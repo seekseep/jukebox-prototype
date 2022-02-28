@@ -1,5 +1,7 @@
 import { SWRConfig } from 'swr'
-import CssBaseline from '@mui/material/CssBaseline';
+
+import '../styles/globals.css'
+
 
 const API_URL_BASE = process.env.NEXT_PUBLIC_API_URL_BASE
 
@@ -30,7 +32,6 @@ function App({ Component, pageProps }) {
         provider: () => new Map(),
         fetcher
       }}>
-      <CssBaseline />
       <Component {...pageProps} />
     </SWRConfig>
   )

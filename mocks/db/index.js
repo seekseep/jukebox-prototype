@@ -1,19 +1,25 @@
 import { factory, primaryKey } from '@mswjs/data'
+import faker from '@faker-js/faker'
 
 export const db = factory({
   users: {
-    id: primaryKey(() => '1'),
-    firstName: () => 'John',
-    lastName: () => 'Maverick',
+    id: primaryKey(faker.datatype.uuid),
+    name: String
   },
+  authentications: {
+    id: primaryKey(faker.datatype.uuid),
+    username: String,
+    password: String,
+    userId: String
+  }
 })
 
-db.users.create({})
+const johnUser = db.users.create({
+  name: "John Due"
+})
 
-console.log(db.users.findFirst({
-  where:{
-    id: {
-      equals: '1',
-    }
-  }
-}))
+db.authentications.create({
+  username: "john",
+  password: "password",
+  userId: johnUser.id
+})
