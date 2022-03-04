@@ -1,44 +1,47 @@
-import { useRouter } from "next/router"
+import { useRouter } from 'next/router'
+import { useMemo } from 'react'
+import { ROLE_TYPE } from '../constatnts'
+import { db } from '../mocks/db'
 
-const rooms = [
-  {
-    id: "room-a",
-    name: "教室 A"
-  },
-  {
-    id: "room-b",
-    name: "教室 B"
-  },
-  {
-    id: "room-c",
-    name: "教室 C"
-  },
-  {
-    id: "room-d",
-    name: "教室 D"
-  },
-]
-
-export function useRoom(roomId) {
-  return rooms.find(room => room.id === roomId)
-}
-
-export function useRooms () {
-  return rooms
-}
-
-export function useCurrentRoomId() {
+export function useCurrentRoomId () {
   const {
-    query:{
-      roomId: currentRoomId
+    query: {
+      roomId
     }
   } = useRouter()
-
-  return currentRoomId
+  return roomId
 }
 
-export function useCurrentRoom () {
-  const currentRoomId = useCurrentRoomId()
-  const currentRoom = useRoom(currentRoomId)
-  return currentRoom
+export function useRoom (roomId) {
+  return db.room.findFirst({
+    where: {
+      id: {
+        equals: roomId
+      }
+    }
+  })
+}
+
+export function useRoomUserByRoleType (roomId, roleType) {
+  const room = useRoom(roomId)
+
+  const filteredUser = useMemo(() => {
+    if (!room) return null
+    return room.roles.filter(role => role.type === roleType).map(role => role.user)
+  }, [room, roleType])
+
+  return filteredUser
+}
+
+export function useStudentsByRoomId (roomId) {
+  return useRoomUserByRoleType(roomId, ROLE_TYPE.STUDENT)
+}
+
+export function useTeachersByRoomId (roomId) {
+  return useRoomUserByRoleType(roomId, ROLE_TYPE.TEACHER)
+}
+
+export function useLessons (roomId) {
+  const room = useRoom(roomId)
+  return room?.lessons
 }
