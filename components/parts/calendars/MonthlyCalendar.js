@@ -1,19 +1,19 @@
-import { format, getMonth } from 'date-fns'
+import { format, getYear, getMonth } from 'date-fns'
 import Link from 'next/link'
 import classNames from 'classnames'
 
-import { useWeekEventsFromYearAndMonth } from '../../../hooks/calendars'
+import { useMontlyCalendar } from '../../../hooks/calendars'
 
-export default function MonthlyCalendar ({ year, month, events, onGoNext, onGoBack, eventBaseUrl = '/events' }) {
-  const weeks = useWeekEventsFromYearAndMonth(year, month, events)
+export default function MonthlyCalendar ({ startDate, events, onGoNext, onGoBack, eventBaseUrl = '/events' }) {
+  const { weeks } = useMontlyCalendar(startDate, events)
 
   return (
-    <div className="p-3 flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       <div className="flex gap-2 items-center justify-between">
         <button className="bg-gray-100 rounded p-2 text-sm" onClick={onGoBack}>戻る</button>
         <div className="flex gap gap-2 text-lg">
-          <div className="w-16 text-right">{year}年</div>
-          <div className="w-16 text-right">{month}月</div>
+          <div className="w-16 text-right">{getYear(startDate)}年</div>
+          <div className="w-16 text-right">{getMonth(startDate) + 1}月</div>
         </div>
         <button className="bg-gray-100 rounded p-2 text-sm" onClick={onGoNext}>次へ</button>
       </div>
@@ -32,7 +32,7 @@ export default function MonthlyCalendar ({ year, month, events, onGoNext, onGoBa
           {week.map(({ date, events }, d) => (
             <div key={d} className="flex-shrink p-1 border-r w-[14.285%] text-sm flex flex-col gap-2">
               <div className={classNames('w-6 text-right', {
-                'text-gray-400': getMonth(date) !== month - 1
+                'text-gray-400': getMonth(date) !== getMonth(startDate)
               })}>
                 {format(date, 'dd')}
               </div>
