@@ -1,9 +1,9 @@
-import classNames from "classnames";
-import Link from "next/link";
+import classNames from 'classnames'
+import Link from 'next/link'
 
 export function PageSection ({ id, className, children }) {
   return (
-    <div id={id} className={classNames(className, "w-96 px-4 py-6 flex flex-col gap-4")}>
+    <div id={id} className={classNames(className, 'w-96 px-4 py-6 flex flex-col gap-4')}>
       {children}
     </div>
   )

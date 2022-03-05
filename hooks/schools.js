@@ -2,7 +2,6 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { ROLE_TYPE } from '../constatnts'
 import { db } from '../mocks/db'
-import { useResourceUsersByRoleType } from './resources'
 
 export function useCurrentSchoolId () {
   const {

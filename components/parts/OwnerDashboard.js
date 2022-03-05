@@ -1,7 +1,7 @@
-import { useCurrentRoomId } from "../../hooks/rooms"
+import { useCurrentRoomId } from '../../hooks/rooms'
 
-import Dashboard, { DashboardMain } from "./Dashboard"
-import MenuItem from "./MenuItem"
+import Dashboard, { DashboardMain } from './Dashboard'
+import MenuItem from './MenuItem'
 
 export default function OwnerDashboard ({ children }) {
   const roomId = useCurrentRoomId()
@@ -27,7 +27,7 @@ export default function OwnerDashboard ({ children }) {
           </MenuItem>
         </div>
         <div>
-          <MenuItem href={`/`}>
+          <MenuItem href={'/'}>
             教室一覧
           </MenuItem>
         </div>

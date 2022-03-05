@@ -4,7 +4,7 @@ import List, {
   KeyValueListItemValue as Value
 } from '../KeyValueList'
 
-export default function SchoolPropertyList({ school }) {
+export default function SchoolPropertyList ({ school }) {
   return (
     <List>
       <Item>

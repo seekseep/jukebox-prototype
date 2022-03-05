@@ -1,12 +1,12 @@
-import Head from "next/head"
-import { useEffect } from "react"
-import { useRouter } from "next/router"
+import Head from 'next/head'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 export default function Logout () {
-  const router  = useRouter()
+  const router = useRouter()
 
   useEffect(() => {
-    router.replace("/login")
+    router.replace('/login')
   })
 
   return (

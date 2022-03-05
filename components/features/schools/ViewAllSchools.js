@@ -1,4 +1,4 @@
-import { useAllSchools } from "../../../hooks/schools"
+import { useAllSchools } from '../../../hooks/schools'
 
 import SchoolList from '../../parts/schools/SchoolList'
 

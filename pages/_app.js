@@ -2,10 +2,9 @@ import { SWRConfig } from 'swr'
 
 import '../styles/globals.css'
 
-
 const API_URL_BASE = process.env.NEXT_PUBLIC_API_URL_BASE
 
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   const { worker } = require('../mocks/browser')
   worker.start()
 }
@@ -24,7 +23,7 @@ async function fetcher (resource, init) {
   return data
 }
 
-function App({ Component, pageProps }) {
+function App ({ Component, pageProps }) {
   return (
     <SWRConfig
       value={{
