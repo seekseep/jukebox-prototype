@@ -1,4 +1,4 @@
-import { format, differenceInMonths, getMonth } from 'date-fns'
+import { format, getMonth } from 'date-fns'
 import Link from 'next/link'
 import classNames from 'classnames'
 
