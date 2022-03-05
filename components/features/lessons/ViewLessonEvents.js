@@ -1,14 +1,14 @@
-import { useLesson } from '../../../hooks/lessons'
+import { useLessonEvents } from '../../../hooks/lessons'
 
-import LessonPropertyList from '../../parts/lessons/LessonPropertyList'
+import EventList from '../../parts/events/EventList'
 
-export default function ViewLesson ({ lessonId }) {
-  const lesson = useLesson(lessonId)
+export default function ViewLessonEvents ({ lessonId }) {
+  const events = useLessonEvents(lessonId)
 
   return (
     <div className="p-3 flex flex-col gap-3">
-      <div className="text-lg">授業</div>
-      <LessonPropertyList lesson={lesson} />
+      <div className="text-lg">予定</div>
+      {events && <EventList events={events} />}
     </div>
   )
 }

@@ -8,7 +8,7 @@ export default function ViewLesson ({ lessonId }) {
   return (
     <div className="p-3 flex flex-col gap-3">
       <div className="text-lg">授業</div>
-      <LessonPropertyList lesson={lesson} />
+      {lesson && <LessonPropertyList lesson={lesson} />}
     </div>
   )
 }

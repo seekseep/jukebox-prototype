@@ -1,17 +1,18 @@
-import { factory, manyOf, oneOf, primaryKey } from '@mswjs/data'
-import { ROLE_TYPE } from '../../constatnts'
+import { add, sub, parseISO } from 'date-fns'
+import { factory, nullable, manyOf, oneOf, primaryKey } from '@mswjs/data'
+import { LESSON_STATUS, ROLE_TYPE } from '../../constatnts'
 
 const commonColumns = {
-  createdAt: () => new Date(),
-  updatedAt: Date,
-  deletedAt: Date
+  createdAt: () => new Date().getTime(),
+  updatedAt: nullable(Number),
+  deletedAt: nullable(Number)
 }
 
 export const db = factory({
   user: {
     id: primaryKey(() => `${db.user.count() + 1}`),
     name: String,
-    birthday: Date,
+    birthday: Number,
     ...commonColumns
   },
   authentication: {
@@ -23,10 +24,10 @@ export const db = factory({
   },
   lesson: {
     id: primaryKey(() => `${db.lesson.count() + 1}`),
+    name: String,
+    status: () => LESSON_STATUS.ACTIVE,
     roles: manyOf('role'),
-    startedAt: Date,
-    finishedAt: Date,
-    status: String,
+    events: manyOf('event'),
     ...commonColumns
   },
   room: {
@@ -46,9 +47,10 @@ export const db = factory({
   event: {
     id: primaryKey(() => `${db.event.count() + 1}`),
     name: String,
+    status: () => LESSON_STATUS.ACTIVE,
     roles: manyOf('role'),
-    startedAt: Date,
-    finishedAt: Date,
+    startedAt: Number,
+    finishedAt: Number,
     ...commonColumns
   },
   role: {
@@ -61,8 +63,8 @@ export const db = factory({
 
 function ageToRandomBirthday (age) {
   const now = new Date()
-  const startDate = new Date(`${now.getFullYear() - 1}/${now.getMonth() + 1}/${now.getDate()} 00:00:00`)
-  return new Date(startDate.getTime() + Math.floor(Math.random() * 364 * 12 * 30 * 24 * 60 * 60 * 10000))
+  const start = sub(now, { year: age })
+  return add(start, { date: Math.floor(365 * Math.random()) }).getTime()
 }
 
 function createRolesFromUsersAndRoleType (users, roleType) {
@@ -78,26 +80,24 @@ function createRoles ({ students = [], teachers = [], owners = [], parents = [] 
   ]
 }
 
-const ONE_MINUTE = 60 * 1000
-const ONE_DAY = 24 * 60 * 60 * 1000
-const ONE_WEEK = ONE_DAY * 7
-
-function createLessonAndLessonEvents ({ name, teachers, students, eventCount, eventDuration, startedAt, repeatInterval }) {
+function createLessonAndLessonEvents ({ name, teachers, students, eventCount, eventDuration, startedAt: lessonStartedAt, repeatInterval }) {
   return db.lesson.create({
     name,
     roles: createRoles({
       students, teachers
     }),
-    events: Array.from({ length: eventCount }).fill(null).map((_, i) =>
-      db.event.create({
+    events: Array.from({ length: eventCount }).fill(null).map((_, i) => {
+      const startedAt = Array.from({ length: i }).fill(null).reduce(startedAt => add(startedAt, repeatInterval), lessonStartedAt)
+      const finishedAt = add(startedAt, eventDuration)
+      return db.event.create({
         name: `第${i + 1}回 ${name}`,
-        startedAt: startedAt + new Date(repeatInterval * i),
-        finishedAt: startedAt + new Date(repeatInterval * i) + new Date(eventDuration),
+        startedAt: startedAt.getTime(),
+        finishedAt: finishedAt.getTime(),
         roles: createRoles({
           students, teachers
         })
       })
-    )
+    })
   })
 }
 
@@ -171,18 +171,18 @@ const sonRoom = db.room.create({
       teachers: sonRoomTeachers,
       students: sonRoomStudents,
       eventCount: 15,
-      eventDuration: 45 * ONE_MINUTE,
-      startedAt: new Date('2023/04/01 9:00'),
-      repeatInterval: ONE_WEEK
+      eventDuration: { minutes: 45 },
+      startedAt: parseISO('2023-04-01 09:00'),
+      repeatInterval: { weeks: 1 }
     }),
     createLessonAndLessonEvents({
       name: '算数',
       teachers: sonRoomTeachers,
       students: sonRoomStudents,
       eventCount: 15,
-      eventDuration: 45 * ONE_MINUTE,
-      startedAt: new Date('2023/04/01 10:00'),
-      repeatInterval: ONE_WEEK
+      eventDuration: { minutes: 45 },
+      startedAt: parseISO('2023-04-01 10:00'),
+      repeatInterval: { weeks: 1 }
     })
   ]
 })
@@ -207,18 +207,18 @@ const daughterRoom = db.room.create({
       teachers: daughterRoomTeachers,
       students: daughterRoomStudents,
       eventCount: 15,
-      eventDuration: 45 * ONE_MINUTE,
-      startedAt: new Date('2023/04/01 9:00'),
-      repeatInterval: ONE_WEEK
+      eventDuration: { minutes: 45 },
+      startedAt: parseISO('2023-04-01 09:00'),
+      repeatInterval: { weeks: 1 }
     }),
     createLessonAndLessonEvents({
       name: '算数',
       teachers: daughterRoomTeachers,
       students: daughterRoomStudents,
       eventCount: 15,
-      eventDuration: 45 * ONE_MINUTE,
-      startedAt: new Date('2023/04/01 10:00'),
-      repeatInterval: ONE_WEEK
+      eventDuration: { minutes: 45 },
+      startedAt: parseISO('2023-04-01 10:00'),
+      repeatInterval: { weeks: 1 }
     })
   ]
 })

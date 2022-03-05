@@ -2,6 +2,17 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { ROLE_TYPE } from '../constatnts'
 import { db } from '../mocks/db'
+import { useResourceUsersByRoleType } from './resources'
+
+export function useCurrentSchoolId () {
+  const {
+    query: {
+      schoolId
+    }
+  } = useRouter()
+
+  return schoolId
+}
 
 export function useAllSchools () {
   return db.school.getAll()
@@ -17,20 +28,20 @@ export function useSchool (schoolId) {
   })
 }
 
-export function useCurrentSchoolId () {
-  const {
-    query: {
-      schoolId
-    }
-  } = useRouter()
-
-  return schoolId
-}
-
 export function useCurrentSchool () {
   const currentSchoolId = useCurrentSchoolId()
   const currentSchool = useSchool(currentSchoolId)
   return currentSchool
+}
+
+export function useSchoolTeachers (schoolId) {
+  const school = useSchool(schoolId)
+  return useSchoolUserByRoleType(school, ROLE_TYPE.TEACHER)
+}
+
+export function useSchoolStudents (schoolId) {
+  const school = useSchool(schoolId)
+  return useSchoolUserByRoleType(school, ROLE_TYPE.STUDENT)
 }
 
 export function useSchoolRooms (schoolId) {
@@ -38,9 +49,7 @@ export function useSchoolRooms (schoolId) {
   return school?.rooms
 }
 
-export function useSchoolUserByRoleType (schoolId, roleType) {
-  const school = useSchool(schoolId)
-
+export function useSchoolUserByRoleType (school, roleType) {
   const filteredSchoolUsers = useMemo(() => {
     if (!school) return null
 
@@ -73,12 +82,4 @@ export function useSchoolUserByRoleType (schoolId, roleType) {
   }, [school, roleType])
 
   return filteredSchoolUsers
-}
-
-export function useSchoolTeachers (schoolId) {
-  return useSchoolUserByRoleType(schoolId, ROLE_TYPE.TEACHER)
-}
-
-export function useSchoolStudents (schoolId) {
-  return useSchoolUserByRoleType(schoolId, ROLE_TYPE.STUDENT)
 }

@@ -1,9 +1,9 @@
-import { useRoomLessons } from '../../../hooks/rooms'
+import { useEventLessons } from '../../../hooks/events'
 
 import LessonList from '../../parts/lessons/LessonList'
 
-export default function ViewRoomLessons ({ roomId }) {
-  const lessons = useRoomLessons(roomId)
+export default function ViewEventLessons ({ eventId }) {
+  const lessons = useEventLessons(eventId)
 
   return (
     <div className="p-3 flex flex-col gap-3">

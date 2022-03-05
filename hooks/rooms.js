@@ -1,7 +1,11 @@
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
+
 import { ROLE_TYPE } from '../constatnts'
+
 import { db } from '../mocks/db'
+
+import { useResourceUsersByRoleType } from './resources'
 
 export function useCurrentRoomId () {
   const {
@@ -22,26 +26,40 @@ export function useRoom (roomId) {
   })
 }
 
-export function useRoomUserByRoleType (roomId, roleType) {
-  const room = useRoom(roomId)
-
-  const filteredUser = useMemo(() => {
-    if (!room) return null
-    return room.roles.filter(role => role.type === roleType).map(role => role.user)
-  }, [room, roleType])
-
-  return filteredUser
+export function useAllRooms () {
+  return db.room.getAll()
 }
 
 export function useStudentsByRoomId (roomId) {
-  return useRoomUserByRoleType(roomId, ROLE_TYPE.STUDENT)
+  const room = useRoom(roomId)
+  return useResourceUsersByRoleType(room, ROLE_TYPE.STUDENT)
 }
 
 export function useTeachersByRoomId (roomId) {
-  return useRoomUserByRoleType(roomId, ROLE_TYPE.TEACHER)
+  const room = useRoom(roomId)
+  return useResourceUsersByRoleType(room, ROLE_TYPE.TEACHER)
 }
 
-export function useLessons (roomId) {
+export function useRoomLessons (roomId) {
   const room = useRoom(roomId)
   return room?.lessons
+}
+
+export function useRoomLessonEvents (roomId) {
+  const lessons = useRoomLessons()
+
+  return useMemo(() => {
+    const lessonEvents = []
+
+    lessons.forEach(lesson =>
+      lesson.events.forEach(event => {
+        lessonEvents.push({
+          ...event,
+          lesson
+        })
+      })
+    )
+
+    return lessonEvents
+  }, [lessons])
 }
