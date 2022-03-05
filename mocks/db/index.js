@@ -140,14 +140,28 @@ db.authentication.create({ user: father, username: 'namihei' })
 const principal = db.user.create({ name: '校長先生' })
 db.authentication.create({ user: principal, username: 'kocho' })
 
-const sonTeacher = db.user.create({ name: 'カツオの担任の先生' })
-db.authentication.create({ user: sonTeacher, username: 'katsuotc' })
+const sonRoomTeacher1 = db.user.create({ name: 'カツオの担任の先生' })
+db.authentication.create({ user: sonRoomTeacher1, username: 'katsuotc' })
 
-const daughterTeacher = db.user.create({ name: 'ワカメの担任の先生' })
-db.authentication.create({ user: daughterTeacher, username: 'wakametc' })
+const sonRoomTeacher2 = db.user.create({ name: '背黒純子' })
+db.authentication.create({ user: sonRoomTeacher2, username: 'katsuotc' })
+
+const sonRoomTeacher3 = db.user.create({ name: '黒若はじめ' })
+db.authentication.create({ user: sonRoomTeacher3, username: 'katsuotc' })
+
+const daughterRoomTeacher1 = db.user.create({ name: 'ワカメの担任の先生' })
+db.authentication.create({ user: daughterRoomTeacher1, username: 'wakametc' })
+
+const daughterRoomTeacher2 = db.user.create({ name: '藁井彩音' })
+db.authentication.create({ user: daughterRoomTeacher2, username: 'wakametc' })
+
+const daughterRoomTeacher3 = db.user.create({ name: '木脚正人' })
+db.authentication.create({ user: daughterRoomTeacher3, username: 'wakametc' })
 
 const sonRoomTeachers = [
-  sonTeacher
+  sonRoomTeacher1,
+  sonRoomTeacher2,
+  sonRoomTeacher3
 ]
 const sonRoomStudents = [
   son,
@@ -168,26 +182,48 @@ const sonRoom = db.room.create({
   lessons: [
     createLessonAndLessonEvents({
       name: '国語',
-      teachers: sonRoomTeachers,
+      teachers: [sonRoomTeacher1],
       students: sonRoomStudents,
       eventCount: 15,
       eventDuration: { minutes: 45 },
-      startedAt: parseISO('2023-04-01 09:00'),
+      startedAt: parseISO('2022-03-01 09:00'),
       repeatInterval: { weeks: 1 }
     }),
     createLessonAndLessonEvents({
       name: '算数',
-      teachers: sonRoomTeachers,
+      teachers: [sonRoomTeacher1],
       students: sonRoomStudents,
       eventCount: 15,
       eventDuration: { minutes: 45 },
-      startedAt: parseISO('2023-04-01 10:00'),
+      startedAt: parseISO('2022-03-01 10:00'),
+      repeatInterval: { weeks: 1 }
+    }),
+    createLessonAndLessonEvents({
+      name: '理科',
+      teachers: [sonRoomTeacher2],
+      students: sonRoomStudents,
+      eventCount: 15,
+      eventDuration: { minutes: 45 },
+      startedAt: parseISO('2022-03-02 11:00'),
+      repeatInterval: { weeks: 1 }
+    }),
+    createLessonAndLessonEvents({
+      name: '社会',
+      teachers: [sonRoomTeacher3],
+      students: sonRoomStudents,
+      eventCount: 15,
+      eventDuration: { minutes: 45 },
+      startedAt: parseISO('2022-03-03 13:00'),
       repeatInterval: { weeks: 1 }
     })
   ]
 })
 
-const daughterRoomTeachers = [daughterTeacher]
+const daughterRoomTeachers = [
+  daughterRoomTeacher1,
+  daughterRoomTeacher2,
+  daughterRoomTeacher3
+]
 const daughterRoomStudents = [
   daughter,
   daughterFriend1,
@@ -204,20 +240,38 @@ const daughterRoom = db.room.create({
   lessons: [
     createLessonAndLessonEvents({
       name: '国語',
-      teachers: daughterRoomTeachers,
+      teachers: [daughterRoomTeacher1],
       students: daughterRoomStudents,
       eventCount: 15,
       eventDuration: { minutes: 45 },
-      startedAt: parseISO('2023-04-01 09:00'),
+      startedAt: parseISO('2022-03-01 09:00'),
       repeatInterval: { weeks: 1 }
     }),
     createLessonAndLessonEvents({
       name: '算数',
-      teachers: daughterRoomTeachers,
+      teachers: [daughterRoomTeacher1],
       students: daughterRoomStudents,
       eventCount: 15,
       eventDuration: { minutes: 45 },
-      startedAt: parseISO('2023-04-01 10:00'),
+      startedAt: parseISO('2022-03-01 10:00'),
+      repeatInterval: { weeks: 1 }
+    }),
+    createLessonAndLessonEvents({
+      name: '理科',
+      teachers: [daughterRoomTeacher2],
+      students: daughterRoomStudents,
+      eventCount: 15,
+      eventDuration: { minutes: 45 },
+      startedAt: parseISO('2022-03-02 11:00'),
+      repeatInterval: { weeks: 1 }
+    }),
+    createLessonAndLessonEvents({
+      name: '社会',
+      teachers: [daughterRoomTeacher3],
+      students: daughterRoomStudents,
+      eventCount: 15,
+      eventDuration: { minutes: 45 },
+      startedAt: parseISO('2022-03-03 13:00'),
       repeatInterval: { weeks: 1 }
     })
   ]

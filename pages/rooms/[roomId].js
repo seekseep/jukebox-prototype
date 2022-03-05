@@ -6,6 +6,7 @@ import ViewRoom from '../../components/features/rooms/ViewRoom'
 import ViewRoomTeachers from '../../components/features/rooms/ViewRoomTeachers'
 import ViewRoomStudents from '../../components/features/rooms/ViewRoomStudents'
 import ViewRoomLessons from '../../components/features/rooms/ViewRoomLessons'
+import ViewRoomCalendar from '../../components/features/rooms/ViewRoomCalendar'
 
 export default function Rooms () {
   const currentRoomId = useCurrentRoomId()
@@ -15,6 +16,7 @@ export default function Rooms () {
       <ViewRoomHead roomId={currentRoomId} />
       <ViewRoomBreadcrumb roomId={currentRoomId} />
       <ViewRoom roomId={currentRoomId} />
+      <ViewRoomCalendar roomId={currentRoomId} />
       <ViewRoomTeachers roomId={currentRoomId} />
       <ViewRoomStudents roomId={currentRoomId} />
       <ViewRoomLessons roomId={currentRoomId} />

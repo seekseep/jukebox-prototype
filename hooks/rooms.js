@@ -46,9 +46,11 @@ export function useRoomLessons (roomId) {
 }
 
 export function useRoomLessonEvents (roomId) {
-  const lessons = useRoomLessons()
+  const lessons = useRoomLessons(roomId)
 
   return useMemo(() => {
+    if (!lessons) return null
+
     const lessonEvents = []
 
     lessons.forEach(lesson =>

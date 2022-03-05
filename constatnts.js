@@ -13,3 +13,10 @@ export const EVENT_STATUS = Object.freeze({
   ACTIVE: 'ACTIVE',
   DISACTIVE: 'DISACTIVE'
 })
+
+export const WEEK_DAY_COUNT = 7
+
+export const CALENDAR_MODE = Object.freeze({
+  WEEK: 'WEEK',
+  MONTH: 'MONTH'
+})
