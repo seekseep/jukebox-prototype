@@ -12,7 +12,12 @@ export const db = factory({
   user: {
     id: primaryKey(() => `${db.user.count() + 1}`),
     name: String,
-    birthday: Number,
+    ...commonColumns
+  },
+  role: {
+    id: primaryKey(() => `${db.role.count() + 1}`),
+    type: String,
+    user: oneOf('user'),
     ...commonColumns
   },
   authentication: {
@@ -22,19 +27,18 @@ export const db = factory({
     password: () => 'password',
     ...commonColumns
   },
-  lesson: {
-    id: primaryKey(() => `${db.lesson.count() + 1}`),
-    name: String,
-    status: () => LESSON_STATUS.ACTIVE,
-    roles: manyOf('role'),
-    events: manyOf('event'),
-    ...commonColumns
-  },
-  room: {
-    id: primaryKey(() => `${db.room.count() + 1}`),
+  subject: {
+    id: primaryKey(() => `${db.subject.count() + 1}`),
     name: String,
     roles: manyOf('role'),
     lessons: manyOf('lesson'),
+    ...commonColumns
+  },
+  lesson: {
+    id: primaryKey(() => `${db.lesson.count() + 1}`),
+    name: String,
+    roles: manyOf('role'),
+    events: manyOf('event'),
     ...commonColumns
   },
   school: {
@@ -42,6 +46,13 @@ export const db = factory({
     name: String,
     rooms: manyOf('room'),
     roles: manyOf('role'),
+    ...commonColumns
+  },
+  room: {
+    id: primaryKey(() => `${db.room.count() + 1}`),
+    name: String,
+    roles: manyOf('role'),
+    lessons: manyOf('lesson'),
     ...commonColumns
   },
   event: {
@@ -53,19 +64,7 @@ export const db = factory({
     finishedAt: Number,
     ...commonColumns
   },
-  role: {
-    id: primaryKey(() => `${db.role.count() + 1}`),
-    type: String,
-    user: oneOf('user'),
-    ...commonColumns
-  }
 })
-
-function ageToRandomBirthday (age) {
-  const now = new Date()
-  const start = sub(now, { year: age })
-  return add(start, { date: Math.floor(365 * Math.random()) }).getTime()
-}
 
 function createRolesFromUsersAndRoleType (users, roleType) {
   return users.map(user => db.role.create({ type: roleType, user }))
@@ -80,58 +79,51 @@ function createRoles ({ students = [], teachers = [], owners = [], parents = [] 
   ]
 }
 
-function createLessonAndLessonEvents ({ name, teachers, students, eventCount, eventDuration, startedAt: lessonStartedAt, repeatInterval }) {
-  return db.lesson.create({
+function createSubject ({ name, students = [], lessonCount = 0 }) {
+  return db.subject.create({
     name,
-    roles: createRoles({
-      students, teachers
-    }),
-    events: Array.from({ length: eventCount }).fill(null).map((_, i) => {
-      const startedAt = Array.from({ length: i }).fill(null).reduce(startedAt => add(startedAt, repeatInterval), lessonStartedAt)
-      const finishedAt = add(startedAt, eventDuration)
-      return db.event.create({
-        name: `第${i + 1}回 ${name}`,
-        startedAt: startedAt.getTime(),
-        finishedAt: finishedAt.getTime(),
-        roles: createRoles({
-          students, teachers
-        })
+    roles: createRoles({ students }),
+    lessons: Array.from({ length: lessonCount }).fill(null).map((_, index) =>
+      db.lesson.create({
+        name: `${name} - ${index + 1}`,
+
       })
-    })
+    )
   })
 }
 
-const son = db.user.create({ name: '磯野カツオ', birthday: ageToRandomBirthday(11) })
+
+const son = db.user.create({ name: '磯野カツオ' })
 db.authentication.create({ user: son, username: 'katsuo' })
 
-const sonFriend1 = db.user.create({ name: '中島', birthday: ageToRandomBirthday(11) })
+const sonFriend1 = db.user.create({ name: '中島' })
 db.authentication.create({ user: sonFriend1, username: 'nakajima' })
 
-const sonFriend2 = db.user.create({ name: '花沢花子', birthday: ageToRandomBirthday(11) })
+const sonFriend2 = db.user.create({ name: '花沢花子' })
 db.authentication.create({ user: sonFriend2, username: 'hanazawa' })
 
-const sonFriend3 = db.user.create({ name: 'かおりちゃん', birthday: ageToRandomBirthday(11) })
+const sonFriend3 = db.user.create({ name: 'かおりちゃん' })
 db.authentication.create({ user: sonFriend3, username: 'kaori' })
 
-const sonFriend4 = db.user.create({ name: '早川さん', birthday: ageToRandomBirthday(11) })
+const sonFriend4 = db.user.create({ name: '早川さん' })
 db.authentication.create({ user: sonFriend4, username: 'hayakawa' })
 
-const sonFriend5 = db.user.create({ name: '橋本', birthday: ageToRandomBirthday(11) })
+const sonFriend5 = db.user.create({ name: '橋本' })
 db.authentication.create({ user: sonFriend5, username: 'hashimoto' })
 
-const sonFriend6 = db.user.create({ name: '西原', birthday: ageToRandomBirthday(11) })
+const sonFriend6 = db.user.create({ name: '西原' })
 db.authentication.create({ user: sonFriend6, username: 'nishihara' })
 
-const daughter = db.user.create({ name: '磯野ワカメ', birthday: ageToRandomBirthday(9) })
+const daughter = db.user.create({ name: '磯野ワカメ' })
 db.authentication.create({ user: daughter, username: 'wakame' })
 
-const daughterFriend1 = db.user.create({ name: 'スズコちゃん', birthday: ageToRandomBirthday(9) })
+const daughterFriend1 = db.user.create({ name: 'スズコちゃん' })
 db.authentication.create({ user: daughterFriend1, username: 'suzuko' })
 
-const daughterFriend2 = db.user.create({ name: 'みゆきちゃん', birthday: ageToRandomBirthday(9) })
+const daughterFriend2 = db.user.create({ name: 'みゆきちゃん' })
 db.authentication.create({ user: daughterFriend2, username: 'miyuki' })
 
-const daughterFriend3 = db.user.create({ name: '堀川くん', birthday: ageToRandomBirthday(9) })
+const daughterFriend3 = db.user.create({ name: '堀川くん' })
 db.authentication.create({ user: daughterFriend3, username: 'horikawa' })
 
 const father = db.user.create({ name: '磯野波平' })
@@ -179,44 +171,7 @@ const sonRoom = db.room.create({
     teachers: sonRoomTeachers,
     students: sonRoomStudents
   }),
-  lessons: [
-    createLessonAndLessonEvents({
-      name: '国語',
-      teachers: [sonRoomTeacher1],
-      students: sonRoomStudents,
-      eventCount: 15,
-      eventDuration: { minutes: 45 },
-      startedAt: parseISO('2022-03-01 09:00'),
-      repeatInterval: { weeks: 1 }
-    }),
-    createLessonAndLessonEvents({
-      name: '算数',
-      teachers: [sonRoomTeacher1],
-      students: sonRoomStudents,
-      eventCount: 15,
-      eventDuration: { minutes: 45 },
-      startedAt: parseISO('2022-03-01 10:00'),
-      repeatInterval: { weeks: 1 }
-    }),
-    createLessonAndLessonEvents({
-      name: '理科',
-      teachers: [sonRoomTeacher2],
-      students: sonRoomStudents,
-      eventCount: 15,
-      eventDuration: { minutes: 45 },
-      startedAt: parseISO('2022-03-02 11:00'),
-      repeatInterval: { weeks: 1 }
-    }),
-    createLessonAndLessonEvents({
-      name: '社会',
-      teachers: [sonRoomTeacher3],
-      students: sonRoomStudents,
-      eventCount: 15,
-      eventDuration: { minutes: 45 },
-      startedAt: parseISO('2022-03-03 13:00'),
-      repeatInterval: { weeks: 1 }
-    })
-  ]
+  lessons: []
 })
 
 const daughterRoomTeachers = [
@@ -237,44 +192,7 @@ const daughterRoom = db.room.create({
     teachers: daughterRoomTeachers,
     students: daughterRoomStudents
   }),
-  lessons: [
-    createLessonAndLessonEvents({
-      name: '国語',
-      teachers: [daughterRoomTeacher1],
-      students: daughterRoomStudents,
-      eventCount: 15,
-      eventDuration: { minutes: 45 },
-      startedAt: parseISO('2022-03-01 09:00'),
-      repeatInterval: { weeks: 1 }
-    }),
-    createLessonAndLessonEvents({
-      name: '算数',
-      teachers: [daughterRoomTeacher1],
-      students: daughterRoomStudents,
-      eventCount: 15,
-      eventDuration: { minutes: 45 },
-      startedAt: parseISO('2022-03-01 10:00'),
-      repeatInterval: { weeks: 1 }
-    }),
-    createLessonAndLessonEvents({
-      name: '理科',
-      teachers: [daughterRoomTeacher2],
-      students: daughterRoomStudents,
-      eventCount: 15,
-      eventDuration: { minutes: 45 },
-      startedAt: parseISO('2022-03-02 11:00'),
-      repeatInterval: { weeks: 1 }
-    }),
-    createLessonAndLessonEvents({
-      name: '社会',
-      teachers: [daughterRoomTeacher3],
-      students: daughterRoomStudents,
-      eventCount: 15,
-      eventDuration: { minutes: 45 },
-      startedAt: parseISO('2022-03-03 13:00'),
-      repeatInterval: { weeks: 1 }
-    })
-  ]
+  lessons: []
 })
 
 /* const kamomeSchool = */ db.school.create({
