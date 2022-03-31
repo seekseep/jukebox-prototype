@@ -1,25 +1,27 @@
-import { useRouter } from 'next/router'
-import { db } from '../mocks/db'
-
-export function useCurrentStudentId () {
-  const {
-    query: {
-      userId
-    }
-  } = useRouter()
-  return userId
-}
+import { useMemo } from "react";
+import { db } from "../mocks/db";
 
 export function useStudent (studentId) {
-  return db.user.findFirst({
-    where: {
-      id: {
-        equals: studentId
-      }
-    }
-  })
+  const student = useMemo(() => db.student.findFirst({ id: studentId  }), [studentId])
+
+  return student;
 }
 
-export function useAllStudents () {
-  return db.student.getAll()
+export function useStudentsByRoomId (roomId) {
+  const students = useMemo(() => {
+    if (!roomId) return null
+
+    return db.student.findMany({
+      query: {
+        where: {
+          roomId: {
+            equals: roomId
+          }
+        }
+      }
+    })
+
+  }, [])
+
+  return students
 }

@@ -1,67 +1,30 @@
-import { useRouter } from 'next/router'
-import { useMemo } from 'react'
+import { useMemo, useCallback } from "react";
+import { db } from "../mocks/db";
 
-import { ROLE_TYPE } from '../constatnts'
+export function useGetRoomLink(roomId) {
+  return useCallback((pathname = "/") => `/rooms/${roomId}${pathname}`, [roomId])
+}
 
-import { db } from '../mocks/db'
+export function useRoomsBySchoolId (schoolId) {
+  const rooms = useMemo(() => {
+    return db.room.findMany({
+      query: {
+        where: {
+          schoolId: {
+            equals: schoolId
+          }
+        }
+      }
+    })
+  }, [schoolId])
 
-import { useResourceUsersByRoleType } from './resources'
-
-export function useCurrentRoomId () {
-  const {
-    query: {
-      roomId
-    }
-  } = useRouter()
-  return roomId
+  return rooms
 }
 
 export function useRoom (roomId) {
-  return db.room.findFirst({
-    where: {
-      id: {
-        equals: roomId
-      }
-    }
-  })
-}
+  const room = useMemo(() => {
+    return db.room.findFirst({ id: roomId })
+  }, [roomId])
 
-export function useAllRooms () {
-  return db.room.getAll()
-}
-
-export function useStudentsByRoomId (roomId) {
-  const room = useRoom(roomId)
-  return useResourceUsersByRoleType(room, ROLE_TYPE.STUDENT)
-}
-
-export function useTeachersByRoomId (roomId) {
-  const room = useRoom(roomId)
-  return useResourceUsersByRoleType(room, ROLE_TYPE.TEACHER)
-}
-
-export function useRoomLessons (roomId) {
-  const room = useRoom(roomId)
-  return room?.lessons
-}
-
-export function useRoomLessonEvents (roomId) {
-  const lessons = useRoomLessons(roomId)
-
-  return useMemo(() => {
-    if (!lessons) return null
-
-    const lessonEvents = []
-
-    lessons.forEach(lesson =>
-      lesson.events.forEach(event => {
-        lessonEvents.push({
-          ...event,
-          lesson
-        })
-      })
-    )
-
-    return lessonEvents
-  }, [lessons])
+  return room
 }
