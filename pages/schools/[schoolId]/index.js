@@ -11,8 +11,6 @@ export default function School () {
   const school = useSchool(schoolId)
   const rooms = useRoomsBySchoolId(schoolId)
 
-  console.log(school)
-
   return (
     <>
       <Head>

@@ -54,7 +54,7 @@ export default function Room () {
             icon="👩‍🎓" title="生徒"
             description="生徒の登録や予定を登録できます"  />
           <FeatureCard
-            href={getRoomLink("/schedules")}
+            href={getRoomLink("/teachers")}
             icon="👨‍🏫" title="講師"
             description="講師の登録や予定を登録できます"  />
           <FeatureCard

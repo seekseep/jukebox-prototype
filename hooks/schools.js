@@ -7,8 +7,5 @@ export function useSchool (schoolId) {
       id: { equals: schoolId }
     }
   }), [schoolId])
-  console.log({schoolId})
   return school
 }
-
-console.log(db.school.getAll()[0])

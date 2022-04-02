@@ -28,6 +28,7 @@ export default function StudentHeader ({ studentId }) {
           <Tab href={getRoomLink(`/students/${studentId}/subjects`)}>履修科目</Tab>
           <Tab href={getRoomLink(`/students/${studentId}/schedule_rules`)}>基本的な予定</Tab>
           <Tab href={getRoomLink(`/students/${studentId}/irregular_schedule`)}>不規則的な予定</Tab>
+          <Tab href={getRoomLink(`/students/${studentId}/relations`)}>関係性</Tab>
         </TabNavigation>
       </div>
     </>

@@ -1,13 +1,17 @@
 import { factory, manyOf, nullable, oneOf, primaryKey } from '@mswjs/data'
 import {
+  createModelId,
   relateSchoolAndRooms,
   relateRoomAndTeachers,
   relateRoomAndStudents,
   relateRoomAndSubjects,
+  relateRoomAndSubjectGroups,
   relateStudentAndSubject,
-  createModelId,
+  relateSubjectGroupAndSubject,
+  relateTeacherAndSubjectGroup,
   createSubjectWithLessons,
-  createBasicStudentScheduleRules
+  createBasicStudentScheduleRules,
+  createBasicTeacherScheduleRules,
 } from './serviceis'
 
 export const db = factory({
@@ -45,14 +49,24 @@ export const db = factory({
   teacher: {
     id: primaryKey(() => createModelId()),
     name: String,
-    room: oneOf("room")
+    room: oneOf("room"),
+    scheduleRules: manyOf("scheduleRule"),
+    subjectGroups: manyOf("subjectGroup")
+  },
+  subjectGroup: {
+    id: primaryKey(() => createModelId()),
+    name: String,
+    room: oneOf("room"),
+    teachers: manyOf("teacher"),
+    subjects: manyOf("subject"),
   },
   subject: {
     id: primaryKey(() => createModelId()),
+    name: String,
     room: oneOf("room"),
+    subjectGroups: manyOf("subjectGroup"),
     students: manyOf("student"),
     lessons: manyOf("lesson"),
-    name: String
   },
   lesson: {
     id: primaryKey(() => createModelId()),
@@ -71,9 +85,18 @@ const rooms = [
 ]
 
 const teachers = [
-  db.teacher.create({ name: "岩倉具視" }),
-  db.teacher.create({ name: "木戸孝允" }),
-  db.teacher.create({ name: "大久保利通" }),
+  db.teacher.create({
+    name: "岩倉具視",
+    scheduleRules: createBasicTeacherScheduleRules(db)
+  }),
+  db.teacher.create({
+    name: "木戸孝允",
+    scheduleRules: createBasicTeacherScheduleRules(db)
+  }),
+  db.teacher.create({
+    name: "大久保利通",
+    scheduleRules: createBasicTeacherScheduleRules(db)
+  }),
 ]
 
 const students = [
@@ -127,6 +150,12 @@ const students = [
   })
 ]
 
+const subjectGroups = [
+  db.subjectGroup.create({ name: "中学英語" }),
+  db.subjectGroup.create({ name: "中学数学" }),
+  db.subjectGroup.create({ name: "小学算数" }),
+]
+
 const subjects = [
   createSubjectWithLessons(db, {
     name: "一斉英語"
@@ -146,13 +175,29 @@ const subjects = [
   }, {
     count: 4,
     name: (subject, index) => `${subject.name} ${index+1}回目`,
-  })
+  }),
+  createSubjectWithLessons(db, {
+    name: "個人算数"
+  }, {
+    count: 4,
+    name: (subject, index) => `${subject.name} ${index+1}回目`,
+  }),
 ]
 
 relateSchoolAndRooms(db, school, rooms)
 relateRoomAndTeachers(db, rooms[0], teachers)
 relateRoomAndStudents(db, rooms[0], students)
 relateRoomAndSubjects(db, rooms[0], subjects)
+relateRoomAndSubjectGroups(db, rooms[0], subjectGroups)
+
+
+relateTeacherAndSubjectGroup(db, teachers[0], subjectGroups[0])
+relateTeacherAndSubjectGroup(db, teachers[0], subjectGroups[1])
+relateTeacherAndSubjectGroup(db, teachers[0], subjectGroups[2])
+
+relateSubjectGroupAndSubject(db, subjectGroups[0], subjects[0])
+relateSubjectGroupAndSubject(db, subjectGroups[0], subjects[1])
+relateSubjectGroupAndSubject(db, subjectGroups[1], subjects[2])
 
 students.forEach(student => {
   relateStudentAndSubject(db, student, subjects[0])

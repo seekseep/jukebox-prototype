@@ -1,7 +1,7 @@
-import { createElement  } from 'react'
+import { forwardRef, createElement } from 'react'
 import classNames from "classnames"
 
-export default function Card ({ type="div", elevation = 1, ...props }) {
+const Card = forwardRef(function Card ({ type="div", elevation = 1, ...props }, ref) {
   return createElement(
     type,
     {
@@ -16,10 +16,13 @@ export default function Card ({ type="div", elevation = 1, ...props }) {
           "shadow-2xl": elevation === 6
         }
       ),
+      ref,
       ...props
     }
   )
-}
+})
+
+export default Card
 
 export function CardActions ({ ...props }) {
   return <div className="border-b bg-gray-100 p-3 flex justify-end" {...props} />
