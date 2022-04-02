@@ -12,7 +12,7 @@ export function Button ({ disabled, sm=false, primary = true, secondary = false,
         {
           "text-sm": sm,
           "border-blue-600 bg-blue-500 text-white active:bg-blue-600 hover:bg-blue-400": primary,
-          "border-gray-200 bg-gray-100 text-gray-900 active:bg-gray-200 hover:bg-gray-50": secondary,
+          "border-gray-300 bg-gray-200 text-gray-900 active:bg-gray-300 hover:bg-gray-100": secondary,
           "opacity-50": disabled
         }
       )}

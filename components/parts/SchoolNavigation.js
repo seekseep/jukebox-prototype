@@ -8,7 +8,7 @@ export default function SchoolNavigation ({ schoolId }) {
     <header className="bg-white border-b">
       <div className="flex justify-between leading-none items-center">
         <Link href={`/schools/${schoolId}`} passHref>
-          <a className="p-4 block font-bold">{school.name}</a>
+          <a className="p-4 block font-bold">{school?.name}</a>
         </Link>
         <Link href="/schools">
           <a className="p-4 block text-blue-500">

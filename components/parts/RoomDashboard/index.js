@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Head from 'next/head'
 
 import classNames from 'classnames'
 
@@ -25,7 +24,6 @@ export default function RoomDashboard ({ roomId, children }) {
 
   return (
     <>
-      <Head>{room?.name} | 教室</Head>
       <div className="flex min-h-screen">
         <nav className="bg-gray-800 text-white w-48 border-r border-gray-600 flex-shrink-0">
           <div className="border-b border-gray-600 h-12">
@@ -47,11 +45,25 @@ export default function RoomDashboard ({ roomId, children }) {
               <a>{room?.name}</a>
             </Link>
           </header>
-          <div className="max-w-4xl flex flex-col gap-8 items-stretch py-4">
+          <div className="max-w-4xl flex flex-col gap-4 items-stretch py-4">
             {children}
           </div>
         </main>
       </div>
     </>
   )
+}
+
+export function RoomDashboardTitle ({ ...props }) {
+  return <h1 className="text-3xl text-gray-800 py-3" {...props} />
+}
+
+export function RoomDashboardSection ({...props}) {
+  return (
+    <section className="flex flex-col gap-4 p-4"  {...props} />
+  )
+}
+
+export function RoomDashboardSectionTitle ({ ...props }) {
+  return <h2 className="text-2xl text-gray-800 py-2" {...props} />
 }

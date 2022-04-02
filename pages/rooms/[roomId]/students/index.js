@@ -4,7 +4,10 @@ import { useRouter } from "next/router";
 import { useGetRoomLink } from "../../../../hooks/rooms";
 import { useStudentsByRoomId } from "../../../../hooks/students";
 
-import RoomDashboard from "../../../../components/parts/RoomDashboard";
+import Card, { CardActions } from "../../../../components/parts/Card";
+import Collection, { CollectionLinkItem, CollectionPlaceholder } from '../../../../components/parts/Collection';
+import RoomDashboard,{ RoomDashboardSection,  RoomDashboardTitle } from "../../../../components/parts/RoomDashboard";
+
 import Breadcrumbs, {
   BreadcrumbsLinkItem as BLink,
   BreadcrumbsCurrentItem as BCurrent
@@ -17,33 +20,34 @@ export default function Students () {
   const getRoomLink = useGetRoomLink(roomId)
 
   return (
+    <>
     <RoomDashboard roomId={roomId}>
       <Breadcrumbs>
         <BLink href={getRoomLink("/")}>ホーム</BLink>
         <BCurrent>生徒一覧</BCurrent>
       </Breadcrumbs>
-      <section className="px-4 flex flex-col gap-4">
-        <h1 className="text-3xl py-2 text-gray-700">生徒の一覧</h1>
-        <div className="bg-white rounded-lg shadow-lg border">
-          <div className="bg-gray-50 border-b flex justify-end p-3">
+      <RoomDashboardSection>
+        <RoomDashboardTitle>生徒の一覧</RoomDashboardTitle>
+        <Card>
+          <CardActions>
             <Link href={getRoomLink("/students/new")}>
-              <a className="bg-blue-500 text-white rounded p-2 text-sm">生徒を登録する</a>
-            </Link>
-          </div>
-          <div className="flex flex-col">
-            {students?.length > 0 ? students.map(student => (
-              <Link key={student.id} href={getRoomLink(`/students/${student.id}`)}>
-                <a className="border-b py-1 px-3 hover:bg-gray-50">{student.name}</a>
+                <a className="bg-blue-500 text-white rounded p-2 text-sm">生徒を登録する</a>
               </Link>
+          </CardActions>
+          <Collection>
+            {students?.length > 0 ? students.map(student => (
+              <CollectionLinkItem key={student.id} href={getRoomLink(`/students/${student.id}`)}>
+                {student.name}
+              </CollectionLinkItem>
             )) : (
-              <div className="py-12 text-center text-gray-500">
+              <CollectionPlaceholder>
                 生徒が登録されていません
-              </div>
+              </CollectionPlaceholder>
             )}
-          </div>
-        </div>
-      </section>
-
+          </Collection>
+        </Card>
+      </RoomDashboardSection>
     </RoomDashboard>
+    </>
   )
 }

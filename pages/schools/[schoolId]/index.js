@@ -11,16 +11,18 @@ export default function School () {
   const school = useSchool(schoolId)
   const rooms = useRoomsBySchoolId(schoolId)
 
+  console.log(school)
+
   return (
     <>
       <Head>
-        <title>学校 | {school.name}</title>
+        <title>学校 | {school?.name}</title>
       </Head>
       <SchoolNavigation schoolId={schoolId}/>
       <div className="bg-gray-100 min-h-screen">
         <header className="bg-blue-500">
           <div className="max-w-2xl py-8 mx-auto">
-            <h1 className="text-2xl text-white text-center">{school.name}</h1>
+            <h1 className="text-2xl text-white text-center">{school?.name}</h1>
           </div>
         </header>
         <section className="max-w-2xl mx-auto py-4 flex flex-col gap-4">
@@ -32,7 +34,7 @@ export default function School () {
             </Link>
           </div>
           <nav className="grid grid-cols-3 gap-4 leading-none">
-            {rooms.map(room => (
+            {rooms?.map(room => (
               <Link key={room.id} href={`/rooms/${room.id}`} passHref>
                 <a className="bg-white rounded shadow p-4 flex items-center gap-2">
                   <span className="text-3xl">🚪</span>

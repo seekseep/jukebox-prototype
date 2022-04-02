@@ -9,7 +9,7 @@ import Breadcrumbs, {
 
 export default function StudentHeader ({ studentId }) {
   const student = useStudent(studentId)
-  const roomId = student?.roomId
+  const roomId = student?.room.id
   const getRoomLink = useGetRoomLink(roomId)
 
   if (!student) return null
@@ -26,7 +26,7 @@ export default function StudentHeader ({ studentId }) {
         <TabNavigation>
           <Tab exact href={getRoomLink(`/students/${studentId}`)}>基本情報</Tab>
           <Tab href={getRoomLink(`/students/${studentId}/subjects`)}>履修科目</Tab>
-          <Tab href={getRoomLink(`/students/${studentId}/regular_schedule`)}>基本的な予定</Tab>
+          <Tab href={getRoomLink(`/students/${studentId}/schedule_rules`)}>基本的な予定</Tab>
           <Tab href={getRoomLink(`/students/${studentId}/irregular_schedule`)}>不規則的な予定</Tab>
         </TabNavigation>
       </div>

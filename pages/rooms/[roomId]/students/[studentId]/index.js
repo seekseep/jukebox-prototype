@@ -1,11 +1,13 @@
+import Head from 'next/head'
 import { useRouter } from "next/router";
 
 import { useStudent } from "../../../../../hooks/students";
 
+import Card, { CardActions } from "../../../../../components/parts/Card";
+import PropertySet, { PropertyItem, PropertyLabel, PropertyContents } from "../../../../../components/parts/PropertySet";
 import { Button } from "../../../../../components/parts/buttons";
-import RoomDashboard from "../../../../../components/parts/RoomDashboard";
+import RoomDashboard, { RoomDashboardSection } from "../../../../../components/parts/RoomDashboard";
 import StudentHeader from '../../../../../components/parts/StudentHeader'
-
 
 export default function Student () {
   const router = useRouter()
@@ -14,23 +16,32 @@ export default function Student () {
   const student = useStudent(studentId)
 
   return (
-    <RoomDashboard roomId={roomId}>
-      <StudentHeader studentId={studentId} />
-      {student && (
-        <section className="px-4">
-          <div className="bg-white rounded-lg shadow-lg border">
-            <div className="bg-gray-50 p-2 border-b flex justify-end">
-              <Button sm secondary>編集する</Button>
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-start">
-                <div className="w-32 p-2 text-gray-600">氏名</div>
-                <div className="flex-grow p-2">{student.name}</div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-    </RoomDashboard>
+    <>
+      <Head>
+        <title>基本情報 | 生徒</title>
+      </Head>
+      <RoomDashboard roomId={roomId}>
+        <StudentHeader studentId={studentId} />
+        <RoomDashboardSection>
+          {student && (
+            <Card>
+              <CardActions>
+                <Button sm secondary>編集する</Button>
+              </CardActions>
+              <PropertySet>
+                <PropertyItem>
+                  <PropertyLabel>
+                    氏名
+                  </PropertyLabel>
+                  <PropertyContents>
+                    {student.name}
+                  </PropertyContents>
+                </PropertyItem>
+              </PropertySet>
+            </Card>
+          )}
+        </RoomDashboardSection>
+      </RoomDashboard>
+    </>
   )
 }
