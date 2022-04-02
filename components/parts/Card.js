@@ -1,19 +1,19 @@
 import { forwardRef, createElement } from 'react'
-import classNames from "classnames"
+import classNames from 'classnames'
 
-const Card = forwardRef(function Card ({ type="div", elevation = 1, ...props }, ref) {
+const Card = forwardRef(function Card ({ type='div', elevation = 1, ...props }, ref) {
   return createElement(
     type,
     {
       className: classNames(
-        "block bg-white rounded-lg border overflow-hidden",
+        'block bg-white rounded-lg border overflow-hidden',
         {
-          "shadow-sm": elevation === 1,
-          "shadow": elevation === 2,
-          "shadow-md":elevation === 3,
-          "shadow-lg":elevation === 4,
-          "shadow-xl":elevation === 5,
-          "shadow-2xl": elevation === 6
+          'shadow-sm' : elevation === 1,
+          'shadow'    : elevation === 2,
+          'shadow-md' : elevation === 3,
+          'shadow-lg' : elevation === 4,
+          'shadow-xl' : elevation === 5,
+          'shadow-2xl': elevation === 6
         }
       ),
       ref,

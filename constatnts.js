@@ -1,16 +1,22 @@
 export const STUDENT_STATUS = Object.freeze({
-  ALL: "ALL",
-  ACTIVE: "ACTIVE",
-  DISACTIVE: "DISACTIVE"
+  ALL      : 'ALL',
+  ACTIVE   : 'ACTIVE',
+  DISACTIVE: 'DISACTIVE'
 })
 
 export const SCHEDULE_RULE_TERM_TYPE = Object.freeze({
-  DAILY: 'DAILY',
-  WEEKLY: 'WEEKLY',
+  DAILY  : 'DAILY',
+  WEEKLY : 'WEEKLY',
   MONTHLY: 'MONTHLY'
 })
 
 export const SCHEDULE_RULE_TYPE = Object.freeze({
-  AVAILABLE: 'AVAILABLE',
+  AVAILABLE   : 'AVAILABLE',
   DISAVAILABLE: 'DISAVAILABLE'
+})
+
+export const SCHEDULE_UNIT_TERM = Object.freeze({
+  DAILY  : 'DAILY',
+  WEEKLY : 'WEEKLY',
+  MONTHLY: 'MONTHLY'
 })

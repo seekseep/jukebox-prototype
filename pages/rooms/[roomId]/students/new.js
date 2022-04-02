@@ -1,19 +1,19 @@
-import Link from "next/link";
+import Link from 'next/link'
 import { useMemo, useCallback } from 'react'
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 
-import { db } from "../../../../mocks/db";
+import { db } from '../../../../mocks/db'
 
-import { useGetRoomLink } from "../../../../hooks/rooms";
-import { useStudentsByRoomId } from "../../../../hooks/students";
+import { useGetRoomLink } from '../../../../hooks/rooms'
+import { useStudentsByRoomId } from '../../../../hooks/students'
 
 import Breadcrumbs, {
   BreadcrumbsLinkItem as BLink,
   BreadcrumbsCurrentItem as BCurrent
-} from "../../../../components/parts/Breadcrumbs";
-import RoomDashboard from "../../../../components/parts/RoomDashboard";
+} from '../../../../components/parts/Breadcrumbs'
+import RoomDashboard from '../../../../components/parts/RoomDashboard'
 import { Form, Field } from '../../../../components/parts/forms'
 import { Button } from '../../../../components/parts/buttons'
 
@@ -25,7 +25,7 @@ export default function Students () {
   const getRoomLink = useGetRoomLink(roomId)
 
   const validationSchema = useMemo(() => Yup.object().shape({
-    name: Yup.string().required().default(""),
+    name  : Yup.string().required().default(''),
     roomId: Yup.string().required(),
   }), [])
   const initialValues = useMemo(() => validationSchema.cast({
@@ -39,8 +39,8 @@ export default function Students () {
   return (
     <RoomDashboard roomId={roomId}>
       <Breadcrumbs>
-        <BLink href={getRoomLink("/")}>ホーム</BLink>
-        <BLink href={getRoomLink("/students")}>生徒の一覧</BLink>
+        <BLink href={getRoomLink('/')}>ホーム</BLink>
+        <BLink href={getRoomLink('/students')}>生徒の一覧</BLink>
         <BCurrent>生徒の登録</BCurrent>
       </Breadcrumbs>
       <section className="px-4 flex flex-col gap-4">

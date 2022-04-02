@@ -1,16 +1,16 @@
 import Head from 'next/head'
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router'
 
 import { useSubjectGroupsByTeacherId } from '../../../../../hooks/subjectGroups'
 
 import { Button } from '../../../../../components/parts/buttons'
-import Card, { CardActions } from "../../../../../components/parts/Card";
-import Collection, { CollectionItem, CollectionLinkItem, CollectionPlaceholder } from "../../../../../components/parts/Collection";
+import Card, { CardActions } from '../../../../../components/parts/Card'
+import Collection, { CollectionItem, CollectionLinkItem, CollectionPlaceholder } from '../../../../../components/parts/Collection'
 
-import RoomDashboard, { RoomDashboardSection} from "../../../../../components/parts/RoomDashboard";
+import RoomDashboard, { RoomDashboardSection} from '../../../../../components/parts/RoomDashboard'
 import TeacherHeader from '../../../../../components/parts/TeacherHeader'
-import { useGetRoomLink } from "../../../../../hooks/rooms";
-import { useState } from 'react';
+import { useGetRoomLink } from '../../../../../hooks/rooms'
+import { useState } from 'react'
 
 export default function Subjects () {
   const router = useRouter()

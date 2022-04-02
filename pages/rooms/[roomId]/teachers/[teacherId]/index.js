@@ -1,12 +1,12 @@
 import Head from 'next/head'
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router'
 
-import { useTeacher } from "../../../../../hooks/teachers";
+import { useTeacher } from '../../../../../hooks/teachers'
 
-import Card, { CardActions } from "../../../../../components/parts/Card";
-import PropertySet, { PropertyItem, PropertyLabel, PropertyContents } from "../../../../../components/parts/PropertySet";
-import { Button } from "../../../../../components/parts/buttons";
-import RoomDashboard, { RoomDashboardSection } from "../../../../../components/parts/RoomDashboard";
+import Card, { CardActions } from '../../../../../components/parts/Card'
+import PropertySet, { PropertyItem, PropertyLabel, PropertyContents } from '../../../../../components/parts/PropertySet'
+import { Button } from '../../../../../components/parts/buttons'
+import RoomDashboard, { RoomDashboardSection } from '../../../../../components/parts/RoomDashboard'
 import TeacherHeader from '../../../../../components/parts/TeacherHeader'
 
 export default function Teacher () {

@@ -1,8 +1,8 @@
-import { useMemo } from "react"
+import { useMemo } from 'react'
 
-import Head from "next/head"
-import Link from "next/link"
-import { db } from "../../mocks/db"
+import Head from 'next/head'
+import Link from 'next/link'
+import { db } from '../../mocks/db'
 
 export default function Schools () {
   const school = useMemo(() => db.school.getAll()[0], [])

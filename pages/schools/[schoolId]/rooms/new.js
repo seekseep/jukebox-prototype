@@ -1,15 +1,15 @@
-import Head from "next/head"
+import Head from 'next/head'
 import { useMemo, useCallback } from 'react'
-import { useRouter } from "next/router"
+import { useRouter } from 'next/router'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 
 import { useSchool } from '../../../../hooks/schools'
 
-import { Button } from "../../../../components/parts/buttons"
-import { Form, Field } from "../../../../components/parts/forms"
-import SchoolNavigation from "../../../../components/parts/SchoolNavigation"
-import { db } from "../../../../mocks/db"
+import { Button } from '../../../../components/parts/buttons'
+import { Form, Field } from '../../../../components/parts/forms'
+import SchoolNavigation from '../../../../components/parts/SchoolNavigation'
+import { db } from '../../../../mocks/db'
 
 export default function CreateRoom () {
   const router = useRouter()
@@ -17,7 +17,7 @@ export default function CreateRoom () {
   const school = useSchool(schoolId)
 
   const validationSchema = useMemo(() => Yup.object().shape({
-    name: Yup.string().required().default(""),
+    name    : Yup.string().required().default(''),
     schoolId: Yup.string().required(),
   }), [])
   const initialValues = useMemo(() => validationSchema.cast({

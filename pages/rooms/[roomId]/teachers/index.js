@@ -1,17 +1,17 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
-import { useGetRoomLink } from "../../../../hooks/rooms";
-import { useTeachersByRoomId } from "../../../../hooks/teachers";
+import { useGetRoomLink } from '../../../../hooks/rooms'
+import { useTeachersByRoomId } from '../../../../hooks/teachers'
 
-import Card, { CardActions } from "../../../../components/parts/Card";
-import Collection, { CollectionLinkItem, CollectionPlaceholder } from '../../../../components/parts/Collection';
-import RoomDashboard,{ RoomDashboardSection,  RoomDashboardTitle } from "../../../../components/parts/RoomDashboard";
+import Card, { CardActions } from '../../../../components/parts/Card'
+import Collection, { CollectionLinkItem, CollectionPlaceholder } from '../../../../components/parts/Collection'
+import RoomDashboard,{ RoomDashboardSection,  RoomDashboardTitle } from '../../../../components/parts/RoomDashboard'
 
 import Breadcrumbs, {
   BreadcrumbsLinkItem as BLink,
   BreadcrumbsCurrentItem as BCurrent
-} from "../../../../components/parts/Breadcrumbs";
+} from '../../../../components/parts/Breadcrumbs'
 
 export default function Teachers () {
   const { query: { roomId }} = useRouter()
@@ -23,14 +23,14 @@ export default function Teachers () {
     <>
     <RoomDashboard roomId={roomId}>
       <Breadcrumbs>
-        <BLink href={getRoomLink("/")}>ホーム</BLink>
+        <BLink href={getRoomLink('/')}>ホーム</BLink>
         <BCurrent>講師一覧</BCurrent>
       </Breadcrumbs>
       <RoomDashboardSection>
         <RoomDashboardTitle>講師の一覧</RoomDashboardTitle>
         <Card>
           <CardActions>
-            <Link href={getRoomLink("/teachers/new")}>
+            <Link href={getRoomLink('/teachers/new')}>
                 <a className="bg-blue-500 text-white rounded p-2 text-sm">講師を登録する</a>
               </Link>
           </CardActions>

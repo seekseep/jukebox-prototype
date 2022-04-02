@@ -1,7 +1,7 @@
-import classNames from "classnames"
-import Link from "next/link"
-import { useRouter } from "next/router"
-import { useMemo } from "react"
+import classNames from 'classnames'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useMemo } from 'react'
 
 
 export default function TabNavigation ({ children }) {
@@ -23,10 +23,10 @@ export function Tab ({ href, children, exact = false }) {
     <Link href={href} passHref>
       <a className={
         classNames(
-          "px-2 py-1 rounded",
+          'px-2 py-1 rounded',
           {
-            "bg-blue-100 text-blue-600": isActive,
-            "bg-transparent text-blue-500": !isActive,
+            'bg-blue-100 text-blue-600'   : isActive,
+            'bg-transparent text-blue-500': !isActive,
           }
         )
       }>

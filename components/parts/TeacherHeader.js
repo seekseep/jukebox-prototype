@@ -1,11 +1,11 @@
-import { useGetRoomLink } from "../../hooks/rooms";
-import { useTeacher } from "../../hooks/teachers";
+import { useGetRoomLink } from '../../hooks/rooms'
+import { useTeacher } from '../../hooks/teachers'
 
 import TabNavigation, { Tab } from './TabNavigation'
 import Breadcrumbs, {
   BreadcrumbsLinkItem as BLink,
   BreadcrumbsCurrentItem as BCurrent
-} from "./Breadcrumbs";
+} from './Breadcrumbs'
 
 export default function TeacherHeader ({ teacherId }) {
   const teacher = useTeacher(teacherId)
@@ -17,8 +17,8 @@ export default function TeacherHeader ({ teacherId }) {
   return (
     <>
       <Breadcrumbs>
-        <BLink href={getRoomLink("/")}>ホーム</BLink>
-        <BLink href={getRoomLink("/teachers")}>講師の一覧</BLink>
+        <BLink href={getRoomLink('/')}>ホーム</BLink>
+        <BLink href={getRoomLink('/teachers')}>講師の一覧</BLink>
         <BCurrent>{teacher?.name}</BCurrent>
       </Breadcrumbs>
       <div className="px-4 flex flex-col gap-4">

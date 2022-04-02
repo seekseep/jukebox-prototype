@@ -1,10 +1,10 @@
 import Head from 'next/head'
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router'
 
 import { Button } from '../../../../../components/parts/buttons'
-import Card, { CardActions } from "../../../../../components/parts/Card";
-import Collection, { CollectionPlaceholder } from "../../../../../components/parts/Collection";
-import RoomDashboard, { RoomDashboardSection} from "../../../../../components/parts/RoomDashboard";
+import Card, { CardActions } from '../../../../../components/parts/Card'
+import Collection, { CollectionPlaceholder } from '../../../../../components/parts/Collection'
+import RoomDashboard, { RoomDashboardSection} from '../../../../../components/parts/RoomDashboard'
 import TeacherHeader from '../../../../../components/parts/TeacherHeader'
 
 export default function Relations () {

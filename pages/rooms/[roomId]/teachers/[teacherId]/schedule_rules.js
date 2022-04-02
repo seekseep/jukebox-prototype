@@ -1,16 +1,16 @@
 import Head from 'next/head'
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router'
 
 import {
   useScheduleRulesByTeacherId,
-} from '../../../../../hooks/scheduleRules';
+} from '../../../../../hooks/scheduleRules'
 
 import { Button } from '../../../../../components/parts/buttons'
-import Card, { CardActions } from "../../../../../components/parts/Card";
-import Collection, { CollectionItem, CollectionPlaceholder } from "../../../../../components/parts/Collection";
-import RoomDashboard, { RoomDashboardSection} from "../../../../../components/parts/RoomDashboard";
+import Card, { CardActions } from '../../../../../components/parts/Card'
+import Collection, { CollectionItem, CollectionPlaceholder } from '../../../../../components/parts/Collection'
+import RoomDashboard, { RoomDashboardSection} from '../../../../../components/parts/RoomDashboard'
 import TeacherHeader from '../../../../../components/parts/TeacherHeader'
-import ScheduleRule from '../../../../../components/parts/ScheduleRule';
+import ScheduleRule from '../../../../../components/parts/ScheduleRule'
 
 export default function ScheduleRules () {
   const router = useRouter()

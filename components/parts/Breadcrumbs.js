@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from 'next/link'
 
 export default function Breadcrumbs ({ children }) {
   return (
@@ -12,7 +12,7 @@ export function BreadcrumbsLinkItem ({href, children}) {
       <Link href={href} passHref>
         <a className="underline">{children}</a>
       </Link>
-      {"/"}
+      {'/'}
     </>
   )
 }

@@ -14,13 +14,13 @@ export function Label ({ ...props }) {
   return <label className="" {...props} />
 }
 
-export function Input ({ type = "text", ...props}) {
+export function Input ({ type = 'text', ...props}) {
   return <input className="border rounded p-2" type={type} {...props}/>
 }
 
 
 export function Field ({label, ...props }) {
-  const [field, meta, helpers] = useField(props);
+  const [field, meta, helpers] = useField(props)
   return (
     <div className="flex flex-col gap-2">
       {label && <Label>{label}</Label>}

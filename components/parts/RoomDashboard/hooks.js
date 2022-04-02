@@ -1,7 +1,7 @@
-import classNames from "classnames";
-import { useRouter } from "next/router";
-import { useCallback } from "react";
-import { useGetRoomLink } from "../../../hooks/rooms";
+import classNames from 'classnames'
+import { useRouter } from 'next/router'
+import { useCallback } from 'react'
+import { useGetRoomLink } from '../../../hooks/rooms'
 
 export function useGetNavLinkProps ({ roomId }) {
   const { asPath: currentPathname } = useRouter()
@@ -15,7 +15,7 @@ export function useGetNavLinkProps ({ roomId }) {
       href,
       className: classNames(
         'px-4 py-2 hover:bg-gray-700 text-sm',
-        { "bg-gray-900 font-bold": isActive }
+        { 'bg-gray-900 font-bold': isActive }
       ),
       ...props
     }

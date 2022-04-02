@@ -31,12 +31,12 @@ export default function RoomDashboard ({ roomId, children }) {
               <a className="block px-4 py-3 text-center font-bold">JUKE BOX</a>
             </Link>
           </div>
-          <div className='flex flex-col py-8'>
-            <NavLink {...getNavLinkProps({ pathname: "/schedules"})}>授業予定</NavLink>
-            <NavLink {...getNavLinkProps({ pathname: "/students"})}>生徒</NavLink>
-            <NavLink {...getNavLinkProps({ pathname: "/teachers"})}>講師</NavLink>
-            <NavLink {...getNavLinkProps({ pathname: "/subjects"})}>科目</NavLink>
-            <NavLink {...getNavLinkProps({ pathname: "/settings"})}>設定</NavLink>
+          <div className="flex flex-col py-8">
+            <NavLink {...getNavLinkProps({ pathname: '/schedules'})}>授業予定</NavLink>
+            <NavLink {...getNavLinkProps({ pathname: '/students'})}>生徒</NavLink>
+            <NavLink {...getNavLinkProps({ pathname: '/teachers'})}>講師</NavLink>
+            <NavLink {...getNavLinkProps({ pathname: '/subjects'})}>科目</NavLink>
+            <NavLink {...getNavLinkProps({ pathname: '/settings'})}>設定</NavLink>
           </div>
         </nav>
         <main className="flex-grow bg-gray-50">

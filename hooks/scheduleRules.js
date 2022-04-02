@@ -1,6 +1,7 @@
-import { useMemo } from "react";
-import { useStudent } from "./students";
-import { useTeacher } from "./teachers";
+import { useMemo } from 'react'
+import { useRoom } from './rooms'
+import { useStudent } from './students'
+import { useTeacher } from './teachers'
 
 export function useScheduleRulesByStudentId (studentId) {
   const student = useStudent(studentId)
@@ -11,5 +12,11 @@ export function useScheduleRulesByStudentId (studentId) {
 export function useScheduleRulesByTeacherId (teacherId) {
   const teacher = useTeacher(teacherId)
   const scheduleRules = useMemo(() => teacher?.scheduleRules || null, [teacher])
+  return scheduleRules
+}
+
+export function useScheduleRulesByRoomId (roomId) {
+  const room = useRoom(roomId)
+  const scheduleRules = useMemo(() => room?.scheduleRules || null, [room])
   return scheduleRules
 }

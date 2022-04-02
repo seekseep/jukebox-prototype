@@ -2,21 +2,21 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 
 import {
-  useScheduleRulesByStudentId,
-} from '../../../../../hooks/scheduleRules'
+  useScheduleRulesByRoomId,
+} from '../../../../hooks/scheduleRules'
 
-import { Button } from '../../../../../components/parts/buttons'
-import Card, { CardActions } from '../../../../../components/parts/Card'
-import Collection, { CollectionItem, CollectionPlaceholder } from '../../../../../components/parts/Collection'
-import RoomDashboard, { RoomDashboardSection} from '../../../../../components/parts/RoomDashboard'
-import StudentHeader from '../../../../../components/parts/StudentHeader'
-import ScheduleRule from '../../../../../components/parts/ScheduleRule'
+import { Button } from '../../../../components/parts/buttons'
+import Card, { CardActions } from '../../../../components/parts/Card'
+import Collection, { CollectionItem, CollectionPlaceholder } from '../../../../components/parts/Collection'
+import RoomDashboard, { RoomDashboardSection} from '../../../../components/parts/RoomDashboard'
+import ScheduleRule from '../../../../components/parts/ScheduleRule'
+import SettingsHeader from '../../../../components/parts/SettingsHeader'
 
 export default function IrregularSchedule () {
   const router = useRouter()
-  const { query: { roomId, studentId  }} = router
+  const { query: { roomId  }} = router
 
-  const scheduleRules = useScheduleRulesByStudentId(studentId)
+  const scheduleRules = useScheduleRulesByRoomId(roomId)
 
   return (
     <>
@@ -24,7 +24,7 @@ export default function IrregularSchedule () {
         <title>不規則な予定</title>
       </Head>
       <RoomDashboard roomId={roomId}>
-        <StudentHeader studentId={studentId} />
+        <SettingsHeader roomId={roomId} />
         <RoomDashboardSection>
           <Card>
             <CardActions>
@@ -35,8 +35,8 @@ export default function IrregularSchedule () {
                 <CollectionItem key={scheduleRule.id}>
                   <ScheduleRule
                     scheduleRule={scheduleRule}
-                    availableLabel="登校可"
-                    disavailableLabel="登校不可" />
+                    availableLabel="営業"
+                    disavailableLabel="休業" />
                 </CollectionItem>
               ) : (
                 <CollectionPlaceholder>
