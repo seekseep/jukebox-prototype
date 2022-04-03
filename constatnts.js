@@ -20,3 +20,10 @@ export const SCHEDULE_UNIT_TERM = Object.freeze({
   WEEKLY : 'WEEKLY',
   MONTHLY: 'MONTHLY'
 })
+
+export const SCHEDULE_STATUS = Object.freeze({
+  UNSUBMITTED: 'UNSUBMITTED',
+  SUBMITTED  : 'SUBMITTED',
+  PUBLISHED  : 'PUBLISHED',
+  ARCHIVED   : 'ARCHIVED',
+})

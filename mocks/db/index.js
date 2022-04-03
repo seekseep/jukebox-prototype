@@ -1,5 +1,5 @@
 import { factory, manyOf, nullable, oneOf, primaryKey } from '@mswjs/data'
-import { SCHEDULE_UNIT_TERM } from '../../constatnts'
+import { SCHEDULE_STATUS, SCHEDULE_UNIT_TERM } from '../../constatnts'
 import {
   createModelId,
   relateSchoolAndRooms,
@@ -34,6 +34,7 @@ export const db = factory({
     subjects     : manyOf('subject'),
     teachers     : manyOf('teacher'),
     students     : manyOf('student'),
+    schedules    : manyOf('schedule'),
     scheduleRules: manyOf('scheduleRule'),
     subjectGroups: manyOf('subjectGroup'),
   },
@@ -43,6 +44,20 @@ export const db = factory({
     scheduleRules: manyOf('scheduleRule'),
     room         : oneOf('room'),
     subjects     : manyOf('subject'),
+    schedules    : manyOf('schedule'),
+  },
+  schedule: {
+    id        : primaryKey(() => createModelId()),
+    status    : String,
+    startedAt : Number,
+    finishedAt: Number,
+    events    : manyOf('event')
+  },
+  event: {
+    id        : primaryKey(() => createModelId()),
+    startedAt : Number,
+    finishedAt: Number,
+    lesson    : oneOf('lesson')
   },
   scheduleRule: {
     id        : primaryKey(() => createModelId()),
@@ -92,6 +107,28 @@ const rooms = [
       term : SCHEDULE_UNIT_TERM.MONTHLY,
       value: 1
     },
+    schedules: [
+      db.schedule.create({
+        status    : SCHEDULE_STATUS.PUBLISHED,
+        startedAt : new Date(2022, 0, 1),
+        finishedAt: new Date(2022, 0, 31),
+      }),
+      db.schedule.create({
+        status    : SCHEDULE_STATUS.PUBLISHED,
+        startedAt : new Date(2022, 1, 1),
+        finishedAt: new Date(2022, 1, 28),
+      }),
+      db.schedule.create({
+        status    : SCHEDULE_STATUS.PUBLISHED,
+        startedAt : new Date(2022, 2, 1),
+        finishedAt: new Date(2022, 2, 31),
+      }),
+      db.schedule.create({
+        status    : SCHEDULE_STATUS.UNSUBMITTED,
+        startedAt : new Date(2022, 3, 1),
+        finishedAt: new Date(2022, 3, 30),
+      }),
+    ],
     scheduleRules: createBasicRoomScheduleRules(db)
   }),
   db.room.create({

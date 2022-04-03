@@ -1,10 +1,10 @@
-import { useMemo, useCallback } from "react";
-import { db } from "../mocks/db";
+import { useMemo, useCallback } from 'react'
+import { db } from '../mocks/db'
 
 import { useSchool } from './schools'
 
 export function useGetRoomLink(roomId) {
-  return useCallback((pathname = "/") => `/rooms/${roomId}${pathname}`, [roomId])
+  return useCallback((pathname = '/') => `/rooms/${roomId}${pathname}`, [roomId])
 }
 
 export function useRoomsBySchoolId (schoolId) {
@@ -14,6 +14,6 @@ export function useRoomsBySchoolId (schoolId) {
 }
 
 export function useRoom (roomId) {
-  const room = useMemo(() => db.room.findFirst({ where: { id: { equals: roomId }} }), [roomId])
+  const room = useMemo(() => db.room.findFirst({ where: { id: { equals: roomId } } }), [roomId])
   return room
 }

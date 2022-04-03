@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import { useGetRoomLink, useRoom } from '../../../hooks/rooms'
 
 import { useGetNavLinkProps  }from'./hooks'
+import Head from 'next/head'
 
 function NavLink ({ className, href, children }) {
   return (
@@ -16,7 +17,7 @@ function NavLink ({ className, href, children }) {
   )
 }
 
-export default function RoomDashboard ({ roomId, children }) {
+export default function RoomDashboard ({ roomId, title, children }) {
   const room = useRoom(roomId)
 
   const getRoomLink = useGetRoomLink(roomId)
@@ -24,6 +25,11 @@ export default function RoomDashboard ({ roomId, children }) {
 
   return (
     <>
+      {title && (
+        <Head>
+          <title>{title}</title>
+        </Head>
+      )}
       <div className="flex min-h-screen">
         <nav className="bg-gray-800 text-white w-48 border-r border-gray-600 flex-shrink-0">
           <div className="border-b border-gray-600 h-12">
@@ -32,11 +38,11 @@ export default function RoomDashboard ({ roomId, children }) {
             </Link>
           </div>
           <div className="flex flex-col py-8">
-            <NavLink {...getNavLinkProps({ pathname: '/schedules'})}>授業予定</NavLink>
-            <NavLink {...getNavLinkProps({ pathname: '/students'})}>生徒</NavLink>
-            <NavLink {...getNavLinkProps({ pathname: '/teachers'})}>講師</NavLink>
-            <NavLink {...getNavLinkProps({ pathname: '/subjects'})}>科目</NavLink>
-            <NavLink {...getNavLinkProps({ pathname: '/settings'})}>設定</NavLink>
+            <NavLink {...getNavLinkProps({ pathname: '/schedules' })}>授業予定</NavLink>
+            <NavLink {...getNavLinkProps({ pathname: '/students' })}>生徒</NavLink>
+            <NavLink {...getNavLinkProps({ pathname: '/teachers' })}>講師</NavLink>
+            <NavLink {...getNavLinkProps({ pathname: '/subjects' })}>科目</NavLink>
+            <NavLink {...getNavLinkProps({ pathname: '/settings' })}>設定</NavLink>
           </div>
         </nav>
         <main className="flex-grow bg-gray-50">
@@ -58,7 +64,7 @@ export function RoomDashboardTitle ({ ...props }) {
   return <h1 className="text-3xl text-gray-800 py-3" {...props} />
 }
 
-export function RoomDashboardSection ({...props}) {
+export function RoomDashboardSection ({ ...props }) {
   return (
     <section className="flex flex-col gap-4 p-4"  {...props} />
   )

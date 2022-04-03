@@ -2,13 +2,13 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
-function useClassName({ disabled, sm=false, primary = true, secondary = false}) {
+function useClassName({ disabled, sm=false, primary = true, secondary = false }) {
   primary = primary && !secondary
   secondary = secondary
 
   return useMemo(() => {
     return classNames(
-      'rounded p-2 border block',
+      'rounded p-2 leading-none border block',
       {
         'text-sm'                                                                       : sm,
         'border-blue-600 bg-blue-500 text-white active:bg-blue-600 hover:bg-blue-400'   : primary,
@@ -19,15 +19,15 @@ function useClassName({ disabled, sm=false, primary = true, secondary = false}) 
   }, [disabled, primary, secondary, sm])
 }
 
-export function Button ({sm = false, primary = true, secondary = false, ...props}) {
-  const className = useClassName({sm, primary, secondary, ...props})
+export function Button ({ sm = false, primary = true, secondary = false, ...props }) {
+  const className = useClassName({ sm, primary, secondary, ...props })
   return (
     <button className={className} {...props} />
   )
 }
 
 export function LinkButton ({ href, sm = false, primary = true, secondary = false, ...props }) {
-  const className = useClassName({sm, primary, secondary, ...props})
+  const className = useClassName({ sm, primary, secondary, ...props })
   return (
     <Link href={href}>
       <a className={className}  {...props} />
