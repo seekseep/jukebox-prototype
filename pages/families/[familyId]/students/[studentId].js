@@ -47,7 +47,7 @@ export default function Student () {
           finishedAt: lessonFinishedAt,
           teachers  : [{
             id  : '1',
-            name: '石原孝之'
+            name: '若松貴文'
           }]
         })
       })
