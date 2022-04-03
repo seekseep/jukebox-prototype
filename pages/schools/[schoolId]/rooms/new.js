@@ -37,7 +37,7 @@ export default function CreateRoom () {
       <div className="max-w-2xl mx-auto py-12 px-4 flex flex-col gap-6">
         <h1 className="text-2xl font-bold">教室の作成</h1>
         {schoolId && (
-          <Formik {...{validationSchema, initialValues, onSubmit}}>
+          <Formik {...{ validationSchema, initialValues, onSubmit }}>
             {() => (
               <Form>
                 <Field name="name" label="教室名" placeholder="教室名" />

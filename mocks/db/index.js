@@ -22,6 +22,12 @@ export const db = factory({
     name : String,
     rooms: manyOf('room')
   },
+  family: {
+    id      : primaryKey(() => createModelId()),
+    name    : String,
+    parents : manyOf('parent'),
+    students: manyOf('student'),
+  },
   room: {
     id          : primaryKey(() => createModelId()),
     name        : String,
@@ -37,6 +43,11 @@ export const db = factory({
     schedules    : manyOf('schedule'),
     scheduleRules: manyOf('scheduleRule'),
     subjectGroups: manyOf('subjectGroup'),
+  },
+  parent: {
+    id      : primaryKey(() => createModelId()),
+    name    : String,
+    families: manyOf('family')
   },
   student: {
     id           : primaryKey(() => createModelId()),
@@ -159,66 +170,66 @@ const rooms = [
 
 const teachers = [
   db.teacher.create({
-    name         : '岩倉具視',
+    name         : '若松貴文',
     scheduleRules: createBasicTeacherScheduleRules(db)
   }),
   db.teacher.create({
-    name         : '木戸孝允',
+    name         : '金井ともみ',
     scheduleRules: createBasicTeacherScheduleRules(db)
   }),
   db.teacher.create({
-    name         : '大久保利通',
+    name         : '山川為春',
     scheduleRules: createBasicTeacherScheduleRules(db)
   }),
 ]
 
 const students = [
   db.student.create({
-    name         : '伊藤博文',
+    name         : '黒木ユウイチ',
     scheduleRules: createBasicStudentScheduleRules(db),
   }),
   db.student.create({
-    name         : '山口尚芳',
+    name         : '黒木ミカ',
     scheduleRules: createBasicStudentScheduleRules(db),
   }),
   db.student.create({
-    name         : '田辺太一',
+    name         : '和井健吉',
     scheduleRules: createBasicStudentScheduleRules(db),
   }),
   db.student.create({
-    name         : '何礼之',
+    name         : '満尾稔江',
     scheduleRules: createBasicStudentScheduleRules(db),
   }),
   db.student.create({
-    name         : '福地源一郎',
+    name         : '長光寿々彦',
     scheduleRules: createBasicStudentScheduleRules(db),
   }),
   db.student.create({
-    name         : '渡辺洪基',
+    name         : '中川美保',
     scheduleRules: createBasicStudentScheduleRules(db),
   }),
   db.student.create({
-    name         : '小松済治',
+    name         : '樫原滝造',
     scheduleRules: createBasicStudentScheduleRules(db),
   }),
   db.student.create({
-    name         : '林董三郎',
+    name         : '矢部静代',
     scheduleRules: createBasicStudentScheduleRules(db),
   }),
   db.student.create({
-    name         : '長野桂次郎',
+    name         : '米田秋穂',
     scheduleRules: createBasicStudentScheduleRules(db),
   }),
   db.student.create({
-    name         : '川路寛堂',
+    name         : '横江雪音',
     scheduleRules: createBasicStudentScheduleRules(db),
   }),
   db.student.create({
-    name         : '安藤太郎',
+    name         : '長尾茅',
     scheduleRules: createBasicStudentScheduleRules(db),
   }),
   db.student.create({
-    name         : '池田政懋',
+    name         : '福安小都音',
     scheduleRules: createBasicStudentScheduleRules(db),
   })
 ]
@@ -256,6 +267,22 @@ const subjects = [
     name : (subject, index) => `${subject.name} ${index+1}回目`,
   }),
 ]
+
+db.family.create({
+  name    : '黒木家',
+  students: [
+    students[0],
+    students[1],
+  ],
+  parents: [
+    db.parent.create({
+      name: '黒木ヨウイチ',
+    }),
+    db.parent.create({
+      name: '黒木ユカ',
+    })
+  ]
+})
 
 relateSchoolAndRooms(db, school, rooms)
 relateRoomAndTeachers(db, rooms[0], teachers)

@@ -16,13 +16,13 @@ export default function Home () {
           <Link href="/schools">
             <a className=" bg-white rounded shadow p-4 flex gap-4 items-center">
               <span className="text-4xl">🏫</span>
-              <span className="text-lg">教室用</span>
+              <span className="text-lg">学校用</span>
             </a>
           </Link>
           <Link href="/families">
             <a className=" bg-white rounded shadow p-4 flex gap-4 items-center">
-              <span className="text-4xl">👪</span>
-              <span className="text-lg">家庭用</span>
+              <span className="text-4xl">🏠</span>
+              <span className="text-lg">家族用</span>
             </a>
           </Link>
         </nav>
