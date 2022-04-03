@@ -11,7 +11,7 @@ import TeacherHeader from '../../../../../components/parts/TeacherHeader'
 
 export default function Teacher () {
   const router = useRouter()
-  const { query: { roomId, teacherId  }} = router
+  const { query: { roomId, teacherId  } } = router
 
   const teacher = useTeacher(teacherId)
 

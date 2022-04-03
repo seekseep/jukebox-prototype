@@ -10,7 +10,7 @@ import RoomDashboard, { RoomDashboardSection } from '../../../../../../component
 import SubjectHeader from '../../../../../../components/parts/SubjectHeader'
 
 export default function Lessons () {
-  const { query: { roomId, subjectId }} = useRouter()
+  const { query: { roomId, subjectId } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
 
   const lessons = useLessonsBySubjectId(subjectId)

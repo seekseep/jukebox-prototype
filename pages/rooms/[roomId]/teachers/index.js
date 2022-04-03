@@ -14,7 +14,7 @@ import Breadcrumbs, {
 } from '../../../../components/parts/Breadcrumbs'
 
 export default function Teachers () {
-  const { query: { roomId }} = useRouter()
+  const { query: { roomId } } = useRouter()
 
   const teachers = useTeachersByRoomId(roomId)
   const getRoomLink = useGetRoomLink(roomId)

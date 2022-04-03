@@ -8,7 +8,7 @@ import Breadcrumbs, {
 } from '../../../../components/parts/Breadcrumbs'
 
 export default function CreateSchedule () {
-  const { query: { roomId }} = useRouter()
+  const { query: { roomId } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
   return (
     <RoomDashboard roomId={roomId}>

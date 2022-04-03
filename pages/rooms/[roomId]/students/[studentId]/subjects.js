@@ -7,13 +7,13 @@ import { Button } from '../../../../../components/parts/buttons'
 import Card, { CardActions } from '../../../../../components/parts/Card'
 import Collection, { CollectionLinkItem, CollectionPlaceholder } from '../../../../../components/parts/Collection'
 
-import RoomDashboard, { RoomDashboardSection} from '../../../../../components/parts/RoomDashboard'
+import RoomDashboard, { RoomDashboardSection } from '../../../../../components/parts/RoomDashboard'
 import StudentHeader from '../../../../../components/parts/StudentHeader'
 import { useGetRoomLink } from '../../../../../hooks/rooms'
 
 export default function Subjects () {
   const router = useRouter()
-  const { query: { roomId, studentId  }} = router
+  const { query: { roomId, studentId  } } = router
 
   const getRoomLink = useGetRoomLink(roomId)
   const subjects = useSubjectsByStudentId(studentId)

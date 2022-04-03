@@ -11,7 +11,7 @@ import StudentHeader from '../../../../../components/parts/StudentHeader'
 
 export default function Student () {
   const router = useRouter()
-  const { query: { roomId, studentId  }} = router
+  const { query: { roomId, studentId  } } = router
 
   const student = useStudent(studentId)
 

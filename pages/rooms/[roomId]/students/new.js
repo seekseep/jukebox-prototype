@@ -20,7 +20,7 @@ import { Button } from '../../../../components/parts/buttons'
 
 export default function Students () {
   const router = useRouter()
-  const { query: { roomId }} = router
+  const { query: { roomId } } = router
 
   const getRoomLink = useGetRoomLink(roomId)
 

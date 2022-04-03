@@ -11,7 +11,7 @@ import SubjectsHeader from '../../../../components/parts/SubjectsHeader'
 
 
 export default function Subejcts () {
-  const { query: { roomId }} = useRouter()
+  const { query: { roomId } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
 
   const subjects = useSubjectsByRoomId(roomId)

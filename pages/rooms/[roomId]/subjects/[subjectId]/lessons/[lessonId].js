@@ -13,11 +13,11 @@ import Breadcrumbs, {
   BreadcrumbsCurrentItem as BCurrnt
 } from '../../../../../../components/parts/Breadcrumbs'
 
-import PropertySet, { PropertyItem, PropertyLabel, PropertyContents} from '../../../../../../components/parts/PropertySet'
+import PropertySet, { PropertyItem, PropertyLabel, PropertyContents } from '../../../../../../components/parts/PropertySet'
 import Collection, { CollectionLinkItem, CollectionPlaceholder } from '../../../../../../components/parts/Collection'
 
 export default function Lesson () {
-  const { query: { roomId, subjectId, lessonId }} = useRouter()
+  const { query: { roomId, subjectId, lessonId } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
 
   const subject = useSubject(subjectId)

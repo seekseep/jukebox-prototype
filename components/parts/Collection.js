@@ -31,7 +31,7 @@ export function CollectionLinkItem ({ href, ...props }) {
   )
 }
 
-export function CollectionPlaceholder ({...props}) {
+export function CollectionPlaceholder ({ ...props }) {
   return (
     <li className="py-12 px-4 text-gray-600 text-center" {...props} />
   )

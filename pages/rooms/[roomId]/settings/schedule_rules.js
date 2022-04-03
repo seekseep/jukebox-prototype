@@ -8,13 +8,13 @@ import {
 import { Button } from '../../../../components/parts/buttons'
 import Card, { CardActions } from '../../../../components/parts/Card'
 import Collection, { CollectionItem, CollectionPlaceholder } from '../../../../components/parts/Collection'
-import RoomDashboard, { RoomDashboardSection} from '../../../../components/parts/RoomDashboard'
+import RoomDashboard, { RoomDashboardSection } from '../../../../components/parts/RoomDashboard'
 import SettingsHeader from '../../../../components/parts/SettingsHeader'
 import ScheduleRule from '../../../../components/parts/ScheduleRule'
 
 export default function ScheduleRules () {
   const router = useRouter()
-  const { query: { roomId  }} = router
+  const { query: { roomId  } } = router
 
   const scheduleRules = useScheduleRulesByRoomId(roomId)
 

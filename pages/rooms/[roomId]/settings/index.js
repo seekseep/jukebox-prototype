@@ -3,13 +3,13 @@ import { useGetRoomLink, useRoom } from '../../../../hooks/rooms'
 
 import RoomDashboard, { RoomDashboardSection } from '../../../../components/parts/RoomDashboard'
 import SettingsHeader from '../../../../components/parts/SettingsHeader'
-import PropertySet, { PropertyItem, PropertyLabel, PropertyContents} from '../../../../components/parts/PropertySet'
+import PropertySet, { PropertyItem, PropertyLabel, PropertyContents } from '../../../../components/parts/PropertySet'
 import Card, { CardActions } from '../../../../components/parts/Card'
 import { Button } from '../../../../components/parts/buttons'
 import { SCHEDULE_UNIT_TERM } from '../../../../constatnts'
 
 export default function Settings () {
-  const { query: { roomId }} = useRouter()
+  const { query: { roomId } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
   const room = useRoom(roomId)
   return (

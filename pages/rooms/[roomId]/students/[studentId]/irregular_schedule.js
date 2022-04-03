@@ -8,13 +8,13 @@ import {
 import { Button } from '../../../../../components/parts/buttons'
 import Card, { CardActions } from '../../../../../components/parts/Card'
 import Collection, { CollectionItem, CollectionPlaceholder } from '../../../../../components/parts/Collection'
-import RoomDashboard, { RoomDashboardSection} from '../../../../../components/parts/RoomDashboard'
+import RoomDashboard, { RoomDashboardSection } from '../../../../../components/parts/RoomDashboard'
 import StudentHeader from '../../../../../components/parts/StudentHeader'
 import ScheduleRule from '../../../../../components/parts/ScheduleRule'
 
 export default function IrregularSchedule () {
   const router = useRouter()
-  const { query: { roomId, studentId  }} = router
+  const { query: { roomId, studentId  } } = router
 
   const scheduleRules = useScheduleRulesByStudentId(studentId)
 

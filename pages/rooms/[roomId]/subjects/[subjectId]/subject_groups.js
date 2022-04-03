@@ -10,7 +10,7 @@ import RoomDashboard, { RoomDashboardSection } from '../../../../../components/p
 import SubjectHeader from '../../../../../components/parts/SubjectHeader'
 
 export default function SubejctGroups () {
-  const { query: { roomId, subjectId }} = useRouter()
+  const { query: { roomId, subjectId } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
 
   const subjectGroups = useSubjectGroupsBySubjectId(subjectId)

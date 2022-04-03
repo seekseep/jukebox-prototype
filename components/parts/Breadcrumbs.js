@@ -6,7 +6,7 @@ export default function Breadcrumbs ({ children }) {
   )
 }
 
-export function BreadcrumbsLinkItem ({href, children}) {
+export function BreadcrumbsLinkItem ({ href, children }) {
   return (
     <>
       <Link href={href} passHref>

@@ -11,7 +11,7 @@ export default function ScheduleRule ({ scheduleRule, availableLabel = '可用',
   const isDisavailable = useMemo(() => scheduleRule.type === SCHEDULE_RULE_TYPE.DISAVAILABLE, [scheduleRule.type])
 
   const scheduleDateLabel = useMemo(() => {
-    const { startedAt, repeat: {term} } = scheduleRule
+    const { startedAt, repeat: { term } } = scheduleRule
     if (term === null) {
       return format(scheduleRule.startedAt, 'yyyy年MM月dd日')
     }
