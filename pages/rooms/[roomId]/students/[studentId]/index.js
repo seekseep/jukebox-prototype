@@ -17,10 +17,7 @@ export default function Student () {
 
   return (
     <>
-      <Head>
-        <title>基本情報 | 生徒</title>
-      </Head>
-      <RoomDashboard roomId={roomId}>
+      <RoomDashboard roomId={roomId} title="生徒 > 基本情報">
         <StudentHeader studentId={studentId} />
         <RoomDashboardSection>
           {student && (

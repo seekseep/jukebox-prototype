@@ -10,10 +10,9 @@ import { SCHEDULE_UNIT_TERM } from '../../../../constatnts'
 
 export default function Settings () {
   const { query: { roomId } } = useRouter()
-  const getRoomLink = useGetRoomLink(roomId)
   const room = useRoom(roomId)
   return (
-    <RoomDashboard roomId={roomId}>
+    <RoomDashboard title="基本設定" roomId={roomId}>
       <SettingsHeader roomId={roomId} />
       <RoomDashboardSection>
         {room && (

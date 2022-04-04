@@ -31,7 +31,7 @@ export default function Room () {
   const { query: { roomId } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
   return (
-    <RoomDashboard roomId={roomId}>
+    <RoomDashboard title="ホーム" roomId={roomId}>
       <RoomDashboardSection>
         <RoomDashboardSectionTitle>やること</RoomDashboardSectionTitle>
         <Card>

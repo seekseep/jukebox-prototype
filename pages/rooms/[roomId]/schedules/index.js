@@ -23,10 +23,7 @@ export default function Schedules () {
   const { query: { roomId } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
 
-  console.log({ roomId })
   const schedules = useSchedulesByRoomId(roomId)
-
-  console.log({ schedules })
 
   return (
     <RoomDashboard roomId={roomId} title="授業予定の一覧">

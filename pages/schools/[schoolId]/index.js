@@ -14,7 +14,7 @@ export default function School () {
   return (
     <>
       <Head>
-        <title>学校 | {school?.name}</title>
+        <title>{school?.name} | 学校</title>
       </Head>
       <SchoolNavigation schoolId={schoolId}/>
       <div className="bg-gray-100 min-h-screen">
@@ -24,14 +24,14 @@ export default function School () {
           </div>
         </header>
         <section className="max-w-2xl mx-auto py-4 flex flex-col gap-4">
-          <div className="flex justify-end">
+          <div className="flex justify-end px-2">
             <Link href={`/schools/${schoolId}/rooms/new`}>
               <a className="bg-blue-500 text-whtie text-white px-4 py-2 rounded">
                 教室を作成
               </a>
             </Link>
           </div>
-          <nav className="grid grid-cols-3 gap-4 leading-none">
+          <nav className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-2 leading-none">
             {rooms?.map(room => (
               <Link key={room.id} href={`/rooms/${room.id}`} passHref>
                 <a className="bg-white rounded shadow p-4 flex items-center gap-2">
@@ -43,8 +43,6 @@ export default function School () {
           </nav>
         </section>
       </div>
-
-
     </>
   )
 }

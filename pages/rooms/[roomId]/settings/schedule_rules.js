@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 
 import {
@@ -20,10 +19,7 @@ export default function ScheduleRules () {
 
   return (
     <>
-      <Head>
-        <title>基本的な予定</title>
-      </Head>
-      <RoomDashboard roomId={roomId}>
+      <RoomDashboard roomId={roomId} title="基本的な予定">
         <SettingsHeader roomId={roomId} />
         <RoomDashboardSection>
           <Card>

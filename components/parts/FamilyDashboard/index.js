@@ -13,7 +13,7 @@ export default function FamilyDashboard ({ title, familyId, children }) {
     <>
       {title && (
         <Head>
-          <title>{title}</title>
+          <title>{title} | {family?.name}</title>
         </Head>
       )}
       <nav className="bg-white sticky top-0 border-b h-16 block">

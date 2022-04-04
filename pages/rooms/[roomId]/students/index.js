@@ -20,8 +20,7 @@ export default function Students () {
   const getRoomLink = useGetRoomLink(roomId)
 
   return (
-    <>
-    <RoomDashboard roomId={roomId}>
+    <RoomDashboard roomId={roomId} title="生徒の一覧">
       <Breadcrumbs>
         <BLink href={getRoomLink('/')}>ホーム</BLink>
         <BCurrent>生徒一覧</BCurrent>
@@ -48,6 +47,5 @@ export default function Students () {
         </Card>
       </RoomDashboardSection>
     </RoomDashboard>
-    </>
   )
 }

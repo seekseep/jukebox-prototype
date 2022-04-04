@@ -27,7 +27,7 @@ export default function RoomDashboard ({ roomId, title, children }) {
     <>
       {title && (
         <Head>
-          <title>{title}</title>
+          <title>{title} | {room?.name}</title>
         </Head>
       )}
       <div className="flex min-h-screen">

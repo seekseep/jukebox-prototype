@@ -11,7 +11,7 @@ export default function CreateSchedule () {
   const { query: { roomId } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
   return (
-    <RoomDashboard roomId={roomId}>
+    <RoomDashboard title="予定の作成" roomId={roomId}>
       <Breadcrumbs>
         <BLink href={getRoomLink('/')}>ホーム</BLink>
         <BLink href={getRoomLink('/schedules')}>予定の一覧</BLink>

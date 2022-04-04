@@ -37,7 +37,7 @@ export default function Students () {
   }, [getRoomLink, router])
 
   return (
-    <RoomDashboard roomId={roomId}>
+    <RoomDashboard roomId={roomId} title="生徒の登録">
       <Breadcrumbs>
         <BLink href={getRoomLink('/')}>ホーム</BLink>
         <BLink href={getRoomLink('/students')}>生徒の一覧</BLink>

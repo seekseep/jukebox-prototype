@@ -20,10 +20,7 @@ export default function IrregularSchedule () {
 
   return (
     <>
-      <Head>
-        <title>不規則な予定</title>
-      </Head>
-      <RoomDashboard roomId={roomId}>
+      <RoomDashboard title="不規則な予定" roomId={roomId}>
         <SettingsHeader roomId={roomId} />
         <RoomDashboardSection>
           <Card>
