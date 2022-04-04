@@ -27,7 +27,7 @@ export default function SubejctGroups () {
             <Collection>
                {subjectGroups.length > 0 ? (
                  subjectGroups.map(subjectGroup => (
-                   <CollectionLinkItem key={subjectGroup.id} href={getRoomLink(`/subjectGroups/${subjectGroup.id}`)}>
+                   <CollectionLinkItem key={subjectGroup.id} href={getRoomLink(`/subjects/subject_groups/${subjectGroup.id}`)}>
                     {subjectGroup.name}
                    </CollectionLinkItem>
                  ))

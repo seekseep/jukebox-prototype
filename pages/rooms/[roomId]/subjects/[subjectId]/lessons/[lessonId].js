@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import { format } from 'date-fns'
 
 import { useGetRoomLink } from '../../../../../../hooks/rooms'
 import { useLesson } from '../../../../../../hooks/lessons'
@@ -44,8 +45,16 @@ export default function Lesson () {
                 <PropertyContents>{lesson.name}</PropertyContents>
               </PropertyItem>
               <PropertyItem>
+                <PropertyLabel>開始日時</PropertyLabel>
+                <PropertyContents>{format(lesson.startedAt, 'yyyy年MM月dd日 HH:mm')}</PropertyContents>
+              </PropertyItem>
+              <PropertyItem>
+                <PropertyLabel>終了日時</PropertyLabel>
+                <PropertyContents>{format(lesson.finishedAt, 'yyyy年MM月dd日 HH:mm')}</PropertyContents>
+              </PropertyItem>
+              <PropertyItem>
                 <PropertyLabel>講師</PropertyLabel>
-                <PropertyContents>
+                <PropertyContents noPadding>
                   <Collection>
                     {lesson.teachers && lesson.teachers.length > 0 ? (
                       lesson.teachers.map(teacher => (

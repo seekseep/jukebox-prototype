@@ -5,9 +5,14 @@ import {
   nextWednesday,
   nextThursday,
   nextFriday,
-  add, sub
+  getDay,
+  add, sub, getMonth, nextDay
 } from 'date-fns'
-import { SCHEDULE_RULE_TERM_TYPE, SCHEDULE_RULE_TYPE } from '../../constatnts'
+import {
+  SCHEDULE_RULE_TERM_TYPE,
+  SCHEDULE_RULE_TYPE,
+  SCHEDULE_UNIT_TERM
+ } from '../../constatnts'
 
 function createCompareModel(baseModel, compare) {
   return (model) => compare(baseModel, model)
@@ -35,11 +40,11 @@ export const createModelId = (() => {
 export function createOneToManyRelater (oneModelName, manyModelName, { oneModelPrimaryKey = 'id', manyModelPrimaryKey = 'id' } = {}) {
   return function relateOneToMany (db, oneModel, manyModel) {
     db[oneModelName].update({
-      where: { [oneModelPrimaryKey]: { equals: oneModel[oneModelPrimaryKey] }},
+      where: { [oneModelPrimaryKey]: { equals: oneModel[oneModelPrimaryKey] } },
       data : { [pluralize(manyModelName)]: appendRelation(manyModel) }
     })
     db[manyModelName].update({
-      where: { [manyModelPrimaryKey]: { equals: manyModel[manyModelPrimaryKey] }},
+      where: { [manyModelPrimaryKey]: { equals: manyModel[manyModelPrimaryKey] } },
       data : { [oneModelName]: oneModel }
     })
   }
@@ -49,11 +54,11 @@ export function createOneToManyRelater (oneModelName, manyModelName, { oneModelP
 export function createManyToManyRelater (manyModelAName, manyModelBName, { manyModelAPrimaryKey = 'id', manyModelBPrimaryKey = 'id' } = {}) {
   return function relateManyToMany (db, manyModelA, manyModelB) {
     db[manyModelAName].update({
-      where: { [manyModelAPrimaryKey]: { equals: manyModelA[manyModelAPrimaryKey] }},
+      where: { [manyModelAPrimaryKey]: { equals: manyModelA[manyModelAPrimaryKey] } },
       data : { [pluralize(manyModelBName)]: appendRelation(manyModelB) }
     })
     db[manyModelBName].update({
-      where: { [manyModelBPrimaryKey]: { equals: manyModelB[manyModelBPrimaryKey] }},
+      where: { [manyModelBPrimaryKey]: { equals: manyModelB[manyModelBPrimaryKey] } },
       data : { [pluralize(manyModelAName)]: appendRelation(manyModelA) }
     })
   }
@@ -111,7 +116,7 @@ export function createSubjectWithLessons (db, subjectOptions, lessonsOptions) {
 
 export function createBasicStudentScheduleRules (db) {
   const repeatStartedAt = new Date(2020, 3, 1)
-  const repeatFinishedAt = sub(add(repeatStartedAt, { years: 3 }), {days: 1})
+  const repeatFinishedAt = sub(add(repeatStartedAt, { years: 3 }), { days: 1 })
   const monday = nextMonday(repeatStartedAt)
   const tuesday = nextTuesday(repeatStartedAt)
   const wednesday = nextWednesday(repeatStartedAt)
@@ -202,7 +207,7 @@ export function createBasicStudentScheduleRules (db) {
 
 export function createBasicTeacherScheduleRules(db) {
   const repeatStartedAt = new Date(2020, 3, 1)
-  const repeatFinishedAt = sub(add(repeatStartedAt, { years: 3 }), {days: 1})
+  const repeatFinishedAt = sub(add(repeatStartedAt, { years: 3 }), { days: 1 })
   const monday = nextMonday(repeatStartedAt)
   const tuesday = nextTuesday(repeatStartedAt)
   const wednesday = nextWednesday(repeatStartedAt)
@@ -267,7 +272,7 @@ export function createBasicTeacherScheduleRules(db) {
 
 export function createBasicRoomScheduleRules(db) {
   const repeatStartedAt = new Date(2020, 3, 1)
-  const repeatFinishedAt = sub(add(repeatStartedAt, { years: 99 }), {days: 1})
+  const repeatFinishedAt = sub(add(repeatStartedAt, { years: 99 }), { days: 1 })
   const monday = nextMonday(repeatStartedAt)
   const tuesday = nextTuesday(repeatStartedAt)
   const wednesday = nextWednesday(repeatStartedAt)
@@ -336,4 +341,80 @@ export function createBasicRoomScheduleRules(db) {
       repeat    : { term: null, finishedAt: null }
     }),
   ]
+}
+
+export function createStudent (db, student = {}) {
+  return db.student.create({
+    scheduleRules: createBasicStudentScheduleRules(db),
+    ...student
+  })
+}
+
+export function createTeacher (db, teacher = {}) {
+  return db.teacher.create({
+    scheduleRules: createBasicTeacherScheduleRules(db),
+    ...teacher
+  })
+}
+
+export function createFrame([startHours, startMinutes], [finishHours, finishMinutes]) {
+  return {
+    start : { hours: startHours, minutes: startMinutes },
+    finish: { hours: finishHours, minutes: finishMinutes },
+  }
+}
+
+export function getFrame (room, day, index) {
+  return room.frames[day][index]
+}
+
+export function createPersonalSubject (db, { room, name, subjectGroups = [], startedAt: subjectStartedAt, lesson: { count: lessonCount = 4 } = {}, student, teacher, frames, ...options } = {}) {
+  const subject = db.subject.create({
+    name: `${student.name} ${name}`,
+    ...options
+  })
+  relateStudentAndSubject(db, student, subject)
+
+  frames.forEach(([day, index]) => {
+    const baseDate = getDay(subjectStartedAt) === day ? subjectStartedAt : nextDay(subjectStartedAt, day)
+    for (let i = 0; i < lessonCount; i ++) {
+      const lessonDate = add(baseDate, { weeks: i })
+      const frame = getFrame(room, day, index)
+      if (getMonth(lessonDate) > getMonth(subjectStartedAt)) return
+      const lesson = db.lesson.create({
+        name      : subject.name,
+        startedAt : add(lessonDate, frame.start).getTime(),
+        finishedAt: add(lessonDate, frame.finish).getTime(),
+        teachers  : [teacher]
+      })
+      relateTeacherAndLesson(db, teacher, lesson)
+      relateSubjectAndLesson(db, subject, lesson)
+    }
+  })
+
+  subjectGroups.forEach(subjectGroup => relateSubjectGroupAndSubject(db, subjectGroup, subject))
+
+  return subject
+}
+
+export function createRoom (db, roomOptions = {}) {
+  return db.room.create({
+    scheduleUnit: {
+      term : SCHEDULE_UNIT_TERM.MONTHLY,
+      value: 1
+    },
+    scheduleRules: createBasicRoomScheduleRules(db),
+    frames       : [
+      [],
+      ...Array.from({ length: 5 }).fill(null).map(() => ([
+        createFrame([15, 0], [15, 55]),
+        createFrame([16, 0], [16, 55]),
+        createFrame([17, 0], [17, 55]),
+        createFrame([18, 0], [18, 55]),
+        createFrame([19, 0], [19, 55]),
+      ])),
+      [],
+    ],
+    ...roomOptions,
+  })
 }

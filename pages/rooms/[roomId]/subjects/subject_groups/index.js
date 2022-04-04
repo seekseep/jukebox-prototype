@@ -27,7 +27,7 @@ export default function SubejctGroups () {
             <Collection>
               {subjectGroups.length > 0 ? (
                 subjectGroups.map(subjectGroup => (
-                  <CollectionLinkItem key={subjectGroup.id} href={getRoomLink(`/subject/subject_groups/${subjectGroup.id}`)}>
+                  <CollectionLinkItem key={subjectGroup.id} href={getRoomLink(`/subjects/subject_groups/${subjectGroup.id}`)}>
                     <div className="flex">
                       <div className="flex-grow">{subjectGroup.name}</div>
                       <div className="w-32"></div>

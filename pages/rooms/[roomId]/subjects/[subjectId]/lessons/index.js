@@ -1,3 +1,5 @@
+import { format } from 'date-fns'
+import locale from 'date-fns/locale/ja'
 import { useRouter } from 'next/router'
 
 import { useGetRoomLink } from '../../../../../../hooks/rooms'
@@ -28,7 +30,19 @@ export default function Lessons () {
                {lessons.length > 0 ? (
                  lessons.map(lesson => (
                    <CollectionLinkItem key={lesson.id} href={getRoomLink(`/subjects/${subjectId}/lessons/${lesson.id}`)}>
-                    {lesson.name}
+                     <div className="flex flex-col gap-1 p-1">
+                       <div className="flex gap-2 leading-none items-center">
+                        <div>{format(lesson.startedAt, 'yyyy年MM月dd日 (EE) HH:mm', { locale })}</div>
+                        <div>~</div>
+                        <div>{format(lesson.finishedAt, 'HH:mm', { locale })}</div>
+                       </div>
+                       <div className="text-sm text-gray-800 flex gap-2">
+                         <div className="flex-grow">{lesson.name}</div>
+                         <div className="w-24">
+                           {lesson.teachers?.map(({ name })=>name).join(',')}
+                         </div>
+                        </div>
+                     </div>
                    </CollectionLinkItem>
                  ))
                ) : (

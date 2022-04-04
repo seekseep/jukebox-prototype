@@ -1,8 +1,14 @@
-import { useMemo } from "react"
+import { useMemo } from 'react'
+import { db } from '../mocks/db'
 
-import { useRoom } from "./rooms";
-import { useSubject } from "./subjects";
-import { useTeacher } from "./teachers";
+import { useRoom } from './rooms'
+import { useSubject } from './subjects'
+import { useTeacher } from './teachers'
+
+export function useSubjectGroup (subjectGroupId)  {
+  const subjectGroup = useMemo(() => db.subjectGroup.findFirst({ where: { id: { equals: subjectGroupId } } }), [subjectGroupId])
+  return subjectGroup
+}
 
 export function useSubjectGroupsByRoomId(roomId) {
   const room = useRoom(roomId)

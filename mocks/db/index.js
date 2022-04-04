@@ -1,5 +1,9 @@
 import { factory, manyOf, nullable, oneOf, primaryKey } from '@mswjs/data'
-import { SCHEDULE_STATUS, SCHEDULE_UNIT_TERM } from '../../constatnts'
+import {
+  SCHEDULE_STATUS,
+  SCHEDULE_UNIT_TERM,
+  WEEK_DAY
+} from '../../constatnts'
 import {
   createModelId,
   relateSchoolAndRooms,
@@ -7,13 +11,12 @@ import {
   relateRoomAndStudents,
   relateRoomAndSubjects,
   relateRoomAndSubjectGroups,
-  relateStudentAndSubject,
-  relateSubjectGroupAndSubject,
   relateTeacherAndSubjectGroup,
-  createSubjectWithLessons,
+  createPersonalSubject,
   createBasicRoomScheduleRules,
-  createBasicStudentScheduleRules,
-  createBasicTeacherScheduleRules,
+  createTeacher,
+  createStudent,
+  createRoom
 } from './serviceis'
 
 export const db = factory({
@@ -29,12 +32,17 @@ export const db = factory({
     students: manyOf('student'),
   },
   room: {
-    id          : primaryKey(() => createModelId()),
-    name        : String,
-    scheduleUnit: {
+    id                : primaryKey(() => createModelId()),
+    name              : String,
+    businessStartHour : Number,
+    businessFinishHour: Number,
+    scheduleUnit      : {
       term : String,
       value: Number,
     },
+    frames: (() => ([
+      [{ start: { hours: 0, minutes: 0 }, finish: { hours: 23, minutes: 0 } }],
+    ])),
     school       : oneOf('school'),
     students     : manyOf('student'),
     subjects     : manyOf('subject'),
@@ -103,185 +111,164 @@ export const db = factory({
     lessons      : manyOf('lesson'),
   },
   lesson: {
-    id     : primaryKey(() => createModelId()),
-    name   : String,
-    subejct: oneOf('subject')
+    id        : primaryKey(() => createModelId()),
+    name      : String,
+    startedAt : Number,
+    finishedAt: Number,
+    teachers  : manyOf('teacher'),
+    subejct   : oneOf('subject')
   },
 })
 
 const school = db.school.create({ name: 'A塾' })
 
 const rooms = [
-  db.room.create({
-    name        : '北教室',
-    scheduleUnit: {
-      term : SCHEDULE_UNIT_TERM.MONTHLY,
-      value: 1
-    },
+  createRoom(db, {
+    name     : '北教室',
     schedules: [
-      db.schedule.create({
-        status    : SCHEDULE_STATUS.PUBLISHED,
-        startedAt : new Date(2022, 0, 1),
-        finishedAt: new Date(2022, 0, 31),
-      }),
-      db.schedule.create({
-        status    : SCHEDULE_STATUS.PUBLISHED,
-        startedAt : new Date(2022, 1, 1),
-        finishedAt: new Date(2022, 1, 28),
-      }),
-      db.schedule.create({
-        status    : SCHEDULE_STATUS.PUBLISHED,
-        startedAt : new Date(2022, 2, 1),
-        finishedAt: new Date(2022, 2, 31),
-      }),
       db.schedule.create({
         status    : SCHEDULE_STATUS.UNSUBMITTED,
         startedAt : new Date(2022, 3, 1),
         finishedAt: new Date(2022, 3, 30),
       }),
     ],
-    scheduleRules: createBasicRoomScheduleRules(db)
   }),
-  db.room.create({
-    name        : '東教室',
-    scheduleUnit: {
-      term : SCHEDULE_UNIT_TERM.MONTHLY,
-      value: 1
-    },
-    scheduleRules: createBasicRoomScheduleRules(db)
-  }),
-  db.room.create({
-    name        : '南教室',
-    scheduleUnit: {
-      term : SCHEDULE_UNIT_TERM.MONTHLY,
-      value: 1
-    },
-    scheduleRules: createBasicRoomScheduleRules(db)
-  }),
-  db.room.create({
-    name        : '西教室',
-    scheduleUnit: {
-      term : SCHEDULE_UNIT_TERM.MONTHLY,
-      value: 1
-    },
-    scheduleRules: createBasicRoomScheduleRules(db)
-  }),
+  createRoom(db, { name: '東教室' }),
+  createRoom(db, { name: '西教室' }),
+  createRoom(db, { name: '南教室' }),
 ]
 
 const teachers = [
-  db.teacher.create({
-    name         : '若松貴文',
-    scheduleRules: createBasicTeacherScheduleRules(db)
-  }),
-  db.teacher.create({
-    name         : '金井ともみ',
-    scheduleRules: createBasicTeacherScheduleRules(db)
-  }),
-  db.teacher.create({
-    name         : '山川為春',
-    scheduleRules: createBasicTeacherScheduleRules(db)
-  }),
+  createTeacher(db, { name: '若松貴文' }),
+  createTeacher(db, { name: '金井ともみ' }),
+  createTeacher(db, { name: '山川為春' }),
+  createTeacher(db, { name: '小山聖紘' }),
+  createTeacher(db, { name: '水野光高' }),
+  // createTeacher(db, { name: '飯塚昌彦' }),
+  // createTeacher(db, { name: '柏原宗太郎' }),
+  // createTeacher(db, { name: '金本健由' }),
+  // createTeacher(db, { name: '庄籠朱鷺' }),
+  // createTeacher(db, { name: '川北伊瀬' }),
 ]
 
 const students = [
-  db.student.create({
-    name         : '黒木ユウイチ',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  }),
-  db.student.create({
-    name         : '黒木ミカ',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  }),
-  db.student.create({
-    name         : '和井健吉',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  }),
-  db.student.create({
-    name         : '満尾稔江',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  }),
-  db.student.create({
-    name         : '長光寿々彦',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  }),
-  db.student.create({
-    name         : '中川美保',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  }),
-  db.student.create({
-    name         : '樫原滝造',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  }),
-  db.student.create({
-    name         : '矢部静代',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  }),
-  db.student.create({
-    name         : '米田秋穂',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  }),
-  db.student.create({
-    name         : '横江雪音',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  }),
-  db.student.create({
-    name         : '長尾茅',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  }),
-  db.student.create({
-    name         : '福安小都音',
-    scheduleRules: createBasicStudentScheduleRules(db),
-  })
+  createStudent(db, { name: '黒木ユウイチ' }),
+  createStudent(db, { name: '黒木ミカ' }),
+  createStudent(db, { name: '和井健吉' }),
+  createStudent(db, { name: '満尾稔江' }),
+  createStudent(db, { name: '長光寿々彦' }),
+  createStudent(db, { name: '中川美保' }),
+  createStudent(db, { name: '樫原滝造' }),
+  createStudent(db, { name: '矢部静代' }),
+  createStudent(db, { name: '米田秋穂' }),
+  createStudent(db, { name: '横江雪音' }),
+  // createStudent(db, { name: '長尾茅' }),
+  // createStudent(db, { name: '福安小都音' }),
+  // createStudent(db, { name: '遠山岩之介' }),
+  // createStudent(db, { name: '川北伊瀬' }),
+  // createStudent(db, { name: '井沢明里' }),
+  // createStudent(db, { name: '室谷恵里子' }),
+  // createStudent(db, { name: '阪田吉乃' }),
+  // createStudent(db, { name: '武山慶樹' }),
+  // createStudent(db, { name: '上野柚吾' }),
+  // createStudent(db, { name: '川辺滝三' }),
+  // createStudent(db, { name: '小山かおり' }),
+  // createStudent(db, { name: '香村寛顕' }),
+  // createStudent(db, { name: '篠原葉月' }),
+  // createStudent(db, { name: '篠崎理津子' }),
+  // createStudent(db, { name: '大西美鈴' }),
+  // createStudent(db, { name: '沢井七' }),
+  // createStudent(db, { name: '井出湊也' }),
+  // createStudent(db, { name: '花村英範' }),
+  // createStudent(db, { name: '金本健由' }),
+  // createStudent(db, { name: '籠辰兵衛' }),
+  // createStudent(db, { name: '福本真之' }),
 ]
 
 const subjectGroups = [
-  db.subjectGroup.create({ name: '中学英語' }),
-  db.subjectGroup.create({ name: '中学数学' }),
-  db.subjectGroup.create({ name: '小学算数' }),
+  db.subjectGroup.create({ name: '英語' }),
+  db.subjectGroup.create({ name: '数学' }),
 ]
 
+const { MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY } = WEEK_DAY
+const [room] = rooms
+const subjectStartedAt = new Date(2022, 3, 1)
 const subjects = [
-  createSubjectWithLessons(db, {
-    name: '一斉英語'
-  }, {
-    count: 4,
-    name : (subject, index) => `${subject.name} ${index+1}回目`,
-  }),
-  createSubjectWithLessons(db, {
-    name: '個人英語'
-  }, {
-    count: 4,
-    name : (subject, index) => `${subject.name} ${index+1}回目`,
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[0], teacher: teachers[0], frames: [[MONDAY, 0]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[0], teacher: teachers[1], frames: [[TUESDAY, 1]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[1], teacher: teachers[2], frames: [[WEDNESDAY, 2]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[1], teacher: teachers[3], frames: [[THURSDAY, 3]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[2], teacher: teachers[0], frames: [[FRIDAY, 4]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[2], teacher: teachers[1], frames: [[MONDAY, 0]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[3], teacher: teachers[2], frames: [[TUESDAY, 1]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[3], teacher: teachers[3], frames: [[WEDNESDAY, 2]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[4], teacher: teachers[0], frames: [[THURSDAY, 3]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[4], teacher: teachers[1], frames: [[FRIDAY, 4]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[5], teacher: teachers[2], frames: [[MONDAY, 0]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[5], teacher: teachers[3], frames: [[TUESDAY, 1]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[6], teacher: teachers[0], frames: [[WEDNESDAY, 2]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[6], teacher: teachers[1], frames: [[THURSDAY, 3]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[7], teacher: teachers[2], frames: [[FRIDAY, 4]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[7], teacher: teachers[3], frames: [[MONDAY, 0]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[8], teacher: teachers[0], frames: [[TUESDAY, 1]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[8], teacher: teachers[1], frames: [[WEDNESDAY, 2]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[9], teacher: teachers[2], frames: [[THURSDAY, 3]] }),
+  createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[9], teacher: teachers[3], frames: [[FRIDAY, 4]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[10], teacher: teachers[0], frames: [[WEDNESDAY, 0]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[10], teacher: teachers[1], frames: [[WEDNESDAY, 1]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[11], teacher: teachers[2], frames: [[WEDNESDAY, 2]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[11], teacher: teachers[3], frames: [[WEDNESDAY, 3]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[12], teacher: teachers[0], frames: [[WEDNESDAY, 4]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[12], teacher: teachers[1], frames: [[WEDNESDAY, 0]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[13], teacher: teachers[2], frames: [[WEDNESDAY, 1]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[13], teacher: teachers[3], frames: [[WEDNESDAY, 2]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[14], teacher: teachers[0], frames: [[WEDNESDAY, 3]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[14], teacher: teachers[1], frames: [[WEDNESDAY, 4]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[15], teacher: teachers[2], frames: [[THURSDAY, 0]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[15], teacher: teachers[3], frames: [[THURSDAY, 1]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[16], teacher: teachers[0], frames: [[THURSDAY, 2]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[16], teacher: teachers[1], frames: [[THURSDAY, 3]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[17], teacher: teachers[2], frames: [[THURSDAY, 4]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[17], teacher: teachers[3], frames: [[THURSDAY, 0]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[18], teacher: teachers[0], frames: [[THURSDAY, 1]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[18], teacher: teachers[1], frames: [[THURSDAY, 2]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[19], teacher: teachers[2], frames: [[THURSDAY, 3]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[19], teacher: teachers[3], frames: [[THURSDAY, 4]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[20], teacher: teachers[0], frames: [[FRIDAY, 0]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[20], teacher: teachers[0], frames: [[FRIDAY, 1]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[21], teacher: teachers[0], frames: [[FRIDAY, 2]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[21], teacher: teachers[0], frames: [[FRIDAY, 3]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[22], teacher: teachers[0], frames: [[FRIDAY, 4]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[22], teacher: teachers[0], frames: [[FRIDAY, 0]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[23], teacher: teachers[0], frames: [[FRIDAY, 1]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[23], teacher: teachers[0], frames: [[FRIDAY, 2]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[24], teacher: teachers[0], frames: [[FRIDAY, 3]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[24], teacher: teachers[0], frames: [[FRIDAY, 4]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[25], teacher: teachers[1], frames: [[MONDAY, 0]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[25], teacher: teachers[1], frames: [[MONDAY, 1]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[26], teacher: teachers[1], frames: [[MONDAY, 2]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[26], teacher: teachers[1], frames: [[MONDAY, 3]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[27], teacher: teachers[1], frames: [[MONDAY, 4]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[27], teacher: teachers[1], frames: [[MONDAY, 0]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[28], teacher: teachers[1], frames: [[MONDAY, 1]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[28], teacher: teachers[1], frames: [[MONDAY, 2]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '英語', subjectGroups: [subjectGroups[0]], student: students[29], teacher: teachers[1], frames: [[MONDAY, 3]] }),
+  // createPersonalSubject(db, { room, startedAt: subjectStartedAt, name: '数学', subjectGroups: [subjectGroups[1]], student: students[29], teacher: teachers[1], frames: [[MONDAY, 4]] })
+]
 
+const parents = [
+  db.parent.create({
+    name: '黒木ヨウイチ',
   }),
-  createSubjectWithLessons(db, {
-    name: '個人数学'
-  }, {
-    count: 4,
-    name : (subject, index) => `${subject.name} ${index+1}回目`,
-  }),
-  createSubjectWithLessons(db, {
-    name: '個人算数'
-  }, {
-    count: 4,
-    name : (subject, index) => `${subject.name} ${index+1}回目`,
-  }),
+  db.parent.create({
+    name: '黒木ユカ',
+  })
 ]
 
 db.family.create({
   name    : '黒木家',
-  students: [
-    students[0],
-    students[1],
-  ],
-  parents: [
-    db.parent.create({
-      name: '黒木ヨウイチ',
-    }),
-    db.parent.create({
-      name: '黒木ユカ',
-    })
-  ]
+  students: [ students[0], students[1] ],
+  parents : [ parents[0], parents[1]]
 })
 
 relateSchoolAndRooms(db, school, rooms)
@@ -290,17 +277,8 @@ relateRoomAndStudents(db, rooms[0], students)
 relateRoomAndSubjects(db, rooms[0], subjects)
 relateRoomAndSubjectGroups(db, rooms[0], subjectGroups)
 
-
-relateTeacherAndSubjectGroup(db, teachers[0], subjectGroups[0])
-relateTeacherAndSubjectGroup(db, teachers[0], subjectGroups[1])
-relateTeacherAndSubjectGroup(db, teachers[0], subjectGroups[2])
-
-relateSubjectGroupAndSubject(db, subjectGroups[0], subjects[0])
-relateSubjectGroupAndSubject(db, subjectGroups[0], subjects[1])
-relateSubjectGroupAndSubject(db, subjectGroups[1], subjects[2])
-
-students.forEach(student => {
-  relateStudentAndSubject(db, student, subjects[0])
+teachers.forEach(teacher => {
+  subjectGroups.forEach(subjectGroup => {
+    relateTeacherAndSubjectGroup(db, teacher, subjectGroup)
+  })
 })
-relateStudentAndSubject(db, students[0], subjects[1])
-relateStudentAndSubject(db, students[0], subjects[2])
