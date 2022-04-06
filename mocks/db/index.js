@@ -246,29 +246,13 @@ const subjects = [
   createPersonalSubject(db, room, students[29], '数学', subjectStartedAt, [[MONDAY, 4]], teachers[1])
 ]
 
-// const parents = [
-//   db.parent.create({
-//     name: '黒木ヨウイチ',
-//   }),
-//   db.parent.create({
-//     name: '黒木ユカ',
-//   })
-// ]
+const parents = [
+  db.parent.create({ name: '黒木ヨウイチ' }),
+  db.parent.create({ name: '黒木ユカ' })
+]
 
-// db.family.create({
-//   name    : '黒木家',
-//   students: [ students[0], students[1] ],
-//   parents : [ parents[0], parents[1]]
-// })
-
-
-// relateRoomAndTeachers(db, rooms[0], teachers)
-// relateRoomAndStudents(db, rooms[0], students)
-// relateRoomAndSubjects(db, rooms[0], subjects)
-// relateRoomAndSubjectGroups(db, rooms[0], subjectGroups)
-
-// teachers.forEach(teacher => {
-//   subjectGroups.forEach(subjectGroup => {
-//     relateTeacherAndSubjectGroup(db, teacher, subjectGroup)
-//   })
-// })
+db.family.create({
+  name    : '黒木家',
+  students: [ students[0], students[1] ],
+  parents : [ parents[0], parents[1]]
+})

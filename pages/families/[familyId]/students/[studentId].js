@@ -41,7 +41,6 @@ export default function Student () {
         const lessonStartedAt = add(subjectStartedAt, { weeks: l })
         const lessonFinishedAt = add(lessonStartedAt, { minutes: 55 })
         lessons.push({
-          id        : lesson.id,
           name      : lesson.name,
           startedAt : lessonStartedAt,
           finishedAt: lessonFinishedAt,
@@ -79,8 +78,8 @@ export default function Student () {
             <div className="text-gray-700">2022年4月1日 ~ 2022年4月30日</div>
           </div>
           <Collection>
-            {lessos.map(lesson => (
-              <CollectionItem key={lesson.id}>
+            {lessos.map((lesson, index) => (
+              <CollectionItem key={index}>
                 <div className="py-2 flex flex-col gap-1">
                   <div className="flex gap-2 items-start">
                     <div className="flex-grow text-sm">{lesson.name}</div>

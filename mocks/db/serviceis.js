@@ -349,8 +349,11 @@ export function getFrame (room, day, index) {
 export function createPersonalSubject (
   db, room, student, name, startedAt, frames, teacher, lessonCount = 4,
 ) {
+
+  const subjectName = (student, name) => `個人${name} ${student.name}`
+
   const subject = db.subject.create({
-    name   : `${student.name} ${name}`,
+    name   : subjectName(student, name),
     tags   : [name],
     lessons: frames.reduce((lessons, [day, index]) => {
       const baseDate = getDay(startedAt) === day ? startedAt : nextDay(startedAt, day)
@@ -361,7 +364,7 @@ export function createPersonalSubject (
         return [
           ...lessons,
           {
-            name      : name,
+            name      : subjectName(student, name),
             startedAt : add(lessonDate, frame.start),
             finishedAt: add(lessonDate, frame.finish),
             teachers  : [teacher]
