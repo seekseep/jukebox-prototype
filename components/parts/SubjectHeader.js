@@ -1,3 +1,5 @@
+import Head from 'next/head'
+
 import { useGetRoomLink } from '../../hooks/rooms'
 import { useSubject } from '../../hooks/subjects'
 
@@ -7,12 +9,15 @@ import Breadcrumbs, {
   BreadcrumbsCurrentItem as BCurrent
 } from './Breadcrumbs'
 
-export default function SubjectHeader ({ subjectId }) {
+export default function SubjectHeader ({ roomId, subjectId }) {
   const subject = useSubject(subjectId)
-  const getRoomLink = useGetRoomLink(subject?.room?.id)
+  const getRoomLink = useGetRoomLink(roomId)
 
   return (
     <>
+      <Head>
+        <title>{subject?.name} | 科目</title>
+      </Head>
       <Breadcrumbs>
         <BLink href={getRoomLink('/')}>ホーム</BLink>
         <BLink href={getRoomLink('/subjects')}>科目</BLink>
@@ -24,7 +29,7 @@ export default function SubjectHeader ({ subjectId }) {
           <Tab exact href={getRoomLink(`/subjects/${subjectId}`)}>基本情報</Tab>
           <Tab exact href={getRoomLink(`/subjects/${subjectId}/students`)}>履修生徒</Tab>
           <Tab exact href={getRoomLink(`/subjects/${subjectId}/lessons`)}>授業</Tab>
-          <Tab exact href={getRoomLink(`/subjects/${subjectId}/subject_groups`)}>科目分類</Tab>
+          <Tab exact href={getRoomLink(`/subjects/${subjectId}/tags`)}>科目分類</Tab>
         </TabNavigation>
       </div>
     </>

@@ -17,7 +17,7 @@ export default function Relations () {
         <title>関係性</title>
       </Head>
       <RoomDashboard roomId={roomId}>
-        <TeacherHeader teacherId={teacherId} />
+      <TeacherHeader roomId={roomId} teacherId={teacherId} />
         <RoomDashboardSection>
           <Card>
             <CardActions>

@@ -17,7 +17,7 @@ export default function Subject () {
 
   return (
     <RoomDashboard roomId={roomId}>
-      <SubjectHeader subjectId={subjectId} />
+      <SubjectHeader roomId={roomId} subjectId={subjectId} />
       <RoomDashboardSection>
         <Card>
           <CardActions>

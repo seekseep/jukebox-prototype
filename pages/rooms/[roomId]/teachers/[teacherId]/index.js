@@ -21,7 +21,7 @@ export default function Teacher () {
         <title>基本情報 | 生徒</title>
       </Head>
       <RoomDashboard roomId={roomId}>
-        <TeacherHeader teacherId={teacherId} />
+        <TeacherHeader roomId={roomId} teacherId={teacherId} />
         <RoomDashboardSection>
           {teacher && (
             <Card>

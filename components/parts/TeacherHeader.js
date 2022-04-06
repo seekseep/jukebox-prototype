@@ -7,9 +7,8 @@ import Breadcrumbs, {
   BreadcrumbsCurrentItem as BCurrent
 } from './Breadcrumbs'
 
-export default function TeacherHeader ({ teacherId }) {
+export default function TeacherHeader ({ roomId, teacherId }) {
   const teacher = useTeacher(teacherId)
-  const roomId = teacher?.room.id
   const getRoomLink = useGetRoomLink(roomId)
 
   if (!teacher) return null
@@ -22,7 +21,7 @@ export default function TeacherHeader ({ teacherId }) {
         <BCurrent>{teacher?.name}</BCurrent>
       </Breadcrumbs>
       <div className="px-4 flex flex-col gap-4">
-        <h1 className="text-3xl py-2 text-gray-700">{teacher?.name}</h1>
+        <h1 className="text-3xl py-2 text-gray-700">講師: {teacher?.name}</h1>
         <TabNavigation>
           <Tab exact href={getRoomLink(`/teachers/${teacherId}`)}>基本情報</Tab>
           <Tab href={getRoomLink(`/teachers/${teacherId}/subjects`)}>指導可能科目</Tab>

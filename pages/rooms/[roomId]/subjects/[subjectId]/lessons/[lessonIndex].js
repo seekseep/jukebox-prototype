@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router'
 import { format } from 'date-fns'
+import { useMemo } from 'react'
 
 import { useGetRoomLink } from '../../../../../../hooks/rooms'
-import { useLesson } from '../../../../../../hooks/lessons'
 import { useSubject } from '../../../../../../hooks/subjects'
 
 import Card, { CardActions } from '../../../../../../components/parts/Card'
@@ -18,11 +18,11 @@ import PropertySet, { PropertyItem, PropertyLabel, PropertyContents } from '../.
 import Collection, { CollectionLinkItem, CollectionPlaceholder } from '../../../../../../components/parts/Collection'
 
 export default function Lesson () {
-  const { query: { roomId, subjectId, lessonId } } = useRouter()
+  const { query: { roomId, subjectId, lessonIndex } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
 
   const subject = useSubject(subjectId)
-  const lesson = useLesson(lessonId)
+  const lesson = useMemo(() => subject?.lessons[lessonIndex], [lessonIndex, subject?.lessons])
 
   return (
     <RoomDashboard roomId={roomId}>
@@ -30,10 +30,11 @@ export default function Lesson () {
         <BLink href={getRoomLink('/')}>ホーム</BLink>
         <BLink href={getRoomLink('/subjects')}>科目</BLink>
         {subject && <BLink href={getRoomLink(`/subjects/${subjectId}`)}>{subject.name}</BLink>}
+        <BLink href={getRoomLink(`/subjects/${subjectId}/lessons`)}>授業一覧</BLink>
         {lesson && <BCurrnt>{lesson.name}</BCurrnt>}
       </Breadcrumbs>
       <RoomDashboardSection>
-        {lesson && <RoomDashboardTitle>{lesson.name}</RoomDashboardTitle>}
+        {lesson && <RoomDashboardTitle>{lesson.name} {+lessonIndex+1}回目</RoomDashboardTitle>}
         <Card>
           <CardActions>
             <Button sm secondary>編集する</Button>

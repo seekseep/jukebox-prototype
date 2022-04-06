@@ -24,15 +24,15 @@ export default function ScheduleRules () {
         <title>基本的な予定</title>
       </Head>
       <RoomDashboard roomId={roomId}>
-        <StudentHeader studentId={studentId} />
+        <StudentHeader roomId={roomId} studentId={studentId} />
         <RoomDashboardSection>
           <Card>
             <CardActions>
               <Button sm>登校日条件を登録する</Button>
             </CardActions>
             <Collection>
-              {scheduleRules?.length > 0 ? scheduleRules.filter(rule => rule.repeat.term !== null).map(scheduleRule =>
-                <CollectionItem key={scheduleRule.id}>
+              {scheduleRules?.length > 0 ? scheduleRules.filter(rule => rule.repeat.term !== null).map((scheduleRule, index) =>
+                <CollectionItem key={index}>
                   <ScheduleRule
                     scheduleRule={scheduleRule}
                     availableLabel="登校可"

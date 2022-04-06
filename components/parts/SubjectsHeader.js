@@ -20,7 +20,7 @@ export default function SubjectsHeader ({ roomId }) {
         <h1 className="text-3xl py-2 text-gray-700">科目</h1>
         <TabNavigation>
           <Tab exact href={getRoomLink('/subjects')}>科目の一覧</Tab>
-          <Tab href={getRoomLink('/subjects/subject_groups')}>科目分類の一覧</Tab>
+          <Tab href={getRoomLink('/subjects/tags')}>科目分類の一覧</Tab>
         </TabNavigation>
       </div>
     </>

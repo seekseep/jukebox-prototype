@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 
 import { useGetRoomLink } from '../../../../../hooks/rooms'
-import { useSubjectGroupsByRoomId } from '../../../../../hooks/subjectGroups'
+import { useSubjectTagsByRoomId } from '../../../../../hooks/subjects'
 
 import Card, { CardActions } from '../../../../../components/parts/Card'
 import { LinkButton } from '../../../../../components/parts/buttons'
@@ -9,11 +9,11 @@ import Collection, { CollectionLinkItem, CollectionPlaceholder } from '../../../
 import RoomDashboard, { RoomDashboardSection } from '../../../../../components/parts/RoomDashboard'
 import SubjectsHeader from '../../../../../components/parts/SubjectsHeader'
 
-export default function SubejctGroups () {
+export default function SubejctTags () {
   const { query: { roomId } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
 
-  const subjectGroups = useSubjectGroupsByRoomId(roomId)
+  const useSubjectTags = useSubjectTagsByRoomId(roomId)
 
   return (
     <RoomDashboard roomId={roomId}>
@@ -23,13 +23,13 @@ export default function SubejctGroups () {
           <CardActions>
             <LinkButton sm href={getRoomLink('/subjects/new')}>科目分類を登録する</LinkButton>
           </CardActions>
-          {subjectGroups && (
+          {useSubjectTags && (
             <Collection>
-              {subjectGroups.length > 0 ? (
-                subjectGroups.map(subjectGroup => (
-                  <CollectionLinkItem key={subjectGroup.id} href={getRoomLink(`/subjects/subject_groups/${subjectGroup.id}`)}>
+              {useSubjectTags.length > 0 ? (
+                useSubjectTags.map(subjectTag => (
+                  <CollectionLinkItem key={subjectTag} href={getRoomLink(`/subjects/tags/${encodeURIComponent(subjectTag)}`)}>
                     <div className="flex">
-                      <div className="flex-grow">{subjectGroup.name}</div>
+                      <div className="flex-grow">{subjectTag}</div>
                       <div className="w-32"></div>
                     </div>
                   </CollectionLinkItem>

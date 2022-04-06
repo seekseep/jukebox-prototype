@@ -1,8 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-import { useSubjectGroupsByTeacherId } from '../../../../../hooks/subjectGroups'
-
 import { Button } from '../../../../../components/parts/buttons'
 import Card, { CardActions } from '../../../../../components/parts/Card'
 import Collection, { CollectionItem, CollectionLinkItem, CollectionPlaceholder } from '../../../../../components/parts/Collection'
@@ -11,14 +9,18 @@ import RoomDashboard, { RoomDashboardSection } from '../../../../../components/p
 import TeacherHeader from '../../../../../components/parts/TeacherHeader'
 import { useGetRoomLink } from '../../../../../hooks/rooms'
 import { useState } from 'react'
+import { useTeacher } from '../../../../../hooks/teachers'
+import { useSubjectsByRoomIdAndSubjectTagName } from '../../../../../hooks/subjects'
 
 export default function Subjects () {
   const router = useRouter()
   const { query: { roomId, teacherId  } } = router
 
   const getRoomLink = useGetRoomLink(roomId)
-  const subjectGroups = useSubjectGroupsByTeacherId(teacherId)
-  const [currentSubjectGroup, setCurrentSubjectGroup] = useState(null)
+
+  const teacher = useTeacher(teacherId)
+  const [currentTagName, setCurrentTagName] = useState(null)
+  const subjects = useSubjectsByRoomIdAndSubjectTagName(roomId, currentTagName)
 
   return (
     <>
@@ -26,7 +28,7 @@ export default function Subjects () {
         <title>指導可能科目 | 講師</title>
       </Head>
       <RoomDashboard roomId={roomId}>
-        <TeacherHeader teacherId={teacherId} />
+        <TeacherHeader roomId={roomId} teacherId={teacherId} />
         <RoomDashboardSection>
           <Card>
             <CardActions>
@@ -38,11 +40,11 @@ export default function Subjects () {
                   <div>科目分類</div>
                 </div>
                 <Collection>
-                  {subjectGroups?.length > 0 ? subjectGroups.map(subjectGroup =>
+                  {(teacher && teacher.subjectTags.length > 0) ? teacher.subjectTags.map(tagName =>
                     <CollectionItem
-                      key={subjectGroup.id} onClick={() => setCurrentSubjectGroup(subjectGroup)}
-                      isActive={currentSubjectGroup?.id === subjectGroup.id} clickable>
-                      {subjectGroup.name}
+                      key={tagName} onClick={() => setCurrentTagName(tagName)}
+                      isActive={tagName === currentTagName} clickable>
+                      {tagName}
                     </CollectionItem>
                   ) : (
                     <CollectionPlaceholder>
@@ -52,15 +54,15 @@ export default function Subjects () {
                 </Collection>
               </div>
               <div className="flex-grow">
-                {currentSubjectGroup ? (
+                {currentTagName ? (
                   <>
                     <div className="bg-gray-50 border-b px-4 py-2 h-12 flex items-center">
-                      <div>{currentSubjectGroup.name}の科目</div>
+                      <div>{currentTagName}の科目</div>
                     </div>
                     <div className="h-[21rem] overflow-scroll">
                       <Collection>
-                        {currentSubjectGroup.subjects && currentSubjectGroup.subjects.length > 0 ? (
-                          currentSubjectGroup.subjects.map(subject =>
+                        {subjects && subjects.length > 0 ? (
+                          subjects.map(subject =>
                             <CollectionLinkItem key={subject.id} href={getRoomLink(`/subjects/${subject.id}`)}>
                               {subject.name}
                             </CollectionLinkItem>

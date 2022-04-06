@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 
 import { useGetRoomLink } from '../../../../../hooks/rooms'
-import { useSubjectGroupsBySubjectId } from '../../../../../hooks/subjectGroups'
+import { useSubject } from '../../../../../hooks/subjects'
 
 import Card, { CardActions } from '../../../../../components/parts/Card'
 import { LinkButton } from '../../../../../components/parts/buttons'
@@ -9,26 +9,26 @@ import Collection, { CollectionPlaceholder, CollectionLinkItem } from '../../../
 import RoomDashboard, { RoomDashboardSection } from '../../../../../components/parts/RoomDashboard'
 import SubjectHeader from '../../../../../components/parts/SubjectHeader'
 
-export default function SubejctGroups () {
+export default function SubejctTags () {
   const { query: { roomId, subjectId } } = useRouter()
   const getRoomLink = useGetRoomLink(roomId)
 
-  const subjectGroups = useSubjectGroupsBySubjectId(subjectId)
+  const subject = useSubject(subjectId)
 
   return (
     <RoomDashboard roomId={roomId}>
-      <SubjectHeader subjectId={subjectId} />
+      <SubjectHeader roomId={roomId} subjectId={subjectId} />
       <RoomDashboardSection>
         <Card>
           <CardActions>
             <LinkButton sm href={getRoomLink(`/subjects/${subjectId}/students/new`)}>科目分類を登録する</LinkButton>
           </CardActions>
-          {subjectGroups && (
+          {subject?.tags && (
             <Collection>
-               {subjectGroups.length > 0 ? (
-                 subjectGroups.map(subjectGroup => (
-                   <CollectionLinkItem key={subjectGroup.id} href={getRoomLink(`/subjects/subject_groups/${subjectGroup.id}`)}>
-                    {subjectGroup.name}
+               {subject.tags.length > 0 ? (
+                 subject.tags.map(subjectTagName => (
+                   <CollectionLinkItem key={subjectTagName} href={getRoomLink(`/subjects/tags/${encodeURIComponent(subjectTagName)}`)}>
+                    {subjectTagName}
                    </CollectionLinkItem>
                  ))
                ) : (

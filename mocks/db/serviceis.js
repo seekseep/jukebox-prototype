@@ -12,7 +12,13 @@ import {
   SCHEDULE_RULE_TERM_TYPE,
   SCHEDULE_RULE_TYPE,
   SCHEDULE_UNIT_TERM
- } from '../../constatnts'
+} from '../../constatnts'
+
+const REPEAT_NONE = Object.freeze({
+  term      : null,
+  finishedAt: null
+})
+
 
 function createCompareModel(baseModel, compare) {
   return (model) => compare(baseModel, model)
@@ -114,7 +120,28 @@ export function createSubjectWithLessons (db, subjectOptions, lessonsOptions) {
   return subject
 }
 
-export function createBasicStudentScheduleRules (db) {
+function createRepeat(term, finishedAt) {
+  return { term, finishedAt }
+}
+
+function createWeeklyRepeat (finishedAt) {
+  return createRepeat(SCHEDULE_RULE_TERM_TYPE.WEEKLY, finishedAt)
+}
+
+function createMonthlyRepeat (finishedAt) {
+  return createRepeat(SCHEDULE_RULE_TERM_TYPE.MONTHLY, finishedAt)
+}
+
+function createSchedule (startedAt, finishedAt, repeat, type = SCHEDULE_RULE_TYPE.AVAILABLE) {
+  return {
+    startedAt,
+    finishedAt,
+    repeat,
+    type
+  }
+}
+
+export function createBasicStudentScheduleRules () {
   const repeatStartedAt = new Date(2020, 3, 1)
   const repeatFinishedAt = sub(add(repeatStartedAt, { years: 3 }), { days: 1 })
   const monday = nextMonday(repeatStartedAt)
@@ -123,89 +150,68 @@ export function createBasicStudentScheduleRules (db) {
   const thursday = nextThursday(repeatStartedAt)
   const friday = nextFriday(repeatStartedAt)
 
+  const weeklyRepeat = createWeeklyRepeat(repeatFinishedAt)
+  const monthlyRepeat = createMonthlyRepeat(repeatFinishedAt)
+
+  function createWeeklyAvailableRule (startedAt, finishedAt, type) {
+    return createSchedule(startedAt, finishedAt, weeklyRepeat, type)
+  }
+
   return [
-    db.scheduleRule.create({
-      startedAt : add(monday, { hours: 16, minutes: 0 }).getTime(),
-      finishedAt: add(monday, { hours: 20, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(tuesday, { hours: 16, minutes: 0 }).getTime(),
-      finishedAt: add(tuesday, { hours: 20, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(wednesday, { hours: 16, minutes: 0 }).getTime(),
-      finishedAt: add(wednesday, { hours: 20, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(thursday, { hours: 16, minutes: 0 }).getTime(),
-      finishedAt: add(thursday, { hours: 20, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(friday, { hours: 16, minutes: 0 }).getTime(),
-      finishedAt: add(friday, { hours: 20, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(repeatStartedAt, { hours: 0, minutes: 0 }).getTime(),
-      finishedAt: add(repeatStartedAt, { hours: 23, minutes: 59 }).getTime(),
+    createWeeklyAvailableRule(
+      add(monday, { hours: 16, minutes: 0 }),
+      add(monday, { hours: 20, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(tuesday, { hours: 16, minutes: 0 }),
+      add(tuesday, { hours: 20, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(wednesday, { hours: 16, minutes: 0 }),
+      add(wednesday, { hours: 20, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(thursday, { hours: 16, minutes: 0 }),
+      add(thursday, { hours: 20, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(friday, { hours: 16, minutes: 0 }),
+      add(friday, { hours: 20, minutes: 0 })
+    ),
+    {
+      startedAt : add(repeatStartedAt, { hours: 0, minutes: 0 }),
+      finishedAt: add(repeatStartedAt, { hours: 23, minutes: 59 }),
       type      : SCHEDULE_RULE_TYPE.DISAVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.MONTHLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(repeatStartedAt, { days: 0, hours: 0, minutes: 0 }).getTime(),
-      finishedAt: add(repeatStartedAt, { days: 0, hours: 23, minutes: 59 }).getTime(),
+      repeat    : monthlyRepeat
+    },
+    {
+      startedAt : add(repeatStartedAt, { days: 0, hours: 0, minutes: 0 }),
+      finishedAt: add(repeatStartedAt, { days: 0, hours: 23, minutes: 59 }),
       type      : SCHEDULE_RULE_TYPE.DISAVAILABLE,
-      repeat    : { term: null, finishedAt: null }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(repeatStartedAt, { days: 1, hours: 0, minutes: 0 }).getTime(),
-      finishedAt: add(repeatStartedAt, { days: 1, hours: 23, minutes: 59 }).getTime(),
+      repeat    : REPEAT_NONE
+    },
+    {
+      startedAt : add(repeatStartedAt, { days: 1, hours: 0, minutes: 0 }),
+      finishedAt: add(repeatStartedAt, { days: 1, hours: 23, minutes: 59 }),
       type      : SCHEDULE_RULE_TYPE.DISAVAILABLE,
-      repeat    : { term: null, finishedAt: null }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(repeatStartedAt, { days: 2, hours: 0, minutes: 0 }).getTime(),
-      finishedAt: add(repeatStartedAt, { days: 2, hours: 23, minutes: 59 }).getTime(),
+      repeat    : REPEAT_NONE
+    },
+    {
+      startedAt : add(repeatStartedAt, { days: 2, hours: 0, minutes: 0 }),
+      finishedAt: add(repeatStartedAt, { days: 2, hours: 23, minutes: 59 }),
       type      : SCHEDULE_RULE_TYPE.DISAVAILABLE,
-      repeat    : { term: null, finishedAt: null }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(repeatStartedAt, { days: 3, hours: 0, minutes: 0 }).getTime(),
-      finishedAt: add(repeatStartedAt, { days: 3, hours: 23, minutes: 59 }).getTime(),
+      repeat    : REPEAT_NONE
+    },
+    {
+      startedAt : add(repeatStartedAt, { days: 3, hours: 0, minutes: 0 }),
+      finishedAt: add(repeatStartedAt, { days: 3, hours: 23, minutes: 59 }),
       type      : SCHEDULE_RULE_TYPE.DISAVAILABLE,
-      repeat    : { term: null, finishedAt: null }
-    }),
+      repeat    : REPEAT_NONE
+    },
   ]
 }
 
-export function createBasicTeacherScheduleRules(db) {
+export function createBasicTeacherScheduleRules() {
   const repeatStartedAt = new Date(2020, 3, 1)
   const repeatFinishedAt = sub(add(repeatStartedAt, { years: 3 }), { days: 1 })
   const monday = nextMonday(repeatStartedAt)
@@ -214,147 +220,119 @@ export function createBasicTeacherScheduleRules(db) {
   const thursday = nextThursday(repeatStartedAt)
   const friday = nextFriday(repeatStartedAt)
 
+  const weeklyRepeat = createWeeklyRepeat(repeatFinishedAt)
+
+  function createWeeklyAvailableRule (startedAt, finishedAt, type) {
+    return createSchedule(startedAt, finishedAt, weeklyRepeat, type)
+  }
+
   return [
-    db.scheduleRule.create({
-      startedAt : add(monday, { hours: 9, minutes: 0 }).getTime(),
-      finishedAt: add(monday, { hours: 21, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(tuesday, { hours: 9, minutes: 0 }).getTime(),
-      finishedAt: add(tuesday, { hours: 21, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(wednesday, { hours: 9, minutes: 0 }).getTime(),
-      finishedAt: add(wednesday, { hours: 21, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(thursday, { hours: 9, minutes: 0 }).getTime(),
-      finishedAt: add(thursday, { hours: 21, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(friday, { hours: 9, minutes: 0 }).getTime(),
-      finishedAt: add(friday, { hours: 21, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(repeatStartedAt, { days: 3, hours: 0, minutes: 0 }).getTime(),
-      finishedAt: add(repeatStartedAt, { days: 3, hours: 23, minutes: 59 }).getTime(),
+    createWeeklyAvailableRule(
+      add(monday, { hours: 9, minutes: 0 }),
+      add(monday, { hours: 21, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(tuesday, { hours: 9, minutes: 0 }),
+      add(tuesday, { hours: 21, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(wednesday, { hours: 9, minutes: 0 }),
+      add(wednesday, { hours: 21, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(thursday, { hours: 9, minutes: 0 }),
+      add(thursday, { hours: 21, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(friday, { hours: 9, minutes: 0 }),
+      add(friday, { hours: 21, minutes: 0 })
+    ),
+    {
+      startedAt : add(repeatStartedAt, { days: 3, hours: 0, minutes: 0 }),
+      finishedAt: add(repeatStartedAt, { days: 3, hours: 23, minutes: 59 }),
       type      : SCHEDULE_RULE_TYPE.DISAVAILABLE,
-      repeat    : { term: null, finishedAt: null }
-    }),
+      repeat    : REPEAT_NONE
+    },
   ]
 }
 
 
-export function createBasicRoomScheduleRules(db) {
+export function createBasicRoomScheduleRules() {
   const repeatStartedAt = new Date(2020, 3, 1)
-  const repeatFinishedAt = sub(add(repeatStartedAt, { years: 99 }), { days: 1 })
+  const repeatFinishedAt = sub(add(repeatStartedAt, { years: 3 }), { days: 1 })
   const monday = nextMonday(repeatStartedAt)
   const tuesday = nextTuesday(repeatStartedAt)
   const wednesday = nextWednesday(repeatStartedAt)
   const thursday = nextThursday(repeatStartedAt)
   const friday = nextFriday(repeatStartedAt)
 
+  const weeklyRepeat = createWeeklyRepeat(repeatFinishedAt)
+
+  function createWeeklyAvailableRule (startedAt, finishedAt, type) {
+    return createSchedule(startedAt, finishedAt, weeklyRepeat, type)
+  }
+
   return [
-    db.scheduleRule.create({
-      startedAt : add(monday, { hours: 9, minutes: 0 }).getTime(),
-      finishedAt: add(monday, { hours: 21, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(tuesday, { hours: 9, minutes: 0 }).getTime(),
-      finishedAt: add(tuesday, { hours: 21, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(wednesday, { hours: 9, minutes: 0 }).getTime(),
-      finishedAt: add(wednesday, { hours: 21, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(thursday, { hours: 9, minutes: 0 }).getTime(),
-      finishedAt: add(thursday, { hours: 21, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(friday, { hours: 9, minutes: 0 }).getTime(),
-      finishedAt: add(friday, { hours: 21, minutes: 0 }).getTime(),
-      type      : SCHEDULE_RULE_TYPE.AVAILABLE,
-      repeat    : {
-        term      : SCHEDULE_RULE_TERM_TYPE.WEEKLY,
-        finishedAt: repeatFinishedAt,
-      }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(repeatStartedAt, { days: 20, hours: 0, minutes: 0 }).getTime(),
-      finishedAt: add(repeatStartedAt, { days: 20, hours: 23, minutes: 59 }).getTime(),
+    createWeeklyAvailableRule(
+      add(monday, { hours: 9, minutes: 0 }),
+      add(monday, { hours: 21, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(tuesday, { hours: 9, minutes: 0 }),
+      add(tuesday, { hours: 21, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(wednesday, { hours: 9, minutes: 0 }),
+      add(wednesday, { hours: 21, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(thursday, { hours: 9, minutes: 0 }),
+      add(thursday, { hours: 21, minutes: 0 })
+    ),
+    createWeeklyAvailableRule(
+      add(friday, { hours: 9, minutes: 0 }),
+      add(friday, { hours: 21, minutes: 0 })
+    ),
+    {
+      startedAt : add(repeatStartedAt, { days: 20, hours: 0, minutes: 0 }),
+      finishedAt: add(repeatStartedAt, { days: 20, hours: 23, minutes: 59 }),
       type      : SCHEDULE_RULE_TYPE.DISAVAILABLE,
       repeat    : {
         term      : SCHEDULE_RULE_TERM_TYPE.MONTHLY,
         finishedAt: repeatFinishedAt
       }
-    }),
-    db.scheduleRule.create({
-      startedAt : add(repeatStartedAt, { days: 3, hours: 0, minutes: 0 }).getTime(),
-      finishedAt: add(repeatStartedAt, { days: 3, hours: 23, minutes: 59 }).getTime(),
+    },
+    {
+      startedAt : add(repeatStartedAt, { days: 3, hours: 0, minutes: 0 }),
+      finishedAt: add(repeatStartedAt, { days: 3, hours: 23, minutes: 59 }),
       type      : SCHEDULE_RULE_TYPE.DISAVAILABLE,
-      repeat    : { term: null, finishedAt: null }
-    }),
+      repeat    : REPEAT_NONE
+    },
   ]
 }
 
-export function createStudent (db, student = {}) {
-  return db.student.create({
-    scheduleRules: createBasicStudentScheduleRules(db),
-    ...student
+export function createStudent (db, room, studentOptions = {}) {
+  const student = db.student.create({
+    scheduleRules: createBasicStudentScheduleRules(),
+    room,
+    ...studentOptions
   })
+
+  relateRoomAndStudent(db, room, student)
+
+  return student
 }
 
-export function createTeacher (db, teacher = {}) {
-  return db.teacher.create({
-    scheduleRules: createBasicTeacherScheduleRules(db),
-    ...teacher
+export function createTeacher (db, room, teacherOptions = {}) {
+  const teacher = db.teacher.create({
+    scheduleRules: createBasicTeacherScheduleRules(),
+    room,
+    ...teacherOptions
   })
+
+  relateRoomAndTeacher(db, room, teacher)
+
+  return teacher
 }
 
 export function createFrame([startHours, startMinutes], [finishHours, finishMinutes]) {
@@ -368,42 +346,44 @@ export function getFrame (room, day, index) {
   return room.frames[day][index]
 }
 
-export function createPersonalSubject (db, { room, name, subjectGroups = [], startedAt: subjectStartedAt, lesson: { count: lessonCount = 4 } = {}, student, teacher, frames, ...options } = {}) {
+export function createPersonalSubject (
+  db, room, student, name, startedAt, frames, teacher, lessonCount = 4,
+) {
   const subject = db.subject.create({
-    name: `${student.name} ${name}`,
-    ...options
+    name   : `${student.name} ${name}`,
+    tags   : [name],
+    lessons: frames.reduce((lessons, [day, index]) => {
+      const baseDate = getDay(startedAt) === day ? startedAt : nextDay(startedAt, day)
+      return Array.from({ length: lessonCount }).fill(null).reduce((lessons, _, i) => {
+        const lessonDate = add(baseDate, { weeks: i })
+        const frame = getFrame(room, day, index)
+        if (getMonth(lessonDate) > getMonth(startedAt) || lessons.length >= lessonCount) return lessons
+        return [
+          ...lessons,
+          {
+            name      : name,
+            startedAt : add(lessonDate, frame.start),
+            finishedAt: add(lessonDate, frame.finish),
+            teachers  : [teacher]
+          }
+        ]
+      }, lessons)
+    }, []),
   })
+
+  relateRoomAndSubject(db, room, subject)
   relateStudentAndSubject(db, student, subject)
-
-  frames.forEach(([day, index]) => {
-    const baseDate = getDay(subjectStartedAt) === day ? subjectStartedAt : nextDay(subjectStartedAt, day)
-    for (let i = 0; i < lessonCount; i ++) {
-      const lessonDate = add(baseDate, { weeks: i })
-      const frame = getFrame(room, day, index)
-      if (getMonth(lessonDate) > getMonth(subjectStartedAt)) return
-      const lesson = db.lesson.create({
-        name      : subject.name,
-        startedAt : add(lessonDate, frame.start).getTime(),
-        finishedAt: add(lessonDate, frame.finish).getTime(),
-        teachers  : [teacher]
-      })
-      relateTeacherAndLesson(db, teacher, lesson)
-      relateSubjectAndLesson(db, subject, lesson)
-    }
-  })
-
-  subjectGroups.forEach(subjectGroup => relateSubjectGroupAndSubject(db, subjectGroup, subject))
 
   return subject
 }
 
-export function createRoom (db, roomOptions = {}) {
-  return db.room.create({
+export function createRoom (db, school, roomOptions = {}) {
+  const room = db.room.create({
     scheduleUnit: {
       term : SCHEDULE_UNIT_TERM.MONTHLY,
       value: 1
     },
-    scheduleRules: createBasicRoomScheduleRules(db),
+    scheduleRules: createBasicRoomScheduleRules(),
     frames       : [
       [],
       ...Array.from({ length: 5 }).fill(null).map(() => ([
@@ -415,6 +395,11 @@ export function createRoom (db, roomOptions = {}) {
       ])),
       [],
     ],
+    school,
     ...roomOptions,
   })
+
+  relateSchoolAndRoom(db, school, room)
+
+  return room
 }

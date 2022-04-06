@@ -19,7 +19,7 @@ export default function Lessons () {
 
   return (
     <RoomDashboard roomId={roomId}>
-      <SubjectHeader subjectId={subjectId} />
+      <SubjectHeader roomId={roomId} subjectId={subjectId} />
       <RoomDashboardSection>
         <Card>
           <CardActions>
@@ -28,8 +28,8 @@ export default function Lessons () {
           {lessons && (
             <Collection>
                {lessons.length > 0 ? (
-                 lessons.map(lesson => (
-                   <CollectionLinkItem key={lesson.id} href={getRoomLink(`/subjects/${subjectId}/lessons/${lesson.id}`)}>
+                 lessons.map((lesson, index) => (
+                   <CollectionLinkItem key={index} href={getRoomLink(`/subjects/${subjectId}/lessons/${index}`)}>
                      <div className="flex flex-col gap-1 p-1">
                        <div className="flex gap-2 leading-none items-center">
                         <div>{format(lesson.startedAt, 'yyyy年MM月dd日 (EE) HH:mm', { locale })}</div>
