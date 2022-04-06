@@ -5,12 +5,14 @@ import {
   nextWednesday,
   nextThursday,
   nextFriday,
-  getDay,
+  lastDayOfMonth,
+  getDay, format,
   add, sub, getMonth, nextDay
 } from 'date-fns'
 import {
   SCHEDULE_RULE_TERM_TYPE,
   SCHEDULE_RULE_TYPE,
+  SCHEDULE_STATUS,
   SCHEDULE_UNIT_TERM
 } from '../../constatnts'
 
@@ -18,7 +20,6 @@ const REPEAT_NONE = Object.freeze({
   term      : null,
   finishedAt: null
 })
-
 
 function createCompareModel(baseModel, compare) {
   return (model) => compare(baseModel, model)
@@ -350,11 +351,12 @@ export function createPersonalSubject (
   db, room, student, name, startedAt, frames, teacher, lessonCount = 4,
 ) {
 
-  const subjectName = (student, name) => `個人${name} ${student.name}`
+  const subjectName = (student, name) => `${format(startedAt, 'yyyy/MM')} 個人${name} ${student.name}`
 
   const subject = db.subject.create({
     name   : subjectName(student, name),
     tags   : [name],
+    frames : frames,
     lessons: frames.reduce((lessons, [day, index]) => {
       const baseDate = getDay(startedAt) === day ? startedAt : nextDay(startedAt, day)
       return Array.from({ length: lessonCount }).fill(null).reduce((lessons, _, i) => {
@@ -405,4 +407,15 @@ export function createRoom (db, school, roomOptions = {}) {
   relateSchoolAndRoom(db, school, room)
 
   return room
+}
+
+
+export function createMothlySchedule(db, startedAt, { status = SCHEDULE_STATUS.PUBLISHED } = { }) {
+  const schedule = db.schedule.create({
+    startedAt,
+    finishedAt: lastDayOfMonth(startedAt),
+    status
+  })
+
+  return schedule
 }

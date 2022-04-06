@@ -60,15 +60,20 @@ export default function Board () {
                     </div>
                   ))}
                   <div className="w-72" />
-                  {lessons.map(lesson => {
+                  {lessons.map((lesson, index) => {
                     const base = add(date, { hours: hours[0].hour })
-                    const offset = (lesson.startedAt - base.getTime()) / 1000 / 60 / 60 * 6
+                    const topOffset = lesson.topOffset || 0
+                    const leftOffset = (lesson.startedAt - base.getTime()) / 1000 / 60 / 60 * 6
                     const duration = (lesson.finishedAt - lesson.startedAt) / 1000 / 60 / 60 * 6
 
                     return (
                       <div
-                        key={lesson.id}
-                        className="absolute h-8 top-0 left-0 p-1" style={{ left: `${offset * 2}rem`, width: `${duration * 2}rem` }}>
+                        key={index}
+                        className="absolute h-8 top-0 left-0 p-1" style={{
+                          top  : `${topOffset * 2}rem`,
+                          left : `${leftOffset * 2}rem`,
+                          width: `${duration * 2}rem`
+                        }}>
                         <div draggable className="w-full h-full rounded border border-blue-50 bg-blue-500 text-white text-xs p-1">
                           {lesson.name}
                         </div>

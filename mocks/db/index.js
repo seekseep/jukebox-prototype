@@ -1,22 +1,14 @@
 import { factory, manyOf, nullable, oneOf, primaryKey } from '@mswjs/data'
-import {
-  SCHEDULE_STATUS,
-  SCHEDULE_UNIT_TERM,
-  WEEK_DAY
-} from '../../constatnts'
+import { format } from 'date-fns'
+
+import { SCHEDULE_STATUS, WEEK_DAY } from '../../constatnts'
 import {
   createModelId,
-  relateSchoolAndRooms,
-  relateRoomAndTeachers,
-  relateRoomAndStudents,
-  relateRoomAndSubjects,
-  relateRoomAndSubjectGroups,
-  relateTeacherAndSubjectGroup,
   createPersonalSubject,
-  createBasicRoomScheduleRules,
   createTeacher,
   createStudent,
-  createRoom
+  createRoom,
+  createMothlySchedule,
 } from './serviceis'
 
 const scheduleRuleDefinition = {
@@ -88,14 +80,12 @@ export const db = factory({
     id           : primaryKey(() => createModelId()),
     name         : String,
     scheduleRules: [scheduleRuleDefinition],
-    room         : oneOf('room'),
     subjects     : manyOf('subject'),
     schedules    : manyOf('schedule'),
   },
   teacher: {
     id           : primaryKey(() => createModelId()),
     name         : String,
-    room         : oneOf('room'),
     scheduleRules: [scheduleRuleDefinition],
     subjectTags  : [String]
   },
@@ -104,6 +94,7 @@ export const db = factory({
     name    : String,
     tags    : [String],
     students: manyOf('student'),
+    frames  : [{ day: Number, index: Number }],
     lessons : [lessonDefinition]
   },
   schedule: {
@@ -120,16 +111,13 @@ const rooms = [
   createRoom(db, school, {
     name     : '北教室',
     schedules: [
-      db.schedule.create({
-        status    : SCHEDULE_STATUS.UNSUBMITTED,
-        startedAt : new Date(2022, 3, 1),
-        finishedAt: new Date(2022, 3, 30),
-      }),
-    ],
+      createMothlySchedule(db, new Date(2022, 2), { status: SCHEDULE_STATUS.PUBLISHED }),
+      createMothlySchedule(db, new Date(2022, 3), { status: SCHEDULE_STATUS.SUBMITTED }),
+    ]
   }),
-  createRoom(db, school, { name: '東教室', school }),
-  createRoom(db, school, { name: '西教室', school }),
-  createRoom(db, school, { name: '南教室', school }),
+  createRoom(db, school, { name: '東教室' }),
+  createRoom(db, school, { name: '西教室' }),
+  createRoom(db, school, { name: '南教室' }),
 ]
 
 const [room] = rooms
@@ -182,69 +170,71 @@ const students = [
 ]
 
 const { MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY } = WEEK_DAY
-const subjectStartedAt = new Date(2022, 3, 1)
-const subjects = [
-  createPersonalSubject(db, room, students[0], '英語', subjectStartedAt, [[MONDAY, 0]], teachers[0]),
-  createPersonalSubject(db, room, students[0], '数学', subjectStartedAt, [[TUESDAY, 1]], teachers[1]),
-  createPersonalSubject(db, room, students[1], '英語', subjectStartedAt, [[WEDNESDAY, 2]], teachers[2]),
-  createPersonalSubject(db, room, students[1], '数学', subjectStartedAt, [[THURSDAY, 3]], teachers[3]),
-  createPersonalSubject(db, room, students[2], '英語', subjectStartedAt, [[FRIDAY, 4]], teachers[0]),
-  createPersonalSubject(db, room, students[2], '数学', subjectStartedAt, [[MONDAY, 0]], teachers[1]),
-  createPersonalSubject(db, room, students[3], '英語', subjectStartedAt, [[TUESDAY, 1]], teachers[2]),
-  createPersonalSubject(db, room, students[3], '数学', subjectStartedAt, [[WEDNESDAY, 2]], teachers[3]),
-  createPersonalSubject(db, room, students[4], '英語', subjectStartedAt, [[THURSDAY, 3]], teachers[0]),
-  createPersonalSubject(db, room, students[4], '数学', subjectStartedAt, [[FRIDAY, 4]], teachers[1]),
-  createPersonalSubject(db, room, students[5], '英語', subjectStartedAt, [[MONDAY, 0]], teachers[2]),
-  createPersonalSubject(db, room, students[5], '数学', subjectStartedAt, [[TUESDAY, 1]], teachers[3]),
-  createPersonalSubject(db, room, students[6], '英語', subjectStartedAt, [[WEDNESDAY, 2]], teachers[0]),
-  createPersonalSubject(db, room, students[6], '数学', subjectStartedAt, [[THURSDAY, 3]], teachers[1]),
-  createPersonalSubject(db, room, students[7], '英語', subjectStartedAt, [[FRIDAY, 4]], teachers[2]),
-  createPersonalSubject(db, room, students[7], '数学', subjectStartedAt, [[MONDAY, 0]], teachers[3]),
-  createPersonalSubject(db, room, students[8], '英語', subjectStartedAt, [[TUESDAY, 1]], teachers[0]),
-  createPersonalSubject(db, room, students[8], '数学', subjectStartedAt, [[WEDNESDAY, 2]], teachers[1]),
-  createPersonalSubject(db, room, students[9], '英語', subjectStartedAt, [[THURSDAY, 3]], teachers[2]),
-  createPersonalSubject(db, room, students[9], '数学', subjectStartedAt, [[FRIDAY, 4]], teachers[3]),
-  createPersonalSubject(db, room, students[10], '英語', subjectStartedAt, [[WEDNESDAY, 0]], teachers[0]),
-  createPersonalSubject(db, room, students[10], '数学', subjectStartedAt, [[WEDNESDAY, 1]], teachers[1]),
-  createPersonalSubject(db, room, students[11], '英語', subjectStartedAt, [[WEDNESDAY, 2]], teachers[2]),
-  createPersonalSubject(db, room, students[11], '数学', subjectStartedAt, [[WEDNESDAY, 3]], teachers[3]),
-  createPersonalSubject(db, room, students[12], '英語', subjectStartedAt, [[WEDNESDAY, 4]], teachers[0]),
-  createPersonalSubject(db, room, students[12], '数学', subjectStartedAt, [[WEDNESDAY, 0]], teachers[1]),
-  createPersonalSubject(db, room, students[13], '英語', subjectStartedAt, [[WEDNESDAY, 1]], teachers[2]),
-  createPersonalSubject(db, room, students[13], '数学', subjectStartedAt, [[WEDNESDAY, 2]], teachers[3]),
-  createPersonalSubject(db, room, students[14], '英語', subjectStartedAt, [[WEDNESDAY, 3]], teachers[0]),
-  createPersonalSubject(db, room, students[14], '数学', subjectStartedAt, [[WEDNESDAY, 4]], teachers[1]),
-  createPersonalSubject(db, room, students[15], '英語', subjectStartedAt, [[THURSDAY, 0]], teachers[2]),
-  createPersonalSubject(db, room, students[15], '数学', subjectStartedAt, [[THURSDAY, 1]], teachers[3]),
-  createPersonalSubject(db, room, students[16], '英語', subjectStartedAt, [[THURSDAY, 2]], teachers[0]),
-  createPersonalSubject(db, room, students[16], '数学', subjectStartedAt, [[THURSDAY, 3]], teachers[1]),
-  createPersonalSubject(db, room, students[17], '英語', subjectStartedAt, [[THURSDAY, 4]], teachers[2]),
-  createPersonalSubject(db, room, students[17], '数学', subjectStartedAt, [[THURSDAY, 0]], teachers[3]),
-  createPersonalSubject(db, room, students[18], '英語', subjectStartedAt, [[THURSDAY, 1]], teachers[0]),
-  createPersonalSubject(db, room, students[18], '数学', subjectStartedAt, [[THURSDAY, 2]], teachers[1]),
-  createPersonalSubject(db, room, students[19], '英語', subjectStartedAt, [[THURSDAY, 3]], teachers[2]),
-  createPersonalSubject(db, room, students[19], '数学', subjectStartedAt, [[THURSDAY, 4]], teachers[3]),
-  createPersonalSubject(db, room, students[20], '英語', subjectStartedAt, [[FRIDAY, 0]], teachers[0]),
-  createPersonalSubject(db, room, students[20], '数学', subjectStartedAt, [[FRIDAY, 1]], teachers[0]),
-  createPersonalSubject(db, room, students[21], '英語', subjectStartedAt, [[FRIDAY, 2]], teachers[0]),
-  createPersonalSubject(db, room, students[21], '数学', subjectStartedAt, [[FRIDAY, 3]], teachers[0]),
-  createPersonalSubject(db, room, students[22], '英語', subjectStartedAt, [[FRIDAY, 4]], teachers[0]),
-  createPersonalSubject(db, room, students[22], '数学', subjectStartedAt, [[FRIDAY, 0]], teachers[0]),
-  createPersonalSubject(db, room, students[23], '英語', subjectStartedAt, [[FRIDAY, 1]], teachers[0]),
-  createPersonalSubject(db, room, students[23], '数学', subjectStartedAt, [[FRIDAY, 2]], teachers[0]),
-  createPersonalSubject(db, room, students[24], '英語', subjectStartedAt, [[FRIDAY, 3]], teachers[0]),
-  createPersonalSubject(db, room, students[24], '数学', subjectStartedAt, [[FRIDAY, 4]], teachers[0]),
-  createPersonalSubject(db, room, students[25], '英語', subjectStartedAt, [[MONDAY, 0]], teachers[1]),
-  createPersonalSubject(db, room, students[25], '数学', subjectStartedAt, [[MONDAY, 1]], teachers[1]),
-  createPersonalSubject(db, room, students[26], '英語', subjectStartedAt, [[MONDAY, 2]], teachers[1]),
-  createPersonalSubject(db, room, students[26], '数学', subjectStartedAt, [[MONDAY, 3]], teachers[1]),
-  createPersonalSubject(db, room, students[27], '英語', subjectStartedAt, [[MONDAY, 4]], teachers[1]),
-  createPersonalSubject(db, room, students[27], '数学', subjectStartedAt, [[MONDAY, 0]], teachers[1]),
-  createPersonalSubject(db, room, students[28], '英語', subjectStartedAt, [[MONDAY, 1]], teachers[1]),
-  createPersonalSubject(db, room, students[28], '数学', subjectStartedAt, [[MONDAY, 2]], teachers[1]),
-  createPersonalSubject(db, room, students[29], '英語', subjectStartedAt, [[MONDAY, 3]], teachers[1]),
-  createPersonalSubject(db, room, students[29], '数学', subjectStartedAt, [[MONDAY, 4]], teachers[1])
-]
+
+room.schedules.forEach(schedule => {
+  const { startedAt } = schedule
+
+  createPersonalSubject(db, room, students[0], '英語', startedAt, [[MONDAY, 0]], teachers[0]),
+  createPersonalSubject(db, room, students[0], '数学', startedAt, [[TUESDAY, 1]], teachers[1]),
+  createPersonalSubject(db, room, students[1], '英語', startedAt, [[WEDNESDAY, 2]], teachers[2]),
+  createPersonalSubject(db, room, students[1], '数学', startedAt, [[THURSDAY, 3]], teachers[3]),
+  createPersonalSubject(db, room, students[2], '英語', startedAt, [[FRIDAY, 4]], teachers[0]),
+  createPersonalSubject(db, room, students[2], '数学', startedAt, [[MONDAY, 0]], teachers[1]),
+  createPersonalSubject(db, room, students[3], '英語', startedAt, [[TUESDAY, 1]], teachers[2]),
+  createPersonalSubject(db, room, students[3], '数学', startedAt, [[WEDNESDAY, 2]], teachers[3]),
+  createPersonalSubject(db, room, students[4], '英語', startedAt, [[THURSDAY, 3]], teachers[0]),
+  createPersonalSubject(db, room, students[4], '数学', startedAt, [[FRIDAY, 4]], teachers[1]),
+  createPersonalSubject(db, room, students[5], '英語', startedAt, [[MONDAY, 0]], teachers[2]),
+  createPersonalSubject(db, room, students[5], '数学', startedAt, [[TUESDAY, 1]], teachers[3]),
+  createPersonalSubject(db, room, students[6], '英語', startedAt, [[WEDNESDAY, 2]], teachers[0]),
+  createPersonalSubject(db, room, students[6], '数学', startedAt, [[THURSDAY, 3]], teachers[1]),
+  createPersonalSubject(db, room, students[7], '英語', startedAt, [[FRIDAY, 4]], teachers[2]),
+  createPersonalSubject(db, room, students[7], '数学', startedAt, [[MONDAY, 0]], teachers[3]),
+  createPersonalSubject(db, room, students[8], '英語', startedAt, [[TUESDAY, 1]], teachers[0]),
+  createPersonalSubject(db, room, students[8], '数学', startedAt, [[WEDNESDAY, 2]], teachers[1]),
+  createPersonalSubject(db, room, students[9], '英語', startedAt, [[THURSDAY, 3]], teachers[2]),
+  createPersonalSubject(db, room, students[9], '数学', startedAt, [[FRIDAY, 4]], teachers[3]),
+  createPersonalSubject(db, room, students[10], '英語', startedAt, [[MONDAY, 0]], teachers[0]),
+  createPersonalSubject(db, room, students[10], '数学', startedAt, [[WEDNESDAY, 1]], teachers[1]),
+  createPersonalSubject(db, room, students[11], '英語', startedAt, [[WEDNESDAY, 2]], teachers[2]),
+  createPersonalSubject(db, room, students[11], '数学', startedAt, [[WEDNESDAY, 3]], teachers[3]),
+  createPersonalSubject(db, room, students[12], '英語', startedAt, [[WEDNESDAY, 4]], teachers[0]),
+  createPersonalSubject(db, room, students[12], '数学', startedAt, [[WEDNESDAY, 0]], teachers[1]),
+  createPersonalSubject(db, room, students[13], '英語', startedAt, [[WEDNESDAY, 1]], teachers[2]),
+  createPersonalSubject(db, room, students[13], '数学', startedAt, [[WEDNESDAY, 2]], teachers[3]),
+  createPersonalSubject(db, room, students[14], '英語', startedAt, [[WEDNESDAY, 3]], teachers[0]),
+  createPersonalSubject(db, room, students[14], '数学', startedAt, [[WEDNESDAY, 4]], teachers[1]),
+  createPersonalSubject(db, room, students[15], '英語', startedAt, [[THURSDAY, 0]], teachers[2]),
+  createPersonalSubject(db, room, students[15], '数学', startedAt, [[THURSDAY, 1]], teachers[3]),
+  createPersonalSubject(db, room, students[16], '英語', startedAt, [[THURSDAY, 2]], teachers[0]),
+  createPersonalSubject(db, room, students[16], '数学', startedAt, [[THURSDAY, 3]], teachers[1]),
+  createPersonalSubject(db, room, students[17], '英語', startedAt, [[THURSDAY, 4]], teachers[2]),
+  createPersonalSubject(db, room, students[17], '数学', startedAt, [[THURSDAY, 0]], teachers[3]),
+  createPersonalSubject(db, room, students[18], '英語', startedAt, [[THURSDAY, 1]], teachers[0]),
+  createPersonalSubject(db, room, students[18], '数学', startedAt, [[THURSDAY, 2]], teachers[1]),
+  createPersonalSubject(db, room, students[19], '英語', startedAt, [[THURSDAY, 3]], teachers[2]),
+  createPersonalSubject(db, room, students[19], '数学', startedAt, [[THURSDAY, 4]], teachers[3]),
+  createPersonalSubject(db, room, students[20], '英語', startedAt, [[FRIDAY, 0]], teachers[0]),
+  createPersonalSubject(db, room, students[20], '数学', startedAt, [[FRIDAY, 1]], teachers[0]),
+  createPersonalSubject(db, room, students[21], '英語', startedAt, [[FRIDAY, 2]], teachers[0]),
+  createPersonalSubject(db, room, students[21], '数学', startedAt, [[FRIDAY, 3]], teachers[0]),
+  createPersonalSubject(db, room, students[22], '英語', startedAt, [[FRIDAY, 4]], teachers[0]),
+  createPersonalSubject(db, room, students[22], '数学', startedAt, [[FRIDAY, 0]], teachers[0]),
+  createPersonalSubject(db, room, students[23], '英語', startedAt, [[FRIDAY, 1]], teachers[0]),
+  createPersonalSubject(db, room, students[23], '数学', startedAt, [[FRIDAY, 2]], teachers[0]),
+  createPersonalSubject(db, room, students[24], '英語', startedAt, [[FRIDAY, 3]], teachers[0]),
+  createPersonalSubject(db, room, students[24], '数学', startedAt, [[FRIDAY, 4]], teachers[0]),
+  createPersonalSubject(db, room, students[25], '英語', startedAt, [[MONDAY, 0]], teachers[1]),
+  createPersonalSubject(db, room, students[25], '数学', startedAt, [[MONDAY, 1]], teachers[1]),
+  createPersonalSubject(db, room, students[26], '英語', startedAt, [[MONDAY, 2]], teachers[1]),
+  createPersonalSubject(db, room, students[26], '数学', startedAt, [[MONDAY, 3]], teachers[1]),
+  createPersonalSubject(db, room, students[27], '英語', startedAt, [[MONDAY, 4]], teachers[1]),
+  createPersonalSubject(db, room, students[27], '数学', startedAt, [[MONDAY, 0]], teachers[1]),
+  createPersonalSubject(db, room, students[28], '英語', startedAt, [[MONDAY, 1]], teachers[1]),
+  createPersonalSubject(db, room, students[28], '数学', startedAt, [[MONDAY, 2]], teachers[1]),
+  createPersonalSubject(db, room, students[29], '英語', startedAt, [[MONDAY, 3]], teachers[1]),
+  createPersonalSubject(db, room, students[29], '数学', startedAt, [[MONDAY, 4]], teachers[1])
+})
 
 const parents = [
   db.parent.create({ name: '黒木ヨウイチ' }),
