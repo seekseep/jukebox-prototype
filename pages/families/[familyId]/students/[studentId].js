@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { add, format } from 'date-fns'
 import locale from 'date-fns/locale/ja'
 
@@ -23,6 +23,10 @@ import Collection, {
 } from '../../../../components/parts/Collection'
 import { useSubjectsByStudentId } from '../../../../hooks/subjects'
 
+const LESSON_FILTER_TYPE = Object.freeze({
+  ALL         : 'ALL',
+  NOT_COMPLETD: 'NOT_COMPLETED'
+})
 
 export default function Student () {
   const { query: { familyId, studentId } } = useRouter()
@@ -30,7 +34,9 @@ export default function Student () {
   const student = useStudent(studentId)
   const subjects = useSubjectsByStudentId(studentId)
 
-  const lessos = useMemo(() => {
+  const [filter, setFilter] = useState(LESSON_FILTER_TYPE.NOT_COMPLETD)
+
+  const allLessons = useMemo(() => {
     const lessons = []
     if (!subjects) return lessons
 
@@ -55,6 +61,11 @@ export default function Student () {
     return lessons.sort(((a,b) => a.startedAt > b.startedAt ? 1 : -1))
   }, [subjects])
 
+  const lessons = useMemo(() => {
+    if (filter === LESSON_FILTER_TYPE.ALL) return allLessons
+    return allLessons.filter(lesson => lesson.startedAt > new Date())
+  }, [allLessons, filter])
+
   return (
     <FamilyDashboard title={student?.name} familyId={familyId}>
       <Breadcrumbs>
@@ -70,15 +81,15 @@ export default function Student () {
         <Card>
           <div className="p-3 border-b-2 flex gap-2 items-center">
             <div className="flex-grow">
-              <Select>
-                <option value="">開始前</option>
-                <option value="">すべて</option>
+              <Select value={filter} onChange={({ target: { value: filter } }) => setFilter(filter)}>
+                <option value={LESSON_FILTER_TYPE.NOT_COMPLETD}>開始前</option>
+                <option value={LESSON_FILTER_TYPE.ALL}>すべて</option>
               </Select>
             </div>
             <div className="text-gray-700">2022年4月1日 ~ 2022年4月30日</div>
           </div>
           <Collection>
-            {lessos.map((lesson, index) => (
+            {lessons.map((lesson, index) => (
               <CollectionItem key={index}>
                 <div className="py-2 flex flex-col gap-1">
                   <div className="flex gap-2 items-start">
