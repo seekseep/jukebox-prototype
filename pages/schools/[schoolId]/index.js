@@ -1,48 +1,18 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import Authorized from '../../../components/features/Authorized'
+import ManageSchool from '../../../components/features/schools/ManageSchool'
+import ManageRooms from '../../../components/features/rooms/ManageRooms'
+import ViewSchoolNavigation from '../../../components/features/schools/ViewSchoolNavigation'
 
-import { useSchool } from '../../../hooks/schools'
-import { useRoomsBySchoolId } from '../../../hooks/rooms'
-import SchoolNavigation from '../../../components/parts/SchoolNavigation'
+import SimplePage from '../../../components/parts/SimplePage'
 
 export default function School () {
-  const { query : { schoolId } } = useRouter()
-  const school = useSchool(schoolId)
-  const rooms = useRoomsBySchoolId(schoolId)
-
   return (
-    <>
-      <Head>
-        <title>{school?.name} | 学校</title>
-      </Head>
-      <SchoolNavigation schoolId={schoolId}/>
-      <div className="bg-gray-100 min-h-screen">
-        <header className="bg-blue-500">
-          <div className="max-w-2xl py-8 mx-auto">
-            <h1 className="text-2xl text-white text-center">{school?.name}</h1>
-          </div>
-        </header>
-        <section className="max-w-2xl mx-auto py-4 flex flex-col gap-4">
-          <div className="flex justify-end px-2">
-            <Link href={`/schools/${schoolId}/rooms/new`}>
-              <a className="bg-blue-500 text-whtie text-white px-4 py-2 rounded">
-                教室を作成
-              </a>
-            </Link>
-          </div>
-          <nav className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-2 leading-none">
-            {rooms?.map(room => (
-              <Link key={room.id} href={`/rooms/${room.id}`} passHref>
-                <a className="bg-white rounded shadow p-4 flex items-center gap-2">
-                  <span className="text-3xl">🚪</span>
-                  <span>{room.name}</span>
-                </a>
-              </Link>
-            ))}
-          </nav>
-        </section>
-      </div>
-    </>
+    <Authorized>
+      <SimplePage size="2xl">
+        <ViewSchoolNavigation />
+        <ManageSchool />
+        <ManageRooms />
+      </SimplePage>
+    </Authorized>
   )
 }

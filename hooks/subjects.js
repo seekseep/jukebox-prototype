@@ -1,53 +1,63 @@
 import { useMemo } from 'react'
-import { db } from '../mocks/db'
-import { useRoom } from './rooms'
+import * as Yup from 'yup'
 
-import { useStudent } from './students'
+import {
+  createSubject,
+  updateSubject,
+  deleteSubject,
+} from '../services/api/subjects'
+import { getTeacherRef } from '../services/api/teachers'
+import { getStudentRef } from '../services/api/students'
 
-export function useSubject(subjectId) {
-  const subject = useMemo(() => db.subject.findFirst({ where: { id: { equals: subjectId } } }), [subjectId])
+import { useCollectionQuery, useDocumentQuery, useMutation } from './api'
+
+function transformSubjectForFirestore ({ students, teachers, ...subject }) {
+
+  if (students) {
+    subject.students = students.map(studentId => getStudentRef(schoolId, roomId, studentId))
+  }
+
+  if (teachers) {
+    subject.teacher = teachers.map(teacherId => getTeacherRef(schoolId, roomId, teacherId))
+  }
+
   return subject
 }
 
-export function useSubjectsByStudentId(studentId) {
-  const student = useStudent(studentId)
-  const subjects = useMemo(() => student?.subjects || null, [student])
-  return subjects
+export function useSubejctSchema () {
+  return useMemo(() => Yup.object().shape({
+    name: Yup.string().default(''),
+  }), [])
 }
 
-export function useSubjectsByRoomId (roomId) {
-  const room = useRoom(roomId)
-  const subjects = useMemo(() => room?.subjects || null, [room])
-  return subjects
+export function useSubjects(schoolId, roomId) {
+  return useCollectionQuery(`/schools/${schoolId}/rooms/${roomId}/subjects`)
 }
 
-export function useSubjectTagsByRoomId(roomId) {
-  const subjects = useSubjectsByRoomId(roomId)
-
-  const subjectTags = useMemo(() => {
-    if (!subjects) return []
-
-    return Object.keys(
-      subjects.reduce((allTags, subject) =>
-        subject.tags.reduce((tags, tag) => ({
-          ...tags,
-          [tag]: true
-        }), allTags)
-      , [])
-    )
-  }, [subjects])
-
-  return subjectTags
+export function useSubject(schoolId, roomId, subjectId) {
+  return useDocumentQuery(`/schools/${schoolId}/rooms/${roomId}/subjects/${subjectId}`)
 }
 
-export function useSubjectsByRoomIdAndSubjectTagName (roomId, subjectTagName) {
-  const subjects = useSubjectsByRoomId(roomId)
+export function useCreateSubject (schoolId, roomId) {
+  return useMutation(
+    async (subject) => {
+      return await createSubject(schoolId, roomId, transformSubjectForFirestore(subject))
+    }
+  )
+}
 
-  const filteredSubjects = useMemo(() => {
-    if (!subjects) return []
+export function useUpdateSubject (schoolId, roomId, subjectId) {
+  return useMutation(
+    async (subject) => {
+      return await updateSubject(schoolId, roomId, subjectId, transformSubjectForFirestore(subject))
+    }
+  )
+}
 
-    return subjects.filter(subject => subject.tags.includes(subjectTagName))
-  }, [subjectTagName, subjects])
-
-  return filteredSubjects
+export function useDeleteSubject (schoolId, roomId, subjectId) {
+  return useMutation(
+    async () => {
+      return await deleteSubject(schoolId, roomId, subjectId)
+    }
+  )
 }

@@ -1,15 +1,21 @@
-import { useRoom, useHourRuler, useRange, useGetLessonsByTeacherIdAndDate } from '../hooks'
-import { getDay, getHours, getMinutes, add }from'date-fns'
+import classNames from 'classnames'
+import { getDay, add }from'date-fns'
 
-import { useTeachersByRoomId } from '../../../../hooks/teachers'
+import { WEEK_DAY } from '../../../../constatnts'
+
+import {
+  useRoom,
+  useHourRuler,
+  useRange,
+  useGetLessonsByTeacherIdAndDate,
+  useTeachers
+} from '../hooks'
 
 import Navigation from './Navigation'
-import { WEEK_DAY } from '../../../../constatnts'
-import classNames from 'classnames'
 
 export default function Board () {
   const room = useRoom()
-  const teachers = useTeachersByRoomId(room?.id)
+  const teachers = useTeachers()
 
   const { currentRange } = useRange()
   const { hours } = useHourRuler()
@@ -28,7 +34,6 @@ export default function Board () {
             <div className="flex flex-col">
               {currentRange && currentRange.map((date) => {
                 const day = getDay(date)
-                if (room.frames[day].length < 1) return null
                 return (
                   <div key={date.getTime()} className="p-1 text-sm h-8 border-b">
                     {day === WEEK_DAY.SUNDAY && '日'}
@@ -46,10 +51,8 @@ export default function Board () {
           <div className={classNames('flex flex-col')}>
             {currentRange && currentRange.map((date) => {
               const day = getDay(date)
-
-              if (room.frames[day].length < 1) return null
-
               const lessons = getLessonsByTeacherIdAndDate(teacher.id, date)
+
               return (
                 <div key={day} className={`flex relative w-[${hours.length*12}]rem`}>
                   {hours.map((hour,i) => (

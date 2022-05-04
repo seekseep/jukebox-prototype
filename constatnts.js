@@ -37,3 +37,5 @@ export const WEEK_DAY = Object.freeze({
   FRIDAY   : 5,
   SATURDAY : 6
 })
+
+export const WEEK_DAY_ALL = -1

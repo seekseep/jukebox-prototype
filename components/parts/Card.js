@@ -6,7 +6,7 @@ const Card = forwardRef(function Card ({ type='div', elevation = 1, ...props }, 
     type,
     {
       className: classNames(
-        'block bg-white rounded-lg border overflow-hidden',
+        'block bg-white rounded-lg border text-black',
         {
           'shadow-sm' : elevation === 1,
           'shadow'    : elevation === 2,
@@ -25,5 +25,9 @@ const Card = forwardRef(function Card ({ type='div', elevation = 1, ...props }, 
 export default Card
 
 export function CardActions ({ ...props }) {
-  return <div className="border-b bg-gray-100 p-3 flex justify-end" {...props} />
+  return <div className="border-b bg-gray-100 p-3 flex justify-end gap-3" {...props} />
+}
+
+export function CardBody ({ ...props }) {
+  return <div className="p-4" {...props} />
 }

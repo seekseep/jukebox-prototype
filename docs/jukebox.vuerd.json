@@ -700,7 +700,7 @@
         "id": "49c0c500-eded-4316-b5c6-ccb0039d01e6"
       },
       {
-        "name": "lesson_teacher",
+        "name": "lesson_Teacher",
         "comment": "",
         "columns": [
           {
@@ -2247,7 +2247,7 @@
           "y": 466.4998,
           "direction": "right"
         },
-        "constraintName": "fk_user_to_teacher",
+        "constraintName": "fk_user_to_Teacher",
         "visible": true,
         "id": "5b7e13e3-33b5-45ec-a669-efe636ea929c"
       },
@@ -2403,7 +2403,7 @@
           "y": 417.5992,
           "direction": "left"
         },
-        "constraintName": "fk_lesson_to_lesson_teacher",
+        "constraintName": "fk_lesson_to_lesson_Teacher",
         "visible": true,
         "id": "6f5e7f5f-e9d7-4ad4-998e-d63f5feb6b4e"
       },
@@ -2429,7 +2429,7 @@
           "y": 417.5992,
           "direction": "right"
         },
-        "constraintName": "fk_teacher_to_lesson_teacher",
+        "constraintName": "fk_Teacher_to_lesson_Teacher",
         "visible": true,
         "id": "78160e3c-10d9-4cf8-ab26-7c6b586045cd"
       },
@@ -2559,7 +2559,7 @@
           "y": 598.3333,
           "direction": "top"
         },
-        "constraintName": "fk_teacher_to_teacher_event",
+        "constraintName": "fk_Teacher_to_Teacher_event",
         "visible": true,
         "id": "60859b72-5572-4692-996f-d935811c7835"
       },
@@ -2585,7 +2585,7 @@
           "y": 653.3333,
           "direction": "left"
         },
-        "constraintName": "fk_event_to_teacher_event",
+        "constraintName": "fk_event_to_Teacher_event",
         "visible": true,
         "id": "9e90130d-9baa-44b8-bcee-2f315923aadb"
       },

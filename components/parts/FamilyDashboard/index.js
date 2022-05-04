@@ -3,10 +3,10 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { createElement } from 'react'
 
-import { useGetFamilyLink, useFamily } from '../../../hooks/families'
+import { useGetFamilyPath, useFamily } from '../../../hooks/families'
 
 export default function FamilyDashboard ({ title, familyId, children }) {
-  const getFamilyLink = useGetFamilyLink(familyId)
+  const getFamilyPath = useGetFamilyPath(familyId)
   const family = useFamily(familyId)
 
   return (
@@ -18,7 +18,7 @@ export default function FamilyDashboard ({ title, familyId, children }) {
       )}
       <nav className="bg-white sticky top-0 border-b h-16 block">
         <div className="flex max-w-2xl mx-auto px-2 justify-between h-full">
-          <Link href={getFamilyLink('/')}>
+          <Link href={getFamilyPath('/')}>
             <a className="text-blue-500 p-2 flex items-center">
               <span>{family?.name}</span>
             </a>

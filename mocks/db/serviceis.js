@@ -13,7 +13,8 @@ import {
   SCHEDULE_RULE_TERM_TYPE,
   SCHEDULE_RULE_TYPE,
   SCHEDULE_STATUS,
-  SCHEDULE_UNIT_TERM
+  SCHEDULE_UNIT_TERM,
+  WEEK_DAY
 } from '../../constatnts'
 
 const REPEAT_NONE = Object.freeze({
@@ -314,7 +315,6 @@ export function createBasicRoomScheduleRules() {
 
 export function createStudent (db, room, studentOptions = {}) {
   const student = db.student.create({
-    scheduleRules: createBasicStudentScheduleRules(),
     room,
     ...studentOptions
   })
@@ -326,7 +326,6 @@ export function createStudent (db, room, studentOptions = {}) {
 
 export function createTeacher (db, room, teacherOptions = {}) {
   const teacher = db.teacher.create({
-    scheduleRules: createBasicTeacherScheduleRules(),
     room,
     ...teacherOptions
   })
@@ -343,25 +342,26 @@ export function createFrame([startHours, startMinutes], [finishHours, finishMinu
   }
 }
 
-export function getFrame (room, day, index) {
-  return room.frames[day][index]
+export function getFrame (frameCondition, day, index) {
+  return frameCondition.rules.find(rule => rule.day === day)?.frames[index]
 }
 
 export function createPersonalSubject (
-  db, room, student, name, startedAt, frames, teacher, lessonCount = 4,
+  db, room, student, name, startedAt, frameConditionName, frames, teacher, lessonCount = 4,
 ) {
-
   const subjectName = (student, name) => `${format(startedAt, 'yyyy/MM')} 個人${name} ${student.name}`
+  const frameCondition = room.frameConditions.find(frameCondition => frameCondition.name === frameConditionName)
 
   const subject = db.subject.create({
-    name   : subjectName(student, name),
-    tags   : [name],
-    frames : frames,
-    lessons: frames.reduce((lessons, [day, index]) => {
+    name              : subjectName(student, name),
+    tags              : [name],
+    frameConditionName: frameConditionName,
+    frames            : frames,
+    lessons           : frames.reduce((lessons, [day, index]) => {
       const baseDate = getDay(startedAt) === day ? startedAt : nextDay(startedAt, day)
       return Array.from({ length: lessonCount }).fill(null).reduce((lessons, _, i) => {
         const lessonDate = add(baseDate, { weeks: i })
-        const frame = getFrame(room, day, index)
+        const frame = getFrame(frameCondition, day, index)
         if (getMonth(lessonDate) > getMonth(startedAt) || lessons.length >= lessonCount) return lessons
         return [
           ...lessons,
@@ -382,23 +382,90 @@ export function createPersonalSubject (
   return subject
 }
 
+function createFrameRule(day, frames) {
+  return { day, frames }
+}
+
+function createFrameCondition (name, rules) {
+  return { name, rules }
+}
+
 export function createRoom (db, school, roomOptions = {}) {
   const room = db.room.create({
     scheduleUnit: {
       term : SCHEDULE_UNIT_TERM.MONTHLY,
       value: 1
     },
-    scheduleRules: createBasicRoomScheduleRules(),
-    frames       : [
-      [],
-      ...Array.from({ length: 5 }).fill(null).map(() => ([
-        createFrame([15, 0], [15, 55]),
-        createFrame([16, 0], [16, 55]),
-        createFrame([17, 0], [17, 55]),
-        createFrame([18, 0], [18, 55]),
-        createFrame([19, 0], [19, 55]),
-      ])),
-      [],
+    scheduleRules  : createBasicRoomScheduleRules(),
+    frameConditions: [
+      createFrameCondition('小学生', [
+        createFrameRule(WEEK_DAY.SUNDAY, []),
+        createFrameRule(WEEK_DAY.MONDAY, [
+          createFrame([15, 0], [15, 55]),
+          createFrame([16, 0], [16, 55]),
+          createFrame([17, 0], [17, 55]),
+          createFrame([18, 0], [18, 55]),
+          createFrame([19, 0], [19, 55]),
+        ]),
+        createFrameRule(WEEK_DAY.TUESDAY, [
+          createFrame([15, 0], [15, 55]),
+          createFrame([16, 0], [16, 55]),
+          createFrame([17, 0], [17, 55]),
+          createFrame([18, 0], [18, 55]),
+          createFrame([19, 0], [19, 55]),
+        ]),
+        createFrameRule(WEEK_DAY.WEDNESDAY, [
+          createFrame([15, 0], [15, 55]),
+          createFrame([16, 0], [16, 55]),
+          createFrame([17, 0], [17, 55]),
+          createFrame([18, 0], [18, 55]),
+          createFrame([19, 0], [19, 55]),
+        ]),
+        createFrameRule(WEEK_DAY.THURSDAY, [
+          createFrame([15, 0], [15, 55]),
+          createFrame([16, 0], [16, 55]),
+          createFrame([17, 0], [17, 55]),
+          createFrame([18, 0], [18, 55]),
+          createFrame([19, 0], [19, 55]),
+        ]),
+        createFrameRule(WEEK_DAY.FRIDAY, [
+          createFrame([15, 0], [15, 55]),
+          createFrame([16, 0], [16, 55]),
+          createFrame([17, 0], [17, 55]),
+          createFrame([18, 0], [18, 55]),
+          createFrame([19, 0], [19, 55]),
+        ]),
+        createFrameRule(WEEK_DAY.SATURDAY, []),
+      ]),
+      createFrameCondition('中学生', [
+        createFrameRule(WEEK_DAY.SUNDAY, []),
+        createFrameRule(WEEK_DAY.MONDAY, [
+          createFrame([15, 0], [16, 55]),
+          createFrame([17, 0], [18, 55]),
+          createFrame([19, 0], [20, 55]),
+        ]),
+        createFrameRule(WEEK_DAY.TUESDAY, [
+          createFrame([15, 0], [16, 55]),
+          createFrame([17, 0], [18, 55]),
+          createFrame([19, 0], [20, 55]),
+        ]),
+        createFrameRule(WEEK_DAY.WEDNESDAY, [
+          createFrame([15, 0], [16, 55]),
+          createFrame([17, 0], [18, 55]),
+          createFrame([19, 0], [20, 55]),
+        ]),
+        createFrameRule(WEEK_DAY.THURSDAY, [
+          createFrame([15, 0], [16, 55]),
+          createFrame([17, 0], [18, 55]),
+          createFrame([19, 0], [20, 55]),
+        ]),
+        createFrameRule(WEEK_DAY.FRIDAY, [
+          createFrame([15, 0], [16, 55]),
+          createFrame([17, 0], [18, 55]),
+          createFrame([19, 0], [20, 55]),
+        ]),
+        createFrameRule(WEEK_DAY.SATURDAY, []),
+      ]),
     ],
     school,
     ...roomOptions,

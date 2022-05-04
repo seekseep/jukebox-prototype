@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import { add, format } from 'date-fns'
 import locale from 'date-fns/locale/ja'
 
-import { useGetFamilyLink } from '../../../../hooks/families'
+import { useGetFamilyPath } from '../../../../hooks/families'
 import { useStudent } from '../../../../hooks/students'
 
 import FamilyDashboard, {
@@ -21,45 +21,46 @@ import Collection, {
   CollectionItem,
   CollectionPlaceholder
 } from '../../../../components/parts/Collection'
-import { useSubjectsByStudentId } from '../../../../hooks/subjects'
 
 const LESSON_FILTER_TYPE = Object.freeze({
   ALL         : 'ALL',
   NOT_COMPLETD: 'NOT_COMPLETED'
 })
 
+const subjects =[]
+
 export default function Student () {
   const { query: { familyId, studentId } } = useRouter()
-  const getFamilyLink = useGetFamilyLink(familyId)
-  const student = useStudent(studentId)
-  const subjects = useSubjectsByStudentId(studentId)
+  const getFamilyPath = useGetFamilyPath(familyId)
+  const { data: student } = useStudent(studentId)
 
   const [filter, setFilter] = useState(LESSON_FILTER_TYPE.NOT_COMPLETD)
 
   const allLessons = useMemo(() => {
-    const lessons = []
-    if (!subjects) return lessons
+    return []
+    // const lessons = []
+    // if (!subjects) return lessons
 
-    const startedAt = new Date(2022, 3, 4, 16)
-    subjects.forEach((subject, s) => {
-      const subjectStartedAt = add(startedAt, { days: s })
-      subject.lessons.forEach((lesson, l) => {
-        const lessonStartedAt = add(subjectStartedAt, { weeks: l })
-        const lessonFinishedAt = add(lessonStartedAt, { minutes: 55 })
-        lessons.push({
-          name      : lesson.name,
-          startedAt : lessonStartedAt,
-          finishedAt: lessonFinishedAt,
-          teachers  : [{
-            id  : '1',
-            name: '若松貴文'
-          }]
-        })
-      })
-    }, [])
+    // const startedAt = new Date(2022, 3, 4, 16)
+    // subjects.forEach((subject, s) => {
+    //   const subjectStartedAt = add(startedAt, { days: s })
+    //   subject.lessons.forEach((lesson, l) => {
+    //     const lessonStartedAt = add(subjectStartedAt, { weeks: l })
+    //     const lessonFinishedAt = add(lessonStartedAt, { minutes: 55 })
+    //     lessons.push({
+    //       name      : lesson.name,
+    //       startedAt : lessonStartedAt,
+    //       finishedAt: lessonFinishedAt,
+    //       teachers  : [{
+    //         id  : '1',
+    //         name: '若松貴文'
+    //       }]
+    //     })
+    //   })
+    // }, [])
 
-    return lessons.sort(((a,b) => a.startedAt > b.startedAt ? 1 : -1))
-  }, [subjects])
+    // return lessons.sort(((a,b) => a.startedAt > b.startedAt ? 1 : -1))
+  }, [])
 
   const lessons = useMemo(() => {
     if (filter === LESSON_FILTER_TYPE.ALL) return allLessons
@@ -69,8 +70,8 @@ export default function Student () {
   return (
     <FamilyDashboard title={student?.name} familyId={familyId}>
       <Breadcrumbs>
-        <BLink href={getFamilyLink('/')}>ホーム</BLink>
-        <BLink href={getFamilyLink('/students')}>生徒の一覧</BLink>
+        <BLink href={getFamilyPath('/')}>ホーム</BLink>
+        <BLink href={getFamilyPath('/students')}>生徒の一覧</BLink>
         {student && <BCurrent>{student.name}</BCurrent>}
       </Breadcrumbs>
       <FamilyDashboardSection>

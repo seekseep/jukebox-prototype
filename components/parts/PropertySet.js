@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { format } from 'date-fns'
 
 export default function PropertySet ({ ...props }) {
   return <dl className="flex flex-col" {...props}/>
@@ -23,4 +24,8 @@ export function PropertyContents ({ noPadding = false, ...props }) {
       }
       {...props} />
   )
+}
+
+export function PropertyDateTimeContents({ value: date }) {
+  return <PropertyContents>{date ? format(date, 'yyyy/MM/dd hh:MM'): ''}</PropertyContents>
 }

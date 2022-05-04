@@ -1,8 +1,14 @@
 import Link from 'next/link'
 import classNames from 'classnames'
 
-export default function Collection ({ ...props }) {
-  return <ul className="flex flex-col" {...props} />
+export default function Collection ({ children, placeholder = '項目が存在しません' }) {
+  if (children.length < 1) {
+    return (
+      <CollectionPlaceholder>{placeholder}</CollectionPlaceholder>
+    )
+  }
+
+  return <ul className="flex flex-col py-2">{children}</ul>
 }
 
 export function CollectionItem ({ clickable = false, isActive = false, ...props }) {
@@ -33,6 +39,6 @@ export function CollectionLinkItem ({ href, ...props }) {
 
 export function CollectionPlaceholder ({ ...props }) {
   return (
-    <li className="py-12 px-4 text-gray-600 text-center" {...props} />
+    <div className="py-12 px-4 text-gray-600 text-center" {...props} />
   )
 }

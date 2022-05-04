@@ -12,17 +12,12 @@ export default function Navigation (){
     <>
       <div className="fixed top-16 h-12 left-0 right-0 flex bg-white border-b z-[1002]">
         <div className="w-48 flex-shrink-0 bg-gray-50 p-1 flex flex-col items-stretch border-r">
-          <Select>
-            <option value="">講師</option>
-            <option value="">生徒</option>
-            <option value="">科目</option>
-            <option value="">席</option>
-          </Select>
+
         </div>
         <div className="flex flex-col">
           <div className="flex gap-3 items-stretch leading-none h-12 p-2 sticky left-48">
             {(currentRange && getWeekOfMonth(currentRange[0]) > 1) ? (
-              <button onClick={goPrevRange} className="bg-gray-100 rounded p-2">⬅</button>
+              <button type="button" onClick={goPrevRange} className="bg-gray-100 rounded p-2">⬅</button>
             ) : <div className="w-8" />}
             <div className="flex items-center gap-2">
               <div>第{currentRange && getWeekOfMonth(currentRange[0])}週</div>
@@ -36,8 +31,8 @@ export default function Navigation (){
                 </div>
               </div>
             </div>
-            {(currentRange && getWeekOfMonth(currentRange[0]) < getWeekOfMonth(schedule.finishedAt)) ? (
-              <button onClick={goNextRange} className="bg-gray-100 rounded p-2">➡</button>
+            {(currentRange && getWeekOfMonth(currentRange[0]) < getWeekOfMonth(schedule.finishedAt.toDate())) ? (
+              <button type="button" onClick={goNextRange} className="bg-gray-100 rounded p-2">➡</button>
             ) : <div className="w-8" />}
           </div>
         </div>

@@ -2,7 +2,7 @@ import { useMemo, useCallback } from 'react'
 
 import { db } from '../mocks/db'
 
-export function useGetFamilyLink(familyId) {
+export function useGetFamilyPath(familyId) {
   return useCallback((pathname = '/') => `/families/${familyId}${pathname}`, [familyId])
 }
 

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-import { useGetFamilyLink } from '../../../../hooks/families'
+import { useGetFamilyPath } from '../../../../hooks/families'
 import { useStudentsByFamilyId } from '../../../../hooks/students'
 
 import FamilyDashboard, {
@@ -17,12 +17,12 @@ import Collection, { CollectionLinkItem, CollectionPlaceholder } from '../../../
 
 export default function Students () {
   const { query: { familyId } } = useRouter()
-  const getFamilyLink = useGetFamilyLink(familyId)
+  const getFamilyPath = useGetFamilyPath(familyId)
   const students = useStudentsByFamilyId(familyId)
   return (
     <FamilyDashboard title="生徒の一覧" familyId={familyId}>
       <Breadcrumbs>
-        <BLink href={getFamilyLink('/')}>ホーム</BLink>
+        <BLink href={getFamilyPath('/')}>ホーム</BLink>
         <BCurrent>生徒の一覧</BCurrent>
       </Breadcrumbs>
       <FamilyDashboardSection>
@@ -32,7 +32,7 @@ export default function Students () {
             <Collection>
               {students.length > 0 ? (
                 students.map(student => (
-                  <CollectionLinkItem key={student.id} href={getFamilyLink(`/students/${student.id}`)}>
+                  <CollectionLinkItem key={student.id} href={getFamilyPath(`/students/${student.id}`)}>
                     {student.name}
                   </CollectionLinkItem>
                 ))

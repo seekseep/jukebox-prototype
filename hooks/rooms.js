@@ -1,19 +1,25 @@
 import { useMemo, useCallback } from 'react'
-import { db } from '../mocks/db'
 
-import { useSchool } from './schools'
+import { useCollectionQuery, useDocumentQuery, useMutation } from './api'
 
-export function useGetRoomLink(roomId) {
-  return useCallback((pathname = '/') => `/rooms/${roomId}${pathname}`, [roomId])
+import { createRoom } from '../services/api/rooms'
+
+export function useRoomSchema () {
+  return useMemo(() => Yup.object().shape({
+    name: Yup.string().required().default('')
+  }),[])
 }
 
-export function useRoomsBySchoolId (schoolId) {
-  const school = useSchool(schoolId)
-  const rooms = useMemo(() => school?.rooms || null, [school])
-  return rooms
+export function useRooms(schoolId) {
+  return useCollectionQuery(`/schools/${schoolId}/rooms`)
 }
 
-export function useRoom (roomId) {
-  const room = useMemo(() => db.room.findFirst({ where: { id: { equals: roomId } } }), [roomId])
-  return room
+export function useRoom(schoolId, roomId) {
+  return useDocumentQuery(`/schools/${schoolId}/rooms/${roomId}`)
+}
+
+export function useCreateRoom (schoolId) {
+  return useMutation(
+    async (room) => await createRoom(schoolId, room)
+  )
 }

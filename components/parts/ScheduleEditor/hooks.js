@@ -1,45 +1,102 @@
 
 import { format, add, getDay, previousSunday,startOfDay, nextSunday } from 'date-fns'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { db } from '../../../mocks/db'
+
+import { useSchool as useFirestoreSchool } from '../../../hooks/schools'
+import { useRoom as useFirestoreRoom } from '../../../hooks/rooms'
+import { useSubjectsIncludingLessons as useFirestoreSubjects } from '../../../hooks/subjects'
+import { useTeachers as useFirestoreTeachers } from '../../../hooks/teachers'
+import { useStudents as useFirestoreStudents } from '../../../hooks/students'
+import { useSchedule as useFirestoreSchedule } from '../../../hooks/schedules'
+import { useFrameRulesSets as useFirestoreFrameRulesSets } from '../../../hooks/frameRulesSets'
 
 const Context = createContext()
 
-export function Provider ({ roomId, scheduleId, ...props }) {
-  const schedule = useMemo(() => db.schedule.findFirst({ where: { id: { equals: scheduleId } } }), [scheduleId])
-  const room = useMemo(() => db.room.findFirst({ where: { id: { equals: roomId } } }), [roomId])
+export function Provider ({ schoolId, roomId, scheduleId, ...props }) {
 
   const [state, setState] = useState({ currentRange: null })
 
+  const { data: school, isLoading: isGettingSchool } = useFirestoreSchool(schoolId)
+  const { data: room, isLoading: isGettingRoom } = useFirestoreRoom(schoolId, roomId)
+  const { data: subjects, isLoading: isGettingSubjects } = useFirestoreSubjects(schoolId, roomId)
+  const { data: teachers, isLoading: isGettingTeachers } = useFirestoreTeachers(schoolId, roomId)
+  const { data: students, isLoading: isGettingStudents } = useFirestoreStudents(schoolId, roomId)
+  const { data: frameRulesSets, isLoading: isGettingFrameRulesSets } = useFirestoreFrameRulesSets(schoolId, roomId)
+  const { data: schedule, isLoading: isGettingSchedule } = useFirestoreSchedule(schoolId, roomId, scheduleId)
+
+  const isLoading = isGettingSchool || isGettingRoom || isGettingSubjects || isGettingTeachers || isGettingStudents || isGettingSchedule || isGettingFrameRulesSets
+
   useEffect(() => {
     if (!schedule) return
-
-    setState(s => ({
-      ...s,
-      currentRange: Array.from({ length: 7 - getDay(schedule.startedAt) }).fill(null).map((_,i)=> add(schedule.startedAt, { days: i }))
-    }))
-
+    setState(s => {
+      const startedAt = schedule.startedAt.toDate()
+      const currentRange = Array.from({ length: 7 - getDay(startedAt) }).fill(null).map((_, i)=> add(startedAt, { days: i }))
+      return { ...s, currentRange }
+    })
   }, [schedule])
 
 
-  if (!schedule || !room) return null
+  if (isLoading) return null
 
   return (
     <Context.Provider
-      value={{ room, schedule, state, setState }}
+      value={{
+        school,
+        room,
+        schedule,
+        subjects,
+        teachers,
+        students,
+        frameRulesSets,
+        state, setState }}
       {...props} />
   )
 }
 
-export function useLessons () {
-  const room = useRoom()
-  const lessons = useMemo(() => {
-    if (!room) return null
+export function useSchool () {
+  const { school } = useContext(Context)
+  return school
+}
 
-    return room.subjects.reduce((lessons, subject) => ([
+export function useRoom () {
+  const { room } = useContext(Context)
+  return room
+}
+
+export function useFrameRulesSets () {
+  const { frameRulesSets } = useContext(Context)
+  return frameRulesSets
+}
+
+export function useSubjects () {
+  const { subjects } = useContext(Context)
+  return subjects
+}
+
+export function useTeachers () {
+  const { teachers } = useContext(Context)
+  return teachers
+}
+
+export function useStudents () {
+  const { students } = useContext(Context)
+  return students
+}
+
+export function useSchedule () {
+  const { schedule } = useContext(Context)
+  return schedule
+}
+
+export function useLessons () {
+  const subjects = useSubjects()
+
+  const lessons = useMemo(() => {
+    if (!subjects) return null
+    return subjects.reduce((lessons, subject) => ([
       ...lessons, ...subject.lessons
     ]), [])
-  }, [room])
+  }, [subjects])
 
   return lessons
 }
@@ -56,7 +113,7 @@ export function useGetLessonsByTeacherIdAndDate() {
     const map = {}
 
     lessons?.forEach(lesson => {
-      const key = getKey(lesson.teachers[0].id, lesson.startedAt)
+      const key = getKey(lesson.teachers[0].id, lesson.startedAt.toDate())
       map[key] = [...(map[key]||[]), lesson]
     })
 
@@ -74,22 +131,26 @@ export function useRange() {
 
   const goNextRange = useCallback(() => {
     setState(({ currentRange, ...s }) => {
+      const startedAt = schedule.startedAt.toDate()
+      const finishedAt = schedule.finishedAt.toDate()
       return {
         ...s,
         currentRange: Array.from({ length: 7 }).fill(null).map((_, i) => {
           return add(nextSunday(currentRange[0]), { days: i })
-        }).filter(date => schedule.startedAt <= date && date <= schedule.finishedAt)
+        }).filter(date => startedAt <= date && date <= finishedAt)
       }
     })
   }, [schedule.finishedAt, schedule.startedAt, setState])
 
   const goPrevRange = useCallback(() => {
     setState(({ currentRange, ...s }) => {
+      const startedAt = schedule.startedAt.toDate()
+      const finishedAt = schedule.finishedAt.toDate()
       return {
         ...s,
         currentRange: Array.from({ length: 7 }).fill(null).map((_, i) => {
           return add(previousSunday(currentRange[0]), { days: i })
-        }).filter(date => schedule.startedAt <= date && date <= schedule.finishedAt)
+        }).filter(date => startedAt <= date && date <= finishedAt)
       }
     })
   }, [schedule.finishedAt, schedule.startedAt, setState])
@@ -101,30 +162,23 @@ export function useRange() {
   }
 }
 
-export function useRoom () {
-  const { room } = useContext(Context)
-  return room
-}
-
-export function useSchedule () {
-  const { schedule } = useContext(Context)
-  return schedule
-}
-
 export function useHourRuler () {
-  const room = useRoom()
-
+  const frameRulesSets = useFrameRulesSets()
   const { startHour, finishHour } = useMemo(() => {
-    if (!room) return { startHour: 0, finishHour: 23 }
-    return room.frames.reduce(({ startHour, finishHour }, frameSet) => {
-      return frameSet.reduce(({ startHour, finishHour }, { start,finish }) => {
-        return {
-          startHour : Math.min(startHour, start.hours),
-          finishHour: Math.max(finishHour, finish.hours),
-        }
-      }, { startHour, finishHour })
-    }, { startHour: 23, finishHour: 0 })
-  }, [room])
+    if (!frameRulesSets) return { startHour: 0, finishHour: 23 }
+
+    let startHour = 23
+    let finishHour = 0
+
+    frameRulesSets.forEach(frameRulesSet => {
+      frameRulesSet.rules.forEach(rule => {
+        startHour = Math.min(startHour, rule.start.hours)
+        finishHour = Math.max(finishHour, rule.finish.hours)
+      })
+    })
+
+    return { startHour, finishHour }
+  }, [frameRulesSets])
 
   const hours = useMemo(() => {
     return Array.from({ length: finishHour - startHour + 1 }).fill(null).map((_, i) => ({

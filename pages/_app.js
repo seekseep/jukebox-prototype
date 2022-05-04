@@ -1,13 +1,14 @@
-import '../styles/globals.css'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
-if (typeof window !== 'undefined') {
-  const { worker } = require('../mocks/browser')
-  worker.start()
-}
+import '../styles/globals.css'
 
 function App ({ Component, pageProps }) {
   return (
+    <>
       <Component {...pageProps} />
+      <ToastContainer />
+    </>
   )
 }
 

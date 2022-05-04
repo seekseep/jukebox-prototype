@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-import { useGetFamilyLink } from '../../../hooks/families'
+import { useGetFamilyPath } from '../../../hooks/families'
 
 import FamilyDashboard, {
   FamilyDashboardTitle,
@@ -14,7 +14,7 @@ import Card from '../../../components/parts/Card'
 
 export default function Family () {
   const { query: { familyId } } = useRouter()
-  const getFamilyLink = useGetFamilyLink(familyId)
+  const getFamilyPath = useGetFamilyPath(familyId)
   return (
     <FamilyDashboard title="ホーム" familyId={familyId}>
       <Breadcrumbs>
@@ -22,7 +22,7 @@ export default function Family () {
       </Breadcrumbs>
       <FamilyDashboardSection>
         <FamilyDashboardTitle>ホーム</FamilyDashboardTitle>
-        <Link href={getFamilyLink('/students')} passHref>
+        <Link href={getFamilyPath('/students')} passHref>
           <Card>
             <div className="flex gap-4 items-center p-4">
               <div className="text-5xl leading-none">👨‍🎓</div>

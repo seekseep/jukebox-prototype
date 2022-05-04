@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useSchool } from '../../hooks/schools'
 
 export default function SchoolNavigation ({ schoolId }) {
-  const school = useSchool(schoolId)
+  const { data: school } = useSchool(schoolId)
   return (
     <header className="bg-white border-b">
       <div className="flex justify-between leading-none items-center">
