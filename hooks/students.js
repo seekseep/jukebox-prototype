@@ -30,12 +30,12 @@ export function useStudentsByRoomId (roomId) {
   return students
 }
 
-export function useStudents(schoolId, roomId) {
-  return useCollectionQuery(`/schools/${schoolId}/rooms/${roomId}/students`)
+export function useStudents(roomId) {
+  return useCollectionQuery(`/rooms/${roomId}/students`)
 }
 
-export function useStudent(schoolId, roomId, studentId) {
-  return useDocumentQuery(`/schools/${schoolId}/rooms/${roomId}/students/${studentId}`)
+export function useStudent(roomId, studentId) {
+  return useDocumentQuery(`/rooms/${roomId}/students/${studentId}`)
 }
 
 export function useStudentsByFamilyId(familyId) {
@@ -44,42 +44,42 @@ export function useStudentsByFamilyId(familyId) {
   return students
 }
 
-export function useCreateStudent (schoolId, roomId) {
+export function useCreateStudent (roomId) {
   return useMutation(
     async (student) => {
-      return await createStudent(schoolId, roomId, student)
+      return await createStudent(roomId, student)
     }
   )
 }
 
-export function useUpdateStudent (schoolId, roomId, studentId) {
+export function useUpdateStudent (roomId, studentId) {
   return useMutation(
     async (student) => {
-      return await updateStudent(schoolId, roomId, studentId, student)
+      return await updateStudent(roomId, studentId, student)
     }
   )
 }
 
-export function useDeleteStudent (schoolId, roomId, studentId) {
+export function useDeleteStudent (roomId, studentId) {
   return useMutation(
     async () => {
-      return await deleteStudent(schoolId, roomId, studentId)
+      return await deleteStudent(roomId, studentId)
     }
   )
 }
 
-export function useStudentSubjects (schoolId, roomId, studentId) {
-  const swr = useSWR([schoolId, roomId, studentId], getStudentSubjects)
+export function useStudentSubjects (roomId, studentId) {
+  const swr = useSWR([roomId, studentId], getStudentSubjects)
   return expandSWR(swr)
 }
 
-export function useStudentSchedules (schoolId, roomId, studentId) {
-  const swr = useSWR([schoolId, roomId, studentId], getStudentSchedules)
+export function useStudentSchedules (roomId, studentId) {
+  const swr = useSWR([roomId, studentId], getStudentSchedules)
   return expandSWR(swr)
 }
 
-export function useStudentRelations (schoolId, roomId, studentId) {
-  const swr = useSWR([schoolId, roomId, studentId], getStudentRelations)
+export function useStudentRelations (roomId, studentId) {
+  const swr = useSWR([roomId, studentId], getStudentRelations)
   return expandSWR(swr)
 }
 

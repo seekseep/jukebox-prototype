@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
-import { useGetAdminPath } from '../../../hooks/admin'
-import { useSchools } from '../../../hooks/schools'
+import { useGetAdminPath } from '@/hooks/admin'
+import { useSchools } from '@/hooks/schools'
 
 import ErrorAlert from '../../../components/parts/ErrorAlert'
 import Loading from '../../../components/parts/Loading'

@@ -3,8 +3,8 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { useMemo, useCallback, useEffect } from 'react'
 
-import { useGetAdminPath } from '../../../hooks/admin'
-import { useSchoolSchema, useCreateSchool } from '../../../hooks/schools'
+import { useGetAdminPath } from '@/hooks/admin'
+import { useSchoolSchema, useCreateSchool } from '@/hooks/schools'
 
 import Breadcrumbs, {
   BreadcrumbsLinkItem as BLink,

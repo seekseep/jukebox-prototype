@@ -17,32 +17,31 @@ export function useGetSchoolPath (schoolId) {
   return useCallback((pathname = '') => `/schools/${schoolId}${pathname}`, [schoolId])
 }
 
-export function useGetRoomPath(schoolId, roomId) {
-  const getSchoolLink = useGetSchoolPath(schoolId)
-  return useCallback((pathname = '') => getSchoolLink(`/rooms/${roomId}${pathname}`), [getSchoolLink, roomId])
+export function useGetRoomPath(roomId) {
+  return useCallback((pathname = '') => `/rooms/${roomId}${pathname}`, [roomId])
 }
 
-export function useGetStudentPath(schoolId, roomId, studentId) {
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
+export function useGetStudentPath(roomId, studentId) {
+  const getRoomPath = useGetRoomPath(roomId)
   return useCallback((pathname = '') => getRoomPath(`/students/${studentId}${pathname}`), [getRoomPath, studentId])
 }
 
-export function useGetTeacherPath(schoolId, roomId, teacherId) {
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
+export function useGetTeacherPath(roomId, teacherId) {
+  const getRoomPath = useGetRoomPath(roomId)
   return useCallback((pathname = '') => getRoomPath(`/teachers/${teacherId}${pathname}`), [getRoomPath, teacherId])
 }
 
-export function useGetSheetPath(schoolId, roomId, sheetId) {
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
+export function useGetSheetPath(roomId, sheetId) {
+  const getRoomPath = useGetRoomPath(roomId)
   return useCallback((pathname = '') => getRoomPath(`/sheets/${sheetId}${pathname}`), [getRoomPath, sheetId])
 }
 
-export function useGetSubjectPath(schoolId, roomId, subjectId) {
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
+export function useGetSubjectPath(roomId, subjectId) {
+  const getRoomPath = useGetRoomPath(roomId)
   return useCallback((pathname = '') => getRoomPath(`/subjects/${subjectId}${pathname}`), [getRoomPath, subjectId])
 }
 
-export function useGetLessonPath(schoolId, roomId, subjectId, lessonId) {
-  const getSubjectPath = useGetSubjectPath(schoolId, roomId, subjectId)
+export function useGetLessonPath(roomId, subjectId, lessonId) {
+  const getSubjectPath = useGetSubjectPath(roomId, subjectId)
   return useCallback((pathname = '') => getSubjectPath(`/lessons/${lessonId}${pathname}`), [getSubjectPath, lessonId])
 }

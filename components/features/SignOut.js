@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 
-import { useSignOut } from '../../hooks/auth'
+import { useSignOut } from '@/hooks/auth'
 
 export default function SignUp () {
   const router = useRouter()

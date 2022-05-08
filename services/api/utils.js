@@ -1,17 +1,13 @@
-export function docToData (doc){
+export function docSnapshotToData (doc){
   return {
     id: doc.id,
     ...doc.data()
   }
 }
 
-export async function collectionToModels (collectionReference) {
-  const { docs } = await getDocs(collectionReference)
-  return docs.map(doc => docToData(doc))
-}
 
-export function snapshotToModels (snapshot, converter = docToData) {
-  const models = []
-  snapshot.forEach(doc => models.push(converter(doc)))
-  return models
+export function collectionSnapshotToDataArray (snapshot, converter = docSnapshotToData) {
+  const dataArray = []
+  snapshot.forEach(doc => dataArray.push(converter(doc)))
+  return dataArray
 }

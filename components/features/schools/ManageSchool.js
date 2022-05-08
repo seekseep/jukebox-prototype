@@ -6,20 +6,20 @@ import { toast } from 'react-toastify'
 
 import { FORM_ERROR_REQUIRED } from '../../../messages'
 
-import { useSchool, useUpdateSchool } from '../../../hooks/schools'
-import { useToggleState } from '../../../hooks/ui'
+import { useSchool, useUpdateSchool } from '@/hooks/schools'
+import { useToggleState } from '@/hooks/ui'
 
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
-import { Form, Field } from '../../parts/forms'
-import { Button } from '../../parts/buttons'
-import Loading from '../../parts/Loading'
-import Card, { CardActions, CardBody } from '../../parts/Card'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
+import { Form, Field } from '@/components/parts/forms'
+import { Button } from '@/components/parts/buttons'
+import Loading from '@/components/parts/Loading'
+import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import PropertySet, {
   PropertyItem,
   PropertyLabel,
   PropertyContents
-} from '../../parts/PropertySet'
-import ErrorAlert from '../../parts/ErrorAlert'
+} from '@/components/parts/PropertySet'
+import ErrorAlert from '@/components/parts/ErrorAlert'
 
 export default function ManageSchool () {
   const {

@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Breadcrumbs, {
   BreadcrumbsLinkItem as BLink,
   BreadcrumbsCurrentItem as BCurrent,
-} from '../../parts/Breadcrumbs'
+} from '@/components/parts/Breadcrumbs'
 
 export default function ViewRegisterSchoolNavigation () {
   return (

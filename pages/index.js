@@ -1,9 +1,8 @@
 import Link from 'next/link'
 
-import Authorized from '../components/features/Authorized'
-import FeatureCard from '../components/parts/FeatureCard'
-import SimplePage from '../components/parts/SimplePage'
-
+import Authorized from '@/components/features/Authorized'
+import FeatureCard from '@/components/parts/FeatureCard'
+import SimplePage from '@/components/parts/SimplePage'
 
 export default function Home () {
   return (

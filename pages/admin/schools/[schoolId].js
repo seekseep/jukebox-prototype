@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 
-import { useGetAdminPath } from '../../../hooks/admin'
-import { useSchool } from '../../../hooks/schools'
+import { useGetAdminPath } from '@/hooks/admin'
+import { useSchool } from '@/hooks/schools'
 
 import ErrorAlert from '../../../components/parts/ErrorAlert'
 import Loading from '../../../components/parts/Loading'

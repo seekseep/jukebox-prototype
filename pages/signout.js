@@ -1,6 +1,6 @@
 import Head from 'next/head'
-import SignOut from '../components/features/SignOut'
-import SimplePage from '../components/parts/SimplePage'
+import SignOut from '@/components/features/SignOut'
+import SimplePage from '@/components/parts/SimplePage'
 
 export default function SignOutPage () {
   return (

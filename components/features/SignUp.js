@@ -12,13 +12,13 @@ import {
   FORM_ERROR_TOO_LONG
 } from '../../messages'
 
-import { useSignUp } from '../../hooks/auth'
+import { useSignUp } from '@/hooks/auth'
 
-import Card, { CardBody } from '../parts/Card'
-import AuthorizeHeader from '../parts/AuthorizeHeader'
-import ErrorAlert from '../parts/ErrorAlert'
-import { Form, Field } from '../parts/forms'
-import { Button } from '../parts/buttons'
+import Card, { CardBody } from '@/components/parts/Card'
+import AuthorizeHeader from '@/components/parts/AuthorizeHeader'
+import ErrorAlert from '@/components/parts/ErrorAlert'
+import { Form, Field } from '@/components/parts/forms'
+import { Button } from '@/components/parts/buttons'
 
 export default function SignUp () {
   const router = useRouter()

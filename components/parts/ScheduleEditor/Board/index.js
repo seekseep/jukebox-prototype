@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { getDay, add }from'date-fns'
 
-import { WEEK_DAY } from '../../../../constatnts'
+import { WEEK_DAY } from '@/constatnts'
 
 import {
   useRoom,
@@ -9,7 +9,7 @@ import {
   useRange,
   useGetLessonsByTeacherIdAndDate,
   useTeachers
-} from '../hooks'
+} from '@/hooks'
 
 import Navigation from './Navigation'
 

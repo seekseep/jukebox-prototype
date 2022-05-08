@@ -22,16 +22,16 @@ export function useTeacherSchema () {
   }),[])
 }
 
-export function useTeachers(schoolId, roomId) {
-  return useCollectionQuery(`/schools/${schoolId}/rooms/${roomId}/teachers`)
+export function useTeachers(roomId) {
+  return useCollectionQuery(`/rooms/${roomId}/teachers`)
 }
 
-export function useTeacher(schoolId, roomId, teacherId) {
-  return useDocumentQuery(`/schools/${schoolId}/rooms/${roomId}/teachers/${teacherId}`)
+export function useTeacher(roomId, teacherId) {
+  return useDocumentQuery(`/rooms/${roomId}/teachers/${teacherId}`)
 }
 
-export function useTeacherSubjects(schoolId, roomId, teacherId){
-  return useSWR([schoolId, roomId, teacherId], getTeacherSubjects)
+export function useTeacherSubjects(roomId, teacherId){
+  return useSWR([roomId, teacherId], getTeacherSubjects)
 }
 
 export function useTeachersByFamilyId(familyId) {
@@ -40,37 +40,37 @@ export function useTeachersByFamilyId(familyId) {
   return teachers
 }
 
-export function useCreateTeacher (schoolId, roomId) {
+export function useCreateTeacher (roomId) {
   return useMutation(
     async (teacher) => {
-      return await createTeacher(schoolId, roomId, teacher)
+      return await createTeacher(roomId, teacher)
     }
   )
 }
 
-export function useUpdateTeacher (schoolId, roomId, teacherId) {
+export function useUpdateTeacher (roomId, teacherId) {
   return useMutation(
     async (teacher) => {
-      return await updateTeacher(schoolId, roomId, teacherId, teacher)
+      return await updateTeacher(roomId, teacherId, teacher)
     }
   )
 }
 
-export function useDeleteTeacher (schoolId, roomId, teacherId,) {
+export function useDeleteTeacher (roomId, teacherId,) {
   return useMutation(
     async () => {
-      return await deleteTeacher(schoolId, roomId, teacherId)
+      return await deleteTeacher(roomId, teacherId)
     }
   )
 }
 
-export function useTeacherSchedules (schoolId, roomId, teacherId) {
-  const swr = useSWR([schoolId, roomId, teacherId], getTeacherSchedules)
+export function useTeacherSchedules (roomId, teacherId) {
+  const swr = useSWR([roomId, teacherId], getTeacherSchedules)
   return expandSWR(swr)
 }
 
-export function useTeacherRelations (schoolId, roomId, teacherId) {
-  const swr = useSWR([schoolId, roomId, teacherId], getTeacherRelations)
+export function useTeacherRelations (roomId, teacherId) {
+  const swr = useSWR([roomId, teacherId], getTeacherRelations)
   return expandSWR(swr)
 }
 

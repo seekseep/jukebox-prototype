@@ -21,8 +21,8 @@ function useClassName({ disabled, sm=false, primary = true, secondary = false, d
   }, [danger, disabled, primary, secondary, sm])
 }
 
-export function Button ({ sm = false, primary = true, secondary = false, ...props }) {
-  const className = useClassName({ sm, primary, secondary, ...props })
+export function Button ({ sm = false, primary = true, secondary = false, danger = false, ...props }) {
+  const className = useClassName({ sm, primary, secondary, danger, ...props })
   return (
     <button className={className} {...props} />
   )

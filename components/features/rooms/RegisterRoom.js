@@ -8,14 +8,14 @@ import {
   FORM_ERROR_REQUIRED,
 } from '../../../messages'
 
-import { useGetSchoolPath } from '../../../hooks/router'
-import { useCreateRoom } from '../../../hooks/rooms'
+import { useGetSchoolPath } from '@/hooks/router'
+import { useCreateRoom } from '@/hooks/rooms'
 
-import Card, { CardBody } from '../../parts/Card'
-import ErrorAlert from '../../parts/ErrorAlert'
-import { Form, Field } from '../../parts/forms'
-import { Button } from '../../parts/buttons'
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
+import Card, { CardBody } from '@/components/parts/Card'
+import ErrorAlert from '@/components/parts/ErrorAlert'
+import { Form, Field } from '@/components/parts/forms'
+import { Button } from '@/components/parts/buttons'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 
 export default function RegisterRoom () {
   const router = useRouter()
@@ -27,21 +27,24 @@ export default function RegisterRoom () {
     isSuccess,
     data: createdRoom,
     error,
-  }] = useCreateRoom(schoolId)
+  }] = useCreateRoom()
 
   const validationSchema = useMemo(() => Yup.object().shape({
-    name: Yup.string().required(FORM_ERROR_REQUIRED).default('')
+    school: Yup.string().required(FORM_ERROR_REQUIRED).default(''),
+    name  : Yup.string().required(FORM_ERROR_REQUIRED).default(''),
   }), [])
   const initialValues = useMemo(() => validationSchema.cast({
-
-  }, { stripUnknown: true }), [validationSchema])
+    school: schoolId
+  }, { stripUnknown: true }), [schoolId, validationSchema])
   const handleSubmit = useCallback((room) => create(room), [create])
 
   useEffect(() => {
     if (!isSuccess) return
     toast.success('教室を登録しました')
-    router.push(getSchoolPath(`/rooms/${createdRoom?.id}`))
+    router.push(`/rooms/${createdRoom?.id}`)
   }, [createdRoom?.id, getSchoolPath, isSuccess, router])
+
+  const isReady = !!schoolId
 
   return (
     <Feature>
@@ -50,13 +53,15 @@ export default function RegisterRoom () {
       </FeatureHead>
       <Card>
         <CardBody>
-          <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleSubmit}>
-            <Form>
-              <Field name="name" label="名称" />
-              {error && <ErrorAlert error={error} />}
-              <Button type="submit">教室を登録する</Button>
-            </Form>
-          </Formik>
+          {isReady && (
+            <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleSubmit}>
+              <Form>
+                <Field name="name" label="名称" />
+                {error && <ErrorAlert error={error} />}
+                <Button type="submit">教室を登録する</Button>
+              </Form>
+            </Formik>
+          )}
         </CardBody>
       </Card>
     </Feature>

@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
-import { useGetRoomPath } from '../../../hooks/router'
+import { useGetRoomPath } from '@/hooks/router'
 
 export function useGetNavLinkProps (schoolId, roomId) {
   const { asPath: currentPathname } = useRouter()

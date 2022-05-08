@@ -39,3 +39,7 @@ export const WEEK_DAY = Object.freeze({
 })
 
 export const WEEK_DAY_ALL = -1
+
+export const REPEAT_TERM_TYPE = Object.freeze({
+  WEEKLY: 'WEEKLY'
+})

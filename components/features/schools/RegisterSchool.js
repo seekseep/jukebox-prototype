@@ -8,13 +8,13 @@ import {
   FORM_ERROR_REQUIRED,
 } from '../../../messages'
 
-import { useCreateSchool } from '../../../hooks/schools'
+import { useCreateSchool } from '@/hooks/schools'
 
-import Card, { CardBody } from '../../parts/Card'
-import ErrorAlert from '../../parts/ErrorAlert'
-import { Form, Field } from '../../parts/forms'
-import { Button } from '../../parts/buttons'
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
+import Card, { CardBody } from '@/components/parts/Card'
+import ErrorAlert from '@/components/parts/ErrorAlert'
+import { Form, Field } from '@/components/parts/forms'
+import { Button } from '@/components/parts/buttons'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 
 export default function RegisterSchool () {
   const router = useRouter()

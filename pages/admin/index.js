@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { useGetAdminPath } from '../../hooks/admin'
+import { useGetAdminPath } from '@/hooks/admin'
 
 import AdminDashboard from '../../components/parts/AdminDashboard'
 import Card from '../../components/parts/Card'

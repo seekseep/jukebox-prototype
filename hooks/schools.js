@@ -1,9 +1,11 @@
-import { useCallback, useMemo } from 'react'
+import useSWR from 'swr'
+import { useMemo } from 'react'
 import * as Yup from 'yup'
 
-import { createSchool, deleteSchool, updateSchool } from '../services/api/schools'
+import { createSchool, deleteSchool, updateSchool } from '@/services/api/schools'
+import { getSchoolRooms } from '@/services/api/rooms'
 
-import { useCollectionQuery, useDocumentQuery, useMutation } from './api'
+import { useCollectionQuery, useDocumentQuery, useMutation, expandSWR } from './api'
 
 export function useSchoolSchema(options) {
   return useMemo(() => Yup.object().shape({
@@ -35,4 +37,9 @@ export function useDeleteSchool (schoolId) {
   return useMutation(
     async () => await deleteSchool(schoolId)
   )
+}
+
+export function useSchoolRooms (schoolId) {
+  const swr = useSWR([schoolId, 'rooms'], getSchoolRooms)
+  return expandSWR(swr)
 }

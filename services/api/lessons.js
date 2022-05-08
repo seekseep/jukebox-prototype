@@ -1,88 +1,107 @@
 import {
   getFirestore,
   collection, doc,
-  getDoc, addDoc, updateDoc, deleteDoc
+  query, where,
+  getDoc, addDoc, updateDoc, deleteDoc, getDocs
 } from 'firebase/firestore'
 
 import { app } from '../../firebase'
+import { getSubjectRef } from './subjects'
 
-import { docToData } from './utils'
+import { docSnapshotToData, collectionSnapshotToDataArray } from './utils'
 
-export function getLessonsRef (schoolId, roomId, subjectId) {
-  const firestore = getFirestore(app)
-  return collection(firestore, `schools/${schoolId}/rooms/${roomId}/subjects/${subjectId}/lessons`)
+async function getReferedSubject(subjectRef) {
+  if(!subjectRef) return null
+  const subjectSnapshot = await getDoc(subjectRef)
+  const subject = docSnapshotToData(subjectSnapshot)
+  return subject
 }
 
-export function getLessonRef (schoolId, roomId, subjectId, lessonId) {
-  const lessonsRef = getLessonsRef(schoolId, roomId, subjectId)
+async function getReferedStudents (students = []) {
+  const referedStudents = []
+  for (let studentRef of students) {
+    const studentSnapshot = await getDoc(studentRef)
+    const student = docSnapshotToData(studentSnapshot)
+    referedStudents.push(student)
+  }
+  return referedStudents
+}
+
+async function getReferedTeachers (teachers = []) {
+  const referedTeachers = []
+  for (let teacherRef of teachers) {
+    const teacherSnapshot = await getDoc(teacherRef)
+    const teacher = docSnapshotToData(teacherSnapshot)
+    referedTeachers.push(teacher)
+  }
+  return referedTeachers
+}
+
+async function getReferedSheets (sheets = []) {
+  const referedSheets = []
+  for (let sheetRef of sheets) {
+    const sheetSnapshot = await getDoc(sheetRef)
+    const sheet = docSnapshotToData(sheetSnapshot)
+    referedSheets.push(sheet)
+  }
+  return referedSheets
+}
+
+export function getLessonsRef (roomId) {
+  const firestore = getFirestore(app)
+  return collection(firestore, `rooms/${roomId}/lessons`)
+}
+
+export function getLessonRef (roomId, lessonId) {
+  const lessonsRef = getLessonsRef(roomId)
   return doc(lessonsRef, lessonId)
 }
 
-export async function getLesson(schoolId, roomId, subjectId, lessonId) {
-  const lessonRef = getLessonRef(schoolId, roomId, subjectId, lessonId)
+export async function getSubjectLessons(roomId, subjectId) {
+  const lessonsRef = getLessonsRef(roomId)
+  const subjectRef = getSubjectRef(roomId, subjectId)
+  const subjectLessonQuery = query(lessonsRef ,where('subject', '==', subjectRef))
+  const snapshot = await getDocs(subjectLessonQuery)
+  return collectionSnapshotToDataArray(snapshot)
+}
+
+export async function getLesson(roomId, lessonId) {
+  const lessonRef = getLessonRef(roomId, lessonId)
   const lessonSnapshot = await getDoc(lessonRef)
-  const {
-    students,
-    teachers,
-    sheets,
-    ...lesson
-  } = docToData(lessonSnapshot)
+  const lesson = docSnapshotToData(lessonSnapshot)
 
-  lesson.students = []
-  if (students) {
-    for (let studentRef of students) {
-      const studentSnapshot = await getDoc(studentRef)
-      const student = docToData(studentSnapshot)
-      lesson.students.push(student)
-    }
-  }
-
-  lesson.teachers = []
-  if (teachers) {
-    for (let teacherRef of teachers) {
-      const teacherSnapshot = await getDoc(teacherRef)
-      const teacher = docToData(teacherSnapshot)
-      lesson.teachers.push(teacher)
-    }
-  }
-
-  lesson.sheets = []
-  if (sheets) {
-    for (let sheetRef of sheets) {
-      const sheetSnapshot = await getDoc(sheetRef)
-      const sheet = docToData(sheetSnapshot)
-      lesson.sheets.push(sheet)
-    }
-  }
+  lesson.subject = await getReferedSubject(lesson.subject)
+  lesson.students = await getReferedStudents(lesson.students)
+  lesson.teachers = await getReferedTeachers(lesson.teachers)
+  lesson.sheets = await getReferedSheets(lesson.sheets)
 
   return lesson
 }
 
-
-export async function createLesson(schoolId, roomId, subjectId, data) {
-  const lessonsRef = getLessonsRef(schoolId, roomId, subjectId)
+export async function createLesson(roomId, data) {
+  const lessonsRef = getLessonsRef(roomId)
 
   const lessonRef = await addDoc(lessonsRef, data)
 
   const lessonSnapshot = await getDoc(lessonRef)
-  const createdLesson = docToData(lessonSnapshot)
+  const createdLesson = docSnapshotToData(lessonSnapshot)
 
   return createdLesson
 }
 
-export async function updateLesson (schoolId, roomId, subjectId, lessonId, data, { merge = true } = { }) {
-  const lessonRef = getLessonRef(schoolId, roomId, subjectId, lessonId)
+export async function updateLesson (roomId, lessonId, data, { merge = true } = { }) {
+  const lessonRef = getLessonRef(roomId, lessonId)
 
   await updateDoc(lessonRef, data, { merge })
 
   const lessonSnapshot = await getDoc(lessonRef)
-  const updatedLesson = docToData(lessonSnapshot)
+  const updatedLesson = docSnapshotToData(lessonSnapshot)
 
   return updatedLesson
 }
 
-export async function deleteLesson (schoolId, roomId, subjectId, lessonId) {
-  const lessonRef = getLessonRef(schoolId, roomId, subjectId, lessonId)
+export async function deleteLesson (roomId, lessonId) {
+  const lessonRef = getLessonRef(roomId, lessonId)
 
   await deleteDoc(lessonRef)
 

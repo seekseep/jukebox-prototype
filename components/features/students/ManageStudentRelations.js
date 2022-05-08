@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router'
 
-import { useGetStudentPath } from '../../../hooks/router'
-import { useStudentRelations } from '../../../hooks/students'
+import { useGetStudentPath } from '@/hooks/router'
+import { useStudentRelations } from '@/hooks/students'
 
-import Card from '../../parts/Card'
-import { LinkButton } from '../../parts/buttons'
-import Loading from '../../parts/Loading'
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
-import Collection, { CollectionLinkItem } from '../../parts/Collection'
+import Card from '@/components/parts/Card'
+import { LinkButton } from '@/components/parts/buttons'
+import Loading from '@/components/parts/Loading'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
+import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
 
 export default function ManageStudentRelations () {
   const { query: { schoolId, roomId, studentId } } = useRouter()

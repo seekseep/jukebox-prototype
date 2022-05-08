@@ -1,5 +1,5 @@
-import { useGetRoomPath } from '../../hooks/rooms'
-import { useStudent } from '../../hooks/students'
+import { useGetRoomPath } from '@/hooks/rooms'
+import { useStudent } from '@/hooks/students'
 
 import TabNavigation, { Tab } from './TabNavigation'
 import Breadcrumbs, {

@@ -6,23 +6,23 @@ import { toast } from 'react-toastify'
 
 import { FORM_ERROR_REQUIRED } from '../../../messages'
 
-import { useSubject, useUpdateSubject } from '../../../hooks/subjects'
-import { useToggleState } from '../../../hooks/ui'
+import { useSubject, useUpdateSubject } from '@/hooks/subjects'
+import { useToggleState } from '@/hooks/ui'
 
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
-import { Form, Field } from '../../parts/forms'
-import { Button } from '../../parts/buttons'
-import Loading from '../../parts/Loading'
-import ErrorAlert from '../../parts/ErrorAlert'
-import Card, { CardActions, CardBody } from '../../parts/Card'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
+import { Form, Field } from '@/components/parts/forms'
+import { Button } from '@/components/parts/buttons'
+import Loading from '@/components/parts/Loading'
+import ErrorAlert from '@/components/parts/ErrorAlert'
+import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import PropertySet, {
   PropertyItem,
   PropertyLabel,
   PropertyContents
-} from '../../parts/PropertySet'
+} from '@/components/parts/PropertySet'
 
 export default function ManageSubject () {
-  const { query:{ schoolId, roomId, subjectId } } = useRouter()
+  const { query:{ roomId, subjectId } } = useRouter()
   const [isEditing, toggleEditing, setIsEditing] = useToggleState()
 
   const {
@@ -31,13 +31,13 @@ export default function ManageSubject () {
     error: gettingError,
     isSuccess: isReady,
     mutate
-  } = useSubject(schoolId, roomId, subjectId)
+  } = useSubject(roomId, subjectId)
   const [update, {
     data: updatedTeacher,
     isLoading: isUpdating,
     isSuccess: isUpdated,
     error: updatingError
-  }] = useUpdateSubject(schoolId, roomId, subjectId)
+  }] = useUpdateSubject(roomId, subjectId)
 
   const validationSchema = useMemo(() => Yup.object().shape({
     name: Yup.string().required(FORM_ERROR_REQUIRED).default('')

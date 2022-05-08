@@ -7,43 +7,39 @@ import { toast } from 'react-toastify'
 
 import { FORM_ERROR_REQUIRED } from '../../../messages'
 
-import { useTeachers } from '../../../hooks/teachers'
-import { useStudents } from '../../../hooks/students'
-import { useSheets } from '../../../hooks/sheets'
-import {
-  useLesson,
-  useLessonSheets,
-  useLessonStudents,
-  useLessonTeachers,
-  useUpdateLesson
-} from '../../../hooks/lessons'
-import { useToggleState } from '../../../hooks/ui'
-import { useGetRoomPath } from '../../../hooks/router'
+import { getDatetimeLocalValue } from '@/services/input'
 
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
-import { Form, Field, SelectField } from '../../parts/forms'
-import { Button } from '../../parts/buttons'
-import Loading from '../../parts/Loading'
-import Card, { CardActions, CardBody } from '../../parts/Card'
+import { useTeachers } from '@/hooks/teachers'
+import { useStudents } from '@/hooks/students'
+import { useSheets } from '@/hooks/sheets'
+import { useLesson, useUpdateLesson } from '@/hooks/lessons'
+import { useToggleState } from '@/hooks/ui'
+import { useGetRoomPath } from '@/hooks/router'
+
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
+import { Form, Field, SelectField } from '@/components/parts/forms'
+import { Button } from '@/components/parts/buttons'
+import Loading from '@/components/parts/Loading'
+import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import PropertySet, {
   PropertyItem,
   PropertyLabel,
   PropertyContents,
   PropertyDateTimeContents
-} from '../../parts/PropertySet'
+} from '@/components/parts/PropertySet'
 import Collection, {
   CollectionLinkItem
-} from '../../parts/Collection'
-import ErrorAlert from '../../parts/ErrorAlert'
+} from '@/components/parts/Collection'
+import ErrorAlert from '@/components/parts/ErrorAlert'
 
 export default function ManageLesson () {
-  const { query:{ schoolId, roomId, subjectId, lessonId } } = useRouter()
+  const { query:{ roomId, lessonId } } = useRouter()
   const [isEditing, toggleEditing, setIsEditing] = useToggleState()
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
+  const getRoomPath = useGetRoomPath(roomId)
 
-  const { data: roomStudents } = useStudents(schoolId, roomId)
-  const { data: roomTeachers } = useTeachers(schoolId, roomId)
-  const { data: roomSheets } = useSheets(schoolId, roomId)
+  const { data: roomStudents } = useStudents(roomId)
+  const { data: roomTeachers } = useTeachers(roomId)
+  const { data: roomSheets } = useSheets(roomId)
 
   const {
     data: lesson,
@@ -51,20 +47,19 @@ export default function ManageLesson () {
     error: gettingError,
     isSuccess: isReady,
     mutate
-  } = useLesson(schoolId, roomId, subjectId, lessonId)
+  } = useLesson(roomId, lessonId)
   const [update, {
     data: updatedLesson,
     isLoading: isUpdating,
     isSuccess: isUpdated,
     error: updatingError
-  }] = useUpdateLesson(schoolId, roomId, subjectId, lessonId)
+  }] = useUpdateLesson(roomId, lessonId)
 
   const studentOptions = useMemo(() => roomStudents?.map(({ id: value, name:label }) => ({ label, value })) || [], [roomStudents])
   const teacherOptions = useMemo(() => roomTeachers?.map(({ id: value, name:label }) => ({ label, value })) || [], [roomTeachers])
   const sheetOptions = useMemo(() => roomSheets?.map(({ id: value, name:label }) => ({ label, value })) || [], [roomSheets])
 
   const validationSchema = useMemo(() => Yup.object().shape({
-    name      : Yup.string().required(FORM_ERROR_REQUIRED).default(''),
     teachers  : Yup.array(Yup.object().shape({ value: Yup.string(), label: Yup.string() })).default([]),
     students  : Yup.array(Yup.object().shape({ value: Yup.string(), label: Yup.string() })).default([]),
     sheets    : Yup.array(Yup.object().shape({ value: Yup.string(), label: Yup.string() })).default([]),
@@ -74,8 +69,8 @@ export default function ManageLesson () {
 
   const initialValues = useMemo(() => validationSchema.cast({
     ...lesson,
-    startedAt : lesson?.startedAt ? format(lesson.startedAt.toDate(), 'yyyy-MM-dd\'T\'hh:mm') : '',
-    finishedAt: lesson?.finishedAt ? format(lesson.finishedAt.toDate(), 'yyyy-MM-dd\'T\'hh:mm') : '',
+    startedAt : getDatetimeLocalValue(lesson?.startedAt?.toDate()),
+    finishedAt: getDatetimeLocalValue(lesson?.finishedAt?.toDate()),
     teachers  : lesson?.teachers?.map(({ id: value, name: label }) => ({ value, label })) || [],
     students  : lesson?.students?.map(({ id: value, name: label }) => ({ value, label })) || [],
     sheets    : lesson?.sheets?.map(({ id: value, name: label }) => ({ value, label })) || [],
@@ -111,7 +106,6 @@ export default function ManageLesson () {
               <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
                 {({ isValid }) => (
                   <Form>
-                    <Field name="name" label="名称" />
                     <Field name="startedAt" label="開始日時" type="datetime-local" />
                     <Field name="finishedAt" label="終了日時" type="datetime-local" />
                     <SelectField name="students" label="生徒" options={studentOptions} isMulti />
@@ -132,10 +126,6 @@ export default function ManageLesson () {
                 <Button secondary sm onClick={toggleEditing}>編集する</Button>
               </CardActions>
               <PropertySet>
-                <PropertyItem>
-                  <PropertyLabel>名称</PropertyLabel>
-                  <PropertyContents>{lesson.name}</PropertyContents>
-                </PropertyItem>
                 <PropertyItem>
                   <PropertyLabel>開始日時</PropertyLabel>
                   <PropertyDateTimeContents value={lesson?.startedAt?.toDate()} />

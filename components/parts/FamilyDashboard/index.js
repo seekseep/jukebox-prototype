@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { createElement } from 'react'
 
-import { useGetFamilyPath, useFamily } from '../../../hooks/families'
+import { useGetFamilyPath, useFamily } from '@/hooks/families'
 
 export default function FamilyDashboard ({ title, familyId, children }) {
   const getFamilyPath = useGetFamilyPath(familyId)

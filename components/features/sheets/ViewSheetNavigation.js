@@ -1,22 +1,22 @@
 import { useRouter } from 'next/router'
 
-import { useGetSheetPath, useGetRoomPath } from '../../../hooks/router'
+import { useGetSheetPath, useGetRoomPath } from '@/hooks/router'
 
-import { useSheet } from '../../../hooks/sheets'
+import { useSheet } from '@/hooks/sheets'
 
 import Breadcrumbs, {
   BreadcrumbsLinkItem as BLink,
   BreadcrumbsCurrentItem as BCurrent,
-} from '../../parts/Breadcrumbs'
+} from '@/components/parts/Breadcrumbs'
 import TabNavigation, {
   Tab
-} from '../../parts/TabNavigation'
+} from '@/components/parts/TabNavigation'
 
 export default function ViewSheetNavigation () {
-  const { query: { schoolId, roomId, sheetId } } = useRouter()
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
-  const getSheetPath = useGetSheetPath(schoolId, roomId, sheetId)
-  const { data: sheet } = useSheet(schoolId, roomId, sheetId)
+  const { query: { roomId, sheetId } } = useRouter()
+  const getRoomPath = useGetRoomPath(roomId)
+  const getSheetPath = useGetSheetPath(roomId, sheetId)
+  const { data: sheet } = useSheet(roomId, sheetId)
 
   return (
     <>

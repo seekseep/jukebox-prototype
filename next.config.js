@@ -3,13 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify      : false,
   async redirects() {
-    return [
-      // {
-        // source: '/',
-        // destination: '/schools',
-        // permanent: false,
-      // }
-    ]
+    return []
   },
 }
 

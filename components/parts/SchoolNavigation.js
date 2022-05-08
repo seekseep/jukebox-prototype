@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { useSchool } from '../../hooks/schools'
+import { useSchool } from '@/hooks/schools'
 
 export default function SchoolNavigation ({ schoolId }) {
   const { data: school } = useSchool(schoolId)

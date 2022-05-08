@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { useGetRoomPath } from '../../../hooks/router'
+import { useGetRoomPath } from '@/hooks/router'
 import { useRoom, useSchedule, useSchool } from './hooks'
 
 import { Button } from '../buttons'

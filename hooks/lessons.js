@@ -1,7 +1,4 @@
-import { startOfMonth, endOfMonth, format } from 'date-fns'
-import { useMutation, useDocumentQuery, useCollectionQuery, expandSWR } from './api'
-import { useMemo } from 'react'
-import * as Yup from 'yup'
+import { useMutation, useCollectionQuery, expandSWR } from './api'
 
 import {
   getLesson,
@@ -13,73 +10,84 @@ import { getStudentRef } from '../services/api/students'
 import { getTeacherRef } from '../services/api/teachers'
 import { getSheetRef } from '../services/api/sheets'
 import useSWR from 'swr'
+import { getSubjectRef } from '@/services/api/subjects'
 
-function transformLessonForFirestore (schoolId, roomId, subjectId, { students, teachers, sheets, ...lesson }) {
-  return {
-    ...lesson,
-    students: students.map(studentId => getStudentRef(schoolId, roomId, studentId)),
-    teachers: teachers.map(teacherId => getTeacherRef(schoolId, roomId, teacherId)),
-    sheets  : sheets.map(sheetId => getSheetRef(schoolId, roomId, sheetId)),
+function getTransformLessonForFirestore (roomId) {
+  return function transformLesson ({ subject: subjectId, students, teachers, sheets, ...lesson }) {
+    if (subjectId) {
+      lesson.subject = getSubjectRef(roomId, subjectId)
+    }
+
+    if(students){
+      lesson.students = students.map(studentId => getStudentRef(roomId, studentId))
+    }
+
+    if(teachers){
+      lesson.teachers = teachers.map(teacherId => getTeacherRef(roomId, teacherId))
+    }
+
+    if(sheets)  {
+      lesson.sheets = sheets.map(sheetId => getSheetRef(roomId, sheetId))
+    }
+
+    return lesson
   }
 }
 
-export function useLessonSchema () {
-  return useMemo(() => Yup.object().shape({
-    startedAt : Yup.string().default(format(startOfMonth(new Date()), 'yyyy-MM-dd')),
-    finishedAt: Yup.string().default(format(endOfMonth(new Date()), 'yyyy-MM-dd')),
-  }),[])
+export function useLessons(roomId) {
+  return useCollectionQuery(`/rooms/${roomId}/lessons`)
 }
 
-export function useLessons(schoolId, roomId, subjectId) {
-  return useCollectionQuery(`/schools/${schoolId}/rooms/${roomId}/subjects/${subjectId}/lessons`)
-}
-
-export function useLesson(schoolId, roomId, subjectId, lessonId) {
-  const swr = useSWR([schoolId, roomId, subjectId, lessonId], getLesson)
+export function useLesson(roomId, lessonId) {
+  const swr = useSWR([roomId, lessonId], getLesson)
   return expandSWR(swr)
 }
 
-export function useCreateLesson (schoolId, roomId, subjectId) {
+export function useCreateLessons(roomId) {
+  const transform = getTransformLessonForFirestore(roomId)
+  return useMutation(
+    async (lessons) => {
+      const createdLessons = []
+
+      for (let lesson of lessons) {
+        const createdLesson = await createLesson(roomId, transform(lesson))
+        createdLessons.push(createdLesson)
+      }
+
+      return createdLessons
+    }
+  )
+}
+
+export function useCreateLesson (roomId) {
+  const transform = getTransformLessonForFirestore(roomId)
   return useMutation(
     async (lesson) => {
       return await createLesson(
-        schoolId,
         roomId,
-        subjectId,
-        transformLessonForFirestore(
-          schoolId,
-          roomId,
-          subjectId,
-          lesson
-        )
+        transform(lesson),
       )
     }
   )
 }
 
-export function useUpdateLesson (schoolId, roomId, subjectId, lessonId) {
+export function useUpdateLesson (roomId, lessonId) {
+  const transform = getTransformLessonForFirestore(roomId)
   return useMutation(
     async (lesson) => {
-      await updateLesson(
-        schoolId,
+      return await updateLesson(
         roomId,
-        subjectId,
         lessonId,
-        transformLessonForFirestore(
-          schoolId,
-          roomId,
-          subjectId,
-          lesson
-        )
+        transform(lesson)
       )
     }
   )
 }
 
-export function useDeleteLesson (schoolId, roomId, subjectId, lessonId) {
+export function useDeleteLesson (roomId, lessonId) {
   return useMutation(
     async () => {
-      await deleteLesson(schoolId, roomId, subjectId, lessonId)
+      return await deleteLesson(roomId, lessonId)
     }
   )
 }

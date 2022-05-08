@@ -1,7 +1,7 @@
-import { useCurrentUser } from '../../hooks/auth'
+import { useCurrentUser } from '@/hooks/auth'
 
-import Loading from '../parts/Loading'
-import Unauthorized from '../parts/Unauthorized'
+import Loading from '@/components/parts/Loading'
+import Unauthorized from '@/components/parts/Unauthorized'
 
 export default function Authorized ({ children }) {
   const { data: currentUser, isLoading } = useCurrentUser()

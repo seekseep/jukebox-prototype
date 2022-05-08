@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import useSWR from 'swr'
 
 import { signUp, signIn, signOut, getCurrentUser,  } from '../services/api/auth'

@@ -6,23 +6,23 @@ import { toast } from 'react-toastify'
 
 import { FORM_ERROR_REQUIRED } from '../../../messages'
 
-import { useToggleState } from '../../../hooks/ui'
+import { useToggleState } from '@/hooks/ui'
 
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
-import { Form, Field } from '../../parts/forms'
-import { Button } from '../../parts/buttons'
-import Loading from '../../parts/Loading'
-import Card, { CardActions, CardBody } from '../../parts/Card'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
+import { Form, Field } from '@/components/parts/forms'
+import { Button } from '@/components/parts/buttons'
+import Loading from '@/components/parts/Loading'
+import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import PropertySet, {
   PropertyItem,
   PropertyLabel,
   PropertyContents
-} from '../../parts/PropertySet'
-import ErrorAlert from '../../parts/ErrorAlert'
-import { useTeacher, useUpdateTeacher } from '../../../hooks/teachers'
+} from '@/components/parts/PropertySet'
+import ErrorAlert from '@/components/parts/ErrorAlert'
+import { useTeacher, useUpdateTeacher } from '@/hooks/teachers'
 
 export default function ManageTeacher () {
-  const { query:{ schoolId, roomId, teacherId } } = useRouter()
+  const { query:{ roomId, teacherId } } = useRouter()
   const [isEditing, toggleEditing, setIsEditing] = useToggleState()
 
   const {
@@ -31,13 +31,13 @@ export default function ManageTeacher () {
     error: gettingError,
     isSuccess: isReady,
     mutate
-  } = useTeacher(schoolId, roomId, teacherId)
+  } = useTeacher(roomId, teacherId)
   const [update, {
     data: updatedTeacher,
     isLoading: isUpdating,
     isSuccess: isUpdated,
     error: updatingError
-  }] = useUpdateTeacher(schoolId, roomId, teacherId)
+  }] = useUpdateTeacher(roomId, teacherId)
 
   const validationSchema = useMemo(() => Yup.object().shape({
     name: Yup.string().required(FORM_ERROR_REQUIRED).default('')

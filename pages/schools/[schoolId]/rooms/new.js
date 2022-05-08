@@ -1,8 +1,8 @@
-import Authorized from '../../../../components/features/Authorized'
-import RegisterRoom from '../../../../components/features/rooms/RegisterRoom'
-import ViewRegisterRoomNavigation from '../../../../components/features/rooms/ViewRegisterRoomNavigation'
+import Authorized from '@/components/features/Authorized'
+import RegisterRoom from '@/components/features/rooms/RegisterRoom'
+import ViewRegisterRoomNavigation from '@/components/features/rooms/ViewRegisterRoomNavigation'
 
-import SimplePage from '../../../../components/parts/SimplePage'
+import SimplePage from '@/components/parts/SimplePage'
 
 export default function NewRoom () {
   return (

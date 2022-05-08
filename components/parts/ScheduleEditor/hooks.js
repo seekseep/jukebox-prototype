@@ -2,13 +2,13 @@
 import { format, add, getDay, previousSunday,startOfDay, nextSunday } from 'date-fns'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
-import { useSchool as useFirestoreSchool } from '../../../hooks/schools'
-import { useRoom as useFirestoreRoom } from '../../../hooks/rooms'
-import { useSubjectsIncludingLessons as useFirestoreSubjects } from '../../../hooks/subjects'
-import { useTeachers as useFirestoreTeachers } from '../../../hooks/teachers'
-import { useStudents as useFirestoreStudents } from '../../../hooks/students'
-import { useSchedule as useFirestoreSchedule } from '../../../hooks/schedules'
-import { useFrameRulesSets as useFirestoreFrameRulesSets } from '../../../hooks/frameRulesSets'
+import { useSchool as useFirestoreSchool } from '@/hooks/schools'
+import { useRoom as useFirestoreRoom } from '@/hooks/rooms'
+import { useSubjectsIncludingLessons as useFirestoreSubjects } from '@/hooks/subjects'
+import { useTeachers as useFirestoreTeachers } from '@/hooks/teachers'
+import { useStudents as useFirestoreStudents } from '@/hooks/students'
+import { useSchedule as useFirestoreSchedule } from '@/hooks/schedules'
+import { useFrameRulesSets as useFirestoreFrameRulesSets } from '@/hooks/frameRulesSets'
 
 const Context = createContext()
 

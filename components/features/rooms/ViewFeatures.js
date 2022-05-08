@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router'
 
-import { useGetRoomPath } from '../../../hooks/router'
+import { useGetRoomPath } from '@/hooks/router'
 
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
-import FeatureCard from '../../parts/FeatureCard'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
+import FeatureCard from '@/components/parts/FeatureCard'
 
 export default function ViewFeatures () {
-  const { query: { schoolId, roomId } } = useRouter()
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
+  const { query: { roomId } } = useRouter()
+  const getRoomPath = useGetRoomPath(roomId)
 
   return (
     <Feature>
@@ -24,7 +24,7 @@ export default function ViewFeatures () {
           icon="👨‍🏫" label="講師"
           description="講師の登録や予定を登録できます"  />
         <FeatureCard
-          href={getRoomPath('/teachers')}
+          href={getRoomPath('/sheets')}
           icon="🪑" label="座席"
           description="座席の登録や予定を登録できます"  />
         <FeatureCard

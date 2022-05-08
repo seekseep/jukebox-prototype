@@ -6,52 +6,52 @@ import {
 
 import { app } from '../../firebase'
 
-import { docToData } from './utils'
+import { docSnapshotToData } from './utils'
 
-export function getSheetsRef (schoolId, roomId) {
+export function getSheetsRef (roomId) {
   const firestore = getFirestore(app)
-  return collection(firestore, `schools/${schoolId}/rooms/${roomId}/sheets`)
+  return collection(firestore, `rooms/${roomId}/sheets`)
 }
 
-export function getSheetRef (schoolId, roomId, sheetId) {
-  const sheetsRef = getSheetsRef(schoolId, roomId)
+export function getSheetRef (roomId, sheetId) {
+  const sheetsRef = getSheetsRef(roomId)
   return doc(sheetsRef, sheetId)
 }
 
-export async function createSheet(schoolId, roomId, data) {
-  const sheetsRef = getSheetsRef(schoolId, roomId)
+export async function createSheet(roomId, data) {
+  const sheetsRef = getSheetsRef(roomId)
 
   const sheetRef = await addDoc(sheetsRef, data)
 
   const sheetSnapshot = await getDoc(sheetRef)
-  const createdSheet = docToData(sheetSnapshot)
+  const createdSheet = docSnapshotToData(sheetSnapshot)
 
   return createdSheet
 }
 
-export async function updateSheet (schoolId, roomId, sheetId, data, { merge = true } = { }) {
-  const sheetRef = getSheetRef(schoolId, roomId, sheetId)
+export async function updateSheet (roomId, sheetId, data, { merge = true } = { }) {
+  const sheetRef = getSheetRef(roomId, sheetId)
 
   await updateDoc(sheetRef, data, { merge })
 
   const sheetSnapshot = await getDoc(sheetRef)
-  const updatedSheet = docToData(sheetSnapshot)
+  const updatedSheet = docSnapshotToData(sheetSnapshot)
 
   return updatedSheet
 }
 
-export async function deleteSheet (schoolId, roomId, sheetId) {
-  const sheetRef = getSheetRef(schoolId, roomId, sheetId)
+export async function deleteSheet (roomId, sheetId) {
+  const sheetRef = getSheetRef(roomId, sheetId)
 
   await deleteDoc(sheetRef)
 
   return null
 }
 
-export async function getSheetSchedules (schoolId, roomId, sheetId) {
-  const sheetRef = getSheetRef(schoolId, roomId, sheetId)
+export async function getSheetSchedules (roomId, sheetId) {
+  const sheetRef = getSheetRef(roomId, sheetId)
   const sheetSnapshot = await getDoc(sheetRef)
-  const sheet = docToData(sheetSnapshot)
+  const sheet = docSnapshotToData(sheetSnapshot)
 
   return sheet.schedules || []
 }

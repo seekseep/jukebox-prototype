@@ -19,12 +19,12 @@ export function useSheetSchema () {
   }),[])
 }
 
-export function useSheets(schoolId, roomId) {
-  return useCollectionQuery(`/schools/${schoolId}/rooms/${roomId}/sheets`)
+export function useSheets(roomId) {
+  return useCollectionQuery(`/rooms/${roomId}/sheets`)
 }
 
-export function useSheet(schoolId, roomId, sheetId) {
-  return useDocumentQuery(`/schools/${schoolId}/rooms/${roomId}/sheets/${sheetId}`)
+export function useSheet(roomId, sheetId) {
+  return useDocumentQuery(`/rooms/${roomId}/sheets/${sheetId}`)
 }
 
 export function useSheetsByFamilyId(familyId) {
@@ -33,26 +33,26 @@ export function useSheetsByFamilyId(familyId) {
   return sheets
 }
 
-export function useCreateSheet (schoolId, roomId) {
+export function useCreateSheet (roomId) {
   return useMutation(
     async (sheet) => {
-      return await createSheet(schoolId, roomId, sheet)
+      return await createSheet(roomId, sheet)
     }
   )
 }
 
-export function useUpdateSheet (schoolId, roomId, sheetId) {
+export function useUpdateSheet (roomId, sheetId) {
   return useMutation(
     async (sheet) => {
-      return await updateSheet(schoolId, roomId, sheetId, sheet)
+      return await updateSheet(roomId, sheetId, sheet)
     }
   )
 }
 
-export function useDeleteSheet (schoolId, roomId, sheetId,) {
+export function useDeleteSheet (roomId, sheetId,) {
   return useMutation(
     async () => {
-      return await deleteSheet(schoolId, roomId, sheetId)
+      return await deleteSheet(roomId, sheetId)
     }
   )
 }
@@ -66,7 +66,7 @@ export function useSheetOptions (sheets) {
   ,[sheets])
 }
 
-export function useSheetSchedules (schoolId, roomId, sheetId) {
-  const swr = useSWR([schoolId, roomId, sheetId], getSheetSchedules)
+export function useSheetSchedules (roomId, sheetId) {
+  const swr = useSWR([roomId, sheetId], getSheetSchedules)
   return expandSWR(swr)
 }

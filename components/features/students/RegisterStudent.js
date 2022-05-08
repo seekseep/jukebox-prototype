@@ -8,26 +8,26 @@ import {
   FORM_ERROR_REQUIRED,
 } from '../../../messages'
 
-import { useGetRoomPath } from '../../../hooks/router'
-import { useCreateStudent } from '../../../hooks/students'
+import { useGetRoomPath } from '@/hooks/router'
+import { useCreateStudent } from '@/hooks/students'
 
-import Card, { CardBody } from '../../parts/Card'
-import ErrorAlert from '../../parts/ErrorAlert'
-import { Form, Field } from '../../parts/forms'
-import { Button } from '../../parts/buttons'
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
+import Card, { CardBody } from '@/components/parts/Card'
+import ErrorAlert from '@/components/parts/ErrorAlert'
+import { Form, Field } from '@/components/parts/forms'
+import { Button } from '@/components/parts/buttons'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 
 export default function RegisterStudent () {
   const router = useRouter()
-  const { query: { schoolId, roomId } } = router
+  const { query: { roomId } } = router
 
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
+  const getRoomPath = useGetRoomPath(roomId)
 
   const [create, {
     isSuccess,
     data: createdStudent,
     error,
-  }] = useCreateStudent(schoolId)
+  }] = useCreateStudent(roomId)
 
   const validationSchema = useMemo(() => Yup.object().shape({
     name: Yup.string().required(FORM_ERROR_REQUIRED).default('')

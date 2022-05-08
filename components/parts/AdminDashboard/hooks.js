@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 
-import { useGetAdminPath } from '../../../hooks/admin'
+import { useGetAdminPath } from '@/hooks/admin'
 
 export function useGetNavLinkProps () {
   const { asPath: currentPathname } = useRouter()

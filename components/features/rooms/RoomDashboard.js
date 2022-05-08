@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import { useGetRoomPath } from '../../../hooks/router'
-import { useRoom } from '../../../hooks/rooms'
+import { useGetRoomPath } from '@/hooks/router'
+import { useRoom } from '@/hooks/rooms'
 
 import {
   Dashboard,
@@ -12,12 +12,12 @@ import {
   DashboardHeader,
   DashboardMain,
   DashboardNavigationLink as DNavLink
-} from '../../parts/dashboard'
+} from '@/components/parts/dashboard'
 
 export default function RoomDashboard ({ title, children }) {
-  const { query: { schoolId, roomId } } = useRouter()
-  const { data: room } = useRoom(schoolId, roomId)
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
+  const { query: { roomId } } = useRouter()
+  const { data: room } = useRoom(roomId)
+  const getRoomPath = useGetRoomPath(roomId)
 
   const roomName = useMemo(() => room?.name || '教室', [room?.name], [])
   const pageTitle = useMemo(() => title ? `${title} | ${roomName}` : roomName, [roomName, title])

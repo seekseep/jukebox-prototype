@@ -2,7 +2,7 @@ import Link from 'next/link'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
-import { useIsActive } from '../../hooks/router'
+import { useIsActive } from '@/hooks/router'
 
 export default function TabNavigation ({ children }) {
   return (

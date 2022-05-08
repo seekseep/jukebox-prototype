@@ -6,7 +6,7 @@ import {
 
 import { app } from '../../firebase'
 
-import { docToData } from './utils'
+import { docSnapshotToData } from './utils'
 
 export function getSchoolsRef () {
   const firestore = getFirestore(app)
@@ -24,7 +24,7 @@ export async function createSchool(data) {
   const schoolRef = await addDoc(schoolsRef, data)
 
   const schooolSnapshot = await getDoc(schoolRef)
-  const createdSchool = docToData(schooolSnapshot)
+  const createdSchool = docSnapshotToData(schooolSnapshot)
 
   return createdSchool
 }
@@ -35,7 +35,7 @@ export async function updateSchool (schoolId, data, { merge = true } = { }) {
   await updateDoc(schoolRef, data, { merge })
 
   const schooolSnapshot = await getDoc(schoolRef)
-  const updatedSchool = docToData(schooolSnapshot)
+  const updatedSchool = docSnapshotToData(schooolSnapshot)
 
   return updatedSchool
 }

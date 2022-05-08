@@ -1,5 +1,5 @@
-import { useGetRoomPath } from '../../hooks/rooms'
-import { useSubject } from '../../hooks/subjects'
+import { useGetRoomPath } from '@/hooks/rooms'
+import { useSubject } from '@/hooks/subjects'
 
 import TabNavigation, { Tab } from './TabNavigation'
 import Breadcrumbs, {

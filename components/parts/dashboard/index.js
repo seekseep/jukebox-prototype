@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import classNames from 'classnames'
 
-import { useIsActive } from '../../../hooks/router'
+import { useIsActive } from '@/hooks/router'
 
 export function Dashboard ({ title, children }) {
   return (

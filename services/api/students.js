@@ -6,77 +6,77 @@ import {
 
 import { app } from '../../firebase'
 
-import { docToData } from './utils'
+import { docSnapshotToData } from './utils'
 
-export function getStudentsRef (schoolId, roomId) {
+export function getStudentsRef (roomId) {
   const firestore = getFirestore(app)
-  return collection(firestore, `schools/${schoolId}/rooms/${roomId}/students`)
+  return collection(firestore, `rooms/${roomId}/students`)
 }
 
-export function getStudentRef (schoolId, roomId, studentId) {
-  const studentsRef = getStudentsRef(schoolId, roomId)
+export function getStudentRef (roomId, studentId) {
+  const studentsRef = getStudentsRef(roomId)
   return doc(studentsRef, studentId)
 }
 
-export async function createStudent(schoolId, roomId, data) {
-  const studentsRef = getStudentsRef(schoolId, roomId)
+export async function createStudent(roomId, data) {
+  const studentsRef = getStudentsRef(roomId)
 
   const studentRef = await addDoc(studentsRef, data)
 
   const studentSnapshot = await getDoc(studentRef)
-  const createdStudent = docToData(studentSnapshot)
+  const createdStudent = docSnapshotToData(studentSnapshot)
 
   return createdStudent
 }
 
-export async function updateStudent (schoolId, roomId, studentId, data, { merge = true } = { }) {
-  const studentRef = getStudentRef(schoolId, roomId, studentId)
+export async function updateStudent (roomId, studentId, data, { merge = true } = { }) {
+  const studentRef = getStudentRef(roomId, studentId)
 
   await updateDoc(studentRef, data, { merge })
 
   const studentSnapshot = await getDoc(studentRef)
-  const updatedStudent = docToData(studentSnapshot)
+  const updatedStudent = docSnapshotToData(studentSnapshot)
 
   return updatedStudent
 }
 
-export async function deleteStudent (schoolId, roomId, studentId) {
-  const studentRef = getStudentRef(schoolId, roomId, studentId)
+export async function deleteStudent (roomId, studentId) {
+  const studentRef = getStudentRef(roomId, studentId)
 
   await deleteDoc(studentRef)
 
   return null
 }
 
-export async function getStudentSubjects (schoolId, roomId, studentId) {
-  const studentRef = getStudentRef(schoolId, roomId, studentId)
+export async function getStudentSubjects (roomId, studentId) {
+  const studentRef = getStudentRef(roomId, studentId)
   const studentSnapshot = await getDoc(studentRef)
-  const student = docToData(studentSnapshot)
+  const student = docSnapshotToData(studentSnapshot)
 
   if (!student.subjects) return []
 
   const subjects = []
   for (let subjectRef of student.subjects) {
     const subjectSnapshot = await getDoc(subjectRef)
-    const subject = docToData(subjectSnapshot)
+    const subject = docSnapshotToData(subjectSnapshot)
     subjects.push(subject)
   }
 
   return subjects
 }
 
-export async function getStudentRelations (schoolId, roomId, studentId) {
-  const studentRef = getStudentRef(schoolId, roomId, studentId)
+export async function getStudentRelations (roomId, studentId) {
+  const studentRef = getStudentRef(roomId, studentId)
   const studentSnapshot = await getDoc(studentRef)
-  const student = docToData(studentSnapshot)
+  const student = docSnapshotToData(studentSnapshot)
 
   return student.relations || []
 }
 
-export async function getStudentSchedules (schoolId, roomId, studentId) {
-  const studentRef = getStudentRef(schoolId, roomId, studentId)
+export async function getStudentSchedules (roomId, studentId) {
+  const studentRef = getStudentRef(roomId, studentId)
   const studentSnapshot = await getDoc(studentRef)
-  const student = docToData(studentSnapshot)
+  const student = docSnapshotToData(studentSnapshot)
 
   return student.schedules || []
 }

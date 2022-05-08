@@ -1,22 +1,22 @@
 import { useRouter } from 'next/router'
 
-import { useGetTeacherPath, useGetRoomPath } from '../../../hooks/router'
+import { useGetTeacherPath, useGetRoomPath } from '@/hooks/router'
 
-import { useTeacher } from '../../../hooks/teachers'
+import { useTeacher } from '@/hooks/teachers'
 
 import Breadcrumbs, {
   BreadcrumbsLinkItem as BLink,
   BreadcrumbsCurrentItem as BCurrent,
-} from '../../parts/Breadcrumbs'
+} from '@/components/parts/Breadcrumbs'
 import TabNavigation, {
   Tab
-} from '../../parts/TabNavigation'
+} from '@/components/parts/TabNavigation'
 
 export default function ViewTeacherNavigation () {
-  const { query: { schoolId, roomId, teacherId } } = useRouter()
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
-  const getTeacherPath = useGetTeacherPath(schoolId, roomId, teacherId)
-  const { data: teacher } = useTeacher(schoolId, roomId, teacherId)
+  const { query: { roomId, teacherId } } = useRouter()
+  const getRoomPath = useGetRoomPath(roomId)
+  const getTeacherPath = useGetTeacherPath(roomId, teacherId)
+  const { data: teacher } = useTeacher(roomId, teacherId)
 
   return (
     <>

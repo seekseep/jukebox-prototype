@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router'
 
-import { useGetSchoolPath } from '../../../hooks/router'
-import { useRooms } from '../../../hooks/rooms'
+import { useGetSchoolPath } from '@/hooks/router'
+import { useRoomsBySchool } from '@/hooks/rooms'
 
-import Card from '../../parts/Card'
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
-import Loading from '../../parts/Loading'
-import Collection, { CollectionLinkItem } from '../../parts/Collection'
-import { LinkButton } from '../../parts/buttons'
+import Card from '@/components/parts/Card'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
+import Loading from '@/components/parts/Loading'
+import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
+import { LinkButton } from '@/components/parts/buttons'
 
 export default function ManageRooms () {
   const {
@@ -20,7 +20,7 @@ export default function ManageRooms () {
     data: rooms,
     isSuccess,
     isLoading
-  } = useRooms(schoolId)
+  } = useRoomsBySchool(schoolId)
 
   return (
     <Feature>
@@ -35,7 +35,7 @@ export default function ManageRooms () {
         {isSuccess && (
           <Collection>
             {rooms.map(room => (
-              <CollectionLinkItem key={room.id} href={getSchoolPath(`/rooms/${room.id}`)}>
+              <CollectionLinkItem key={room.id} href={`/rooms/${room.id}`}>
                 {room.name}
               </CollectionLinkItem>
             ))}

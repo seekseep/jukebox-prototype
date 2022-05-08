@@ -1,11 +1,11 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-import { useSchool } from '../../../hooks/schools'
+import { useSchool } from '@/hooks/schools'
 import Breadcrumbs, {
   BreadcrumbsLinkItem as BLink,
   BreadcrumbsCurrentItem as BCurrent,
-} from '../../parts/Breadcrumbs'
+} from '@/components/parts/Breadcrumbs'
 
 export default function ViewSchoolNavigation () {
   const { query: { schoolId } } = useRouter()

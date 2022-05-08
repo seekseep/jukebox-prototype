@@ -8,26 +8,26 @@ import {
   FORM_ERROR_REQUIRED,
 } from '../../../messages'
 
-import { useGetRoomPath } from '../../../hooks/router'
-import { useCreateSubject } from '../../../hooks/subjects'
+import { useGetRoomPath } from '@/hooks/router'
+import { useCreateSubject } from '@/hooks/subjects'
 
-import Card, { CardBody } from '../../parts/Card'
-import ErrorAlert from '../../parts/ErrorAlert'
-import { Form, Field } from '../../parts/forms'
-import { Button } from '../../parts/buttons'
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
+import Card, { CardBody } from '@/components/parts/Card'
+import ErrorAlert from '@/components/parts/ErrorAlert'
+import { Form, Field } from '@/components/parts/forms'
+import { Button } from '@/components/parts/buttons'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 
 export default function RegisterSubject () {
   const router = useRouter()
-  const { query: { schoolId, roomId } } = router
+  const { query: { roomId } } = router
 
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
+  const getRoomPath = useGetRoomPath(roomId)
 
   const [create, {
     isSuccess,
-    data: createdTeacher,
+    data: createdSubject,
     error,
-  }] = useCreateSubject(schoolId, roomId)
+  }] = useCreateSubject(roomId)
 
   const validationSchema = useMemo(() => Yup.object().shape({
     name: Yup.string().required(FORM_ERROR_REQUIRED).default('')
@@ -40,8 +40,8 @@ export default function RegisterSubject () {
   useEffect(() => {
     if (!isSuccess) return
     toast.success('科目を登録しました')
-    router.push(getRoomPath(`/subjects/${createdTeacher?.id}`))
-  }, [createdTeacher?.id, getRoomPath, isSuccess, router])
+    router.push(getRoomPath(`/subjects/${createdSubject?.id}`))
+  }, [createdSubject?.id, getRoomPath, isSuccess, router])
 
   return (
     <Feature>
@@ -52,7 +52,7 @@ export default function RegisterSubject () {
         <CardBody>
           <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleSubmit}>
             <Form>
-              <Field name="name" label="氏名" />
+              <Field name="name" label="名称" />
               {error && <ErrorAlert error={error} />}
               <Button type="submit">科目を登録する</Button>
             </Form>

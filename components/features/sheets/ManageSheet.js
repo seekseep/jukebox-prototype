@@ -6,23 +6,23 @@ import { toast } from 'react-toastify'
 
 import { FORM_ERROR_REQUIRED } from '../../../messages'
 
-import { useToggleState } from '../../../hooks/ui'
+import { useToggleState } from '@/hooks/ui'
 
-import { Feature, FeatureHead, FeatureTitle } from '../../parts/feature'
-import { Form, Field } from '../../parts/forms'
-import { Button } from '../../parts/buttons'
-import Loading from '../../parts/Loading'
-import Card, { CardActions, CardBody } from '../../parts/Card'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
+import { Form, Field } from '@/components/parts/forms'
+import { Button } from '@/components/parts/buttons'
+import Loading from '@/components/parts/Loading'
+import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import PropertySet, {
   PropertyItem,
   PropertyLabel,
   PropertyContents
-} from '../../parts/PropertySet'
-import ErrorAlert from '../../parts/ErrorAlert'
-import { useSheet, useUpdateSheet } from '../../../hooks/sheets'
+} from '@/components/parts/PropertySet'
+import ErrorAlert from '@/components/parts/ErrorAlert'
+import { useSheet, useUpdateSheet } from '@/hooks/sheets'
 
 export default function ManageSheet () {
-  const { query:{ schoolId, roomId, sheetId } } = useRouter()
+  const { query:{ roomId, sheetId } } = useRouter()
   const [isEditing, toggleEditing, setIsEditing] = useToggleState()
 
   const {
@@ -31,13 +31,13 @@ export default function ManageSheet () {
     error: gettingError,
     isSuccess: isReady,
     mutate
-  } = useSheet(schoolId, roomId, sheetId)
+  } = useSheet(roomId, sheetId)
   const [update, {
     data: updatedSheet,
     isLoading: isUpdating,
     isSuccess: isUpdated,
     error: updatingError
-  }] = useUpdateSheet(schoolId, roomId, sheetId)
+  }] = useUpdateSheet(roomId, sheetId)
 
   const validationSchema = useMemo(() => Yup.object().shape({
     name: Yup.string().required(FORM_ERROR_REQUIRED).default('')
@@ -65,7 +65,7 @@ export default function ManageSheet () {
               <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
                 {({ isValid }) => (
                   <Form>
-                    <Field name="name" label="氏名" />
+                    <Field name="name" label="名称" />
                     {updatingError && <ErrorAlert error={updatingError} />}
                     <div className="flex flex-row-reverse justify-between">
                       <Button primary type="submit" disabled={!isValid || isUpdating}>保存する</Button>
@@ -82,7 +82,7 @@ export default function ManageSheet () {
               </CardActions>
               <PropertySet>
                 <PropertyItem>
-                  <PropertyLabel>氏名</PropertyLabel>
+                  <PropertyLabel>名称</PropertyLabel>
                   <PropertyContents>{sheet.name}</PropertyContents>
                 </PropertyItem>
               </PropertySet>

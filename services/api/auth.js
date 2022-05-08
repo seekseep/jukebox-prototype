@@ -9,7 +9,7 @@ import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore'
 
 import { app } from '../../firebase'
 
-import { docToData } from './utils'
+import { docSnapshotToData } from './utils'
 
 export async function getCurrentUser () {
   return new Promise((resolve) => {
@@ -29,7 +29,7 @@ export async function signUp(email, password, name) {
 
   const snapshot = await getDoc(userRef)
 
-  return docToData(snapshot)
+  return docSnapshotToData(snapshot)
 }
 
 export async function signIn(email, password) {
@@ -41,7 +41,7 @@ export async function signIn(email, password) {
   const userRef = doc(firestore, `/users/${uid}`)
   const snapshot = await getDoc(userRef)
 
-  return docToData(snapshot)
+  return docSnapshotToData(snapshot)
 }
 
 export async function signOut () {

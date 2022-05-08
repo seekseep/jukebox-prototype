@@ -5,8 +5,6 @@ import { useRouter } from 'next/router'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 
-import { db } from '../../mocks/db'
-
 import Card from '../../components/parts/Card'
 import { Button } from '../../components/parts/buttons'
 import { Field, Form } from '../../components/parts/forms'
