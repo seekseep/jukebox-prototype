@@ -1,14 +1,25 @@
 import Link from 'next/link'
 import classNames from 'classnames'
 
-export default function Collection ({ children, placeholder = '項目が存在しません' }) {
+export default function Collection ({ children, header, placeholder = '項目が存在しません' }) {
   if (children.length < 1) {
     return (
       <CollectionPlaceholder>{placeholder}</CollectionPlaceholder>
     )
   }
 
-  return <ul className="flex flex-col py-2">{children}</ul>
+  const body = <ul className="flex flex-col py-2">{children}</ul>
+
+  if (header)  {
+    return (
+      <div>
+        {header}
+        {body}
+      </div>
+    )
+  }
+
+  return body
 }
 
 export function CollectionItem ({ clickable = false, isActive = false, ...props }) {

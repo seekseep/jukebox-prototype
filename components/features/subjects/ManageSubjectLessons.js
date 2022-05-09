@@ -1,19 +1,25 @@
 import { useRouter } from 'next/router'
 import { format } from 'date-fns'
+import Link from 'next/link'
 
 import { useGetSubjectPath } from '@/hooks/router'
 import { useSubjectLessons } from '@/hooks/subjects'
+import { useDeleteLessons } from '@/hooks/lessons'
 
 import Card from '@/components/parts/Card'
+import { Button } from '@/components/parts/buttons'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 import Loading from '@/components/parts/Loading'
-import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
+import Collection, { CollectionItem, CollectionLinkItem } from '@/components/parts/Collection'
 import { LinkButton } from '@/components/parts/buttons'
 import ErrorAlert from '@/components/parts/ErrorAlert'
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { toast } from 'react-toastify'
 
 export default function ManageSubjectLessons () {
   const { query:{ roomId, subjectId } } = useRouter()
+
+  const [selections, setSelections] = useState({})
 
   const getSubjectPath = useGetSubjectPath(roomId, subjectId)
 
@@ -21,8 +27,13 @@ export default function ManageSubjectLessons () {
     data: lessons,
     isSuccess,
     isLoading,
-    error
+    error,
+    mutate
   } = useSubjectLessons(roomId, subjectId)
+
+  const [deleteLessons, {
+    isSuccess: isDeleted,
+  }] = useDeleteLessons(roomId)
 
   const sortedLessons = useMemo(() => {
     if (!lessons) return lessons
@@ -34,6 +45,39 @@ export default function ManageSubjectLessons () {
       return c > d ? 1 : -1
     })
   }, [lessons])
+
+  const isSomeChecked = useMemo(() => {
+    return Object.values(selections).some(selected => selected)
+  }, [selections])
+
+  const isAllChecked = useMemo(() => {
+    return Object.values(selections).every(selected => selected)
+  }, [selections])
+
+  const handleChangeAllCheckbox = useCallback(({ target: { checked } }) => {
+    setSelections(lessons.reduce((selections,lesson) => ({
+      ...selections,
+      [lesson.id]: checked
+    }), {}))
+  }, [lessons])
+
+  const handleDelete = useCallback(() => {
+    deleteLessons(Object.keys(selections))
+  }, [deleteLessons, selections])
+
+  useEffect(() => {
+    if (!lessons) return
+    setSelections(lessons.reduce((selections,lesson) => ({
+      ...selections,
+      [lesson.id]: false
+    }), {}))
+  }, [lessons])
+
+  useEffect(() => {
+    if(!isDeleted) return
+    toast.success('授業を削除しました')
+    mutate([])
+  }, [isDeleted, mutate])
 
   return (
     <Feature>
@@ -47,16 +91,47 @@ export default function ManageSubjectLessons () {
       <Card>
         {isLoading && <Loading />}
         {isSuccess && (
-          <Collection>
-            {sortedLessons.map(lesson => (
-              <CollectionLinkItem key={lesson.id} href={getSubjectPath(`/lessons/${lesson.id}`)}>
-                <div className="flex gap-2">
-                  <div className="w-40">{format(lesson.startedAt.toDate(), 'yyyy/MM/dd HH:mm')}</div>
-                  <div className="w-4">~</div>
-                  <div className="w-40">{format(lesson.finishedAt.toDate(), 'yyyy/MM/dd HH:mm')}</div>
-                </div>
-              </CollectionLinkItem>
-            ))}
+          <Collection header={
+            <div className="border-b px-2 bg-gray-50 rounded-t-lg flex justify-between items-center">
+              <label className="block p-2">
+                <input type="checkbox" onChange={handleChangeAllCheckbox} checked={isAllChecked} />
+              </label>
+              <div className="p-1">
+                {isSomeChecked && <Button type="button" onClick={handleDelete} sm danger>削除</Button>}
+              </div>
+            </div>
+          }>
+            {sortedLessons.map(lesson => {
+                const isChecked = !!selections[lesson.id]
+                const handleChange = ({ target: { checked } }) => {
+                  setSelections((s) => ({
+                    ...s,
+                    [lesson.id]: !s[lesson.id]
+                  }))
+                }
+
+                return (
+                  <CollectionItem key={lesson.id} isActive={isChecked}>
+                    <div className="flex gap-2">
+                      <label className="p-1 px-2">
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={handleChange} />
+                      </label>
+                      <Link href={getSubjectPath(`/lessons/${lesson.id}`)}>
+                        <a className="flex flex-grow items-center gap-2">
+                          <div>{format(lesson.startedAt.toDate(), 'yyyy/MM/dd HH:mm')}</div>
+                          <div>~</div>
+                          <div>{format(lesson.finishedAt.toDate(), 'yyyy/MM/dd HH:mm')}</div>
+                        </a>
+                      </Link>
+
+                    </div>
+                  </CollectionItem>
+                )
+              }
+            )}
           </Collection>
         )}
       </Card>

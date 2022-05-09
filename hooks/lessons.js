@@ -59,6 +59,15 @@ export function useCreateLessons(roomId) {
   )
 }
 
+export function useDeleteLessons(roomId) {
+  return useMutation(
+    async (lessonIds) => {
+      for (let lessonId of lessonIds) await deleteLesson(roomId, lessonId)
+      return
+    }
+  )
+}
+
 export function useCreateLesson (roomId) {
   const transform = getTransformLessonForFirestore(roomId)
   return useMutation(

@@ -3,6 +3,7 @@ import { DashboardSection } from '@/components/parts/dashboard'
 import RoomDashboard from '@/components/features/rooms/RoomDashboard'
 import ViewSubjectLessonNavigation from '@/components/features/subjects/ViewSubjectLessonNavigation'
 import ManageLesson from '@/components/features/lessons/ManageLesson'
+import DeleteSubjectLesson from '@/components/features/subjects/DeleteSubjectLesson'
 
 export default function Lesson () {
   return (
@@ -10,6 +11,9 @@ export default function Lesson () {
       <ViewSubjectLessonNavigation />
       <DashboardSection>
         <ManageLesson />
+      </DashboardSection>
+      <DashboardSection>
+        <DeleteSubjectLesson />
       </DashboardSection>
     </RoomDashboard>
   )

@@ -76,9 +76,9 @@ export default function RegisterSubjectMultiLessons () {
       sheets  : sheets.map(sheet => sheet.value),
     }
 
-    repeatStartDate = new Date(repeatStartDate)
-    const [startHours, startMinutes] = startTime.split('')
-    const [finishHours, finishMinutes] = finishTime.split('')
+    repeatStartDate = new Date(`${repeatStartDate} 00:00:00`)
+    const [startHours, startMinutes] = startTime.split(':').map(Number)
+    const [finishHours, finishMinutes] = finishTime.split(':').map(Number)
 
     switch (repeatTerm.value) {
       case REPEAT_TERM_TYPE.WEEKLY: {
