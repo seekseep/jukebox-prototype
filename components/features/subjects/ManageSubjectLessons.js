@@ -62,7 +62,14 @@ export default function ManageSubjectLessons () {
   }, [lessons])
 
   const handleDelete = useCallback(() => {
-    deleteLessons(Object.keys(selections))
+    const lessonIds = []
+
+    Object.entries(selections).forEach(([lessonId, selected]) => {
+      if (!selected) return
+      lessonIds.push(lessonId)
+    })
+
+    deleteLessons(lessonIds)
   }, [deleteLessons, selections])
 
   useEffect(() => {
@@ -76,7 +83,7 @@ export default function ManageSubjectLessons () {
   useEffect(() => {
     if(!isDeleted) return
     toast.success('授業を削除しました')
-    mutate([])
+    mutate()
   }, [isDeleted, mutate])
 
   return (
