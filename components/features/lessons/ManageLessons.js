@@ -38,7 +38,7 @@ export default function ManageLessons () {
           <Collection>
             {lessons.map(lesson => (
               <CollectionLinkItem key={lesson.id} href={getRoomPath(`/lessons/${lesson.id}`)}>
-                <a className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1">
                   <div className="flex flex-grow items-center gap-2">
                     <div>{format(lesson.startedAt.toDate(), 'yyyy/MM/dd HH:mm')}</div>
                     <div>~</div>
@@ -49,7 +49,7 @@ export default function ManageLessons () {
                     <div>生徒: {lesson.students.map(student => student.name).join(',')}</div>
                     <div>講師: {lesson.teachers.map(teacher => teacher.name).join(',')}</div>
                   </div>
-                </a>
+                </div>
               </CollectionLinkItem>
             ))}
           </Collection>
