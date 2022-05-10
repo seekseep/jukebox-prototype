@@ -14,7 +14,7 @@ import { useGetRoomPath } from '@/hooks/router'
 
 export default function DeleteLesson () {
   const { query:{ roomId, lessonId }, replace } = useRouter()
-  const getRoomPath = useGetRoomPath()
+  const getRoomPath = useGetRoomPath(roomId)
 
   const {
     isLoading,

@@ -32,8 +32,12 @@ export default function ViewFeatures () {
           icon="📕" label="科目"
           description="科目の登録や編集ができます"  />
         <FeatureCard
+          href={getRoomPath('/lessons')}
+          icon="📖" label="授業"
+          description="授業の登録や編集ができます"  />
+        <FeatureCard
           href={getRoomPath('/settings')}
-          icon="🔧" label="設定"
+          icon="🚪" label="設定"
           description="教室の予定や授業枠の設定ができます"  />
       </div>
     </Feature>

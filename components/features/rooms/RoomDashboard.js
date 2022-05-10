@@ -36,6 +36,7 @@ export default function RoomDashboard ({ title, children }) {
           <DNavLink href={getRoomPath('/teachers')}>講師</DNavLink>
           <DNavLink href={getRoomPath('/sheets')}>席</DNavLink>
           <DNavLink href={getRoomPath('/subjects')}>科目</DNavLink>
+          <DNavLink href={getRoomPath('/lessons')}>授業</DNavLink>
           <DNavLink href={getRoomPath('/settings')}>設定</DNavLink>
         </div>
       </DashboardNavigation>

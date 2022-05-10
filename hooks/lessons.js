@@ -1,6 +1,7 @@
 import { useMutation, useCollectionQuery, expandSWR } from './api'
 
 import {
+  getLessons,
   getLesson,
   createLesson,
   updateLesson,
@@ -35,7 +36,8 @@ function getTransformLessonForFirestore (roomId) {
 }
 
 export function useLessons(roomId) {
-  return useCollectionQuery(`/rooms/${roomId}/lessons`)
+  const swr = useSWR([roomId, 'lessons'], getLessons)
+  return expandSWR(swr)
 }
 
 export function useLesson(roomId, lessonId) {

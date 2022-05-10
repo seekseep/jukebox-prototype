@@ -65,6 +65,24 @@ export async function getSubjectLessons(roomId, subjectId) {
   return collectionSnapshotToDataArray(snapshot)
 }
 
+export async function getLessons(roomId)  {
+  const lessonsRef = getLessonsRef(roomId)
+  const lessonsSnapshot = await getDocs(lessonsRef)
+
+  const lessons = []
+
+  for (let lessonSnapshot of lessonsSnapshot.docs) {
+    const lesson = docSnapshotToData(lessonSnapshot)
+    lesson.subject = await getReferedSubject(lesson.subject)
+    lesson.students = await getReferedStudents(lesson.students)
+    lesson.teachers = await getReferedTeachers(lesson.teachers)
+    lesson.sheets = await getReferedSheets(lesson.sheets)
+    lessons.push(lesson)
+  }
+
+  return lessons
+}
+
 export async function getLesson(roomId, lessonId) {
   const lessonRef = getLessonRef(roomId, lessonId)
   const lessonSnapshot = await getDoc(lessonRef)
