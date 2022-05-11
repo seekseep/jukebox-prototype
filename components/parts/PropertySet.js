@@ -27,5 +27,5 @@ export function PropertyContents ({ noPadding = false, ...props }) {
 }
 
 export function PropertyDateTimeContents({ value: date }) {
-  return <PropertyContents>{date ? format(date, 'yyyy/MM/dd hh:MM'): ''}</PropertyContents>
+  return <PropertyContents>{date ? format(date, 'yyyy/MM/dd HH:mm'): ''}</PropertyContents>
 }
