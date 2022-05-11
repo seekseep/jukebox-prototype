@@ -8,7 +8,7 @@ import {
 import { app } from '../../firebase'
 import { getSchoolRef } from './schools'
 
-import { docSnapshotToData, collectionSnapshotToDataArray } from './utils'
+import { docSnapshotToData, collectionSnapshotToDataArray, createResource, updateResource, deleteResource } from './utils'
 
 export function getRoomsRef () {
   const firestore = getFirestore(app)
@@ -30,30 +30,15 @@ export async function getSchoolRooms (schoolId) {
 
 export async function createRoom(data) {
   const roomsRef = getRoomsRef()
-
-  const roomRef = await addDoc(roomsRef, data)
-
-  const roomSnapshot = await getDoc(roomRef)
-  const createdRoom = docSnapshotToData(roomSnapshot)
-
-  return createdRoom
+  return await createResource(roomsRef, data)
 }
 
-export async function updateRoom (roomId, data, { merge = true } = { }) {
+export async function updateRoom (roomId, data, { marge = true } = { }) {
   const roomRef = getRoomRef(roomId)
-
-  await updateDoc(roomRef, data, { merge })
-
-  const roomSnapshot = await getDoc(roomRef)
-  const updatedRoom = docSnapshotToData(roomSnapshot)
-
-  return updatedRoom
+  return await updateResource(roomRef,data, { marge })
 }
 
 export async function deleteRoom (roomId) {
   const roomRef = getRoomRef(roomId)
-
-  await deleteDoc(roomRef)
-
-  return null
+  return await deleteResource(roomRef)
 }

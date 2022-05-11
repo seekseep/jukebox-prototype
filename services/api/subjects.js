@@ -1,10 +1,6 @@
-import {
-  getFirestore,
-  collection, doc,
-  getDoc, addDoc, updateDoc, deleteDoc,
-} from 'firebase/firestore'
+import { getFirestore, collection, doc } from 'firebase/firestore'
 import { app } from '../../firebase'
-import { docSnapshotToData } from './utils'
+import { createResource, deleteResource, updateResource } from './utils'
 
 export function getSubjectsRef (roomId) {
   const firestore = getFirestore(app)
@@ -18,30 +14,15 @@ export function getSubjectRef (roomId, subjectId) {
 
 export async function createSubject(roomId, data) {
   const subjectsRef = getSubjectsRef(roomId)
-
-  const subjectRef = await addDoc(subjectsRef, data)
-
-  const subjectSnapshot = await getDoc(subjectRef)
-  const createdSubject = docSnapshotToData(subjectSnapshot)
-
-  return createdSubject
+  return await createResource(subjectsRef, data)
 }
 
-export async function updateSubject (roomId, subjectId, data, { merge = true } = { }) {
+export async function updateSubject (roomId, subjectId, data, { marge = true } = { }) {
   const subjectRef = getSubjectRef(roomId, subjectId)
-
-  await updateDoc(subjectRef, data, { merge })
-
-  const subjectSnapshot = await getDoc(subjectRef)
-  const updatedSubject = docSnapshotToData(subjectSnapshot)
-
-  return updatedSubject
+  return await updateResource(subjectRef, data, { marge })
 }
 
 export async function deleteSubject (roomId, subjectId) {
   const subjectRef = getSubjectRef(roomId, subjectId)
-
-  await deleteDoc(subjectRef)
-
-  return null
+  return await deleteResource(subjectRef)
 }

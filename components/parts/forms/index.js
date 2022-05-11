@@ -44,7 +44,7 @@ export function SelectField ({ label, options, isMulti = false, ...props }) {
   return (
     <FieldContainer>
       {label && <Label>{label}</Label>}
-      <ReactSelect isMulti={isMulti} options={options} {...field} onChange={setValue} {...props} />
+      <ReactSelect instanceId={props.name} isMulti={isMulti} options={options} {...field} onChange={setValue} {...props} />
       {meta.touched && meta.error ? (
          <div className="text-red-500">{meta.error}</div>
        ) : null}

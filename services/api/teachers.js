@@ -1,12 +1,6 @@
-import {
-  getFirestore,
-  collection, doc,
-  getDoc, addDoc, updateDoc, deleteDoc
-} from 'firebase/firestore'
-
+import { getFirestore, collection, doc, getDoc } from 'firebase/firestore'
 import { app } from '../../firebase'
-
-import { docSnapshotToData } from './utils'
+import { createResource, deleteResource, docSnapshotToData, updateResource } from './utils'
 
 export function getTeachersRef (roomId) {
   const firestore = getFirestore(app)
@@ -20,32 +14,17 @@ export function getTeacherRef (roomId, teacherId) {
 
 export async function createTeacher(roomId, data) {
   const teachersRef = getTeachersRef(roomId)
-
-  const teacherRef = await addDoc(teachersRef, data)
-
-  const teacherSnapshot = await getDoc(teacherRef)
-  const createdTeacher = docSnapshotToData(teacherSnapshot)
-
-  return createdTeacher
+  return await createResource(teachersRef, data)
 }
 
-export async function updateTeacher (roomId, teacherId, data, { merge = true } = { }) {
+export async function updateTeacher (roomId, teacherId, data, { marge = true } = { }) {
   const teacherRef = getTeacherRef(roomId, teacherId)
-
-  await updateDoc(teacherRef, data, { merge })
-
-  const teacherSnapshot = await getDoc(teacherRef)
-  const updatedTeacher = docSnapshotToData(teacherSnapshot)
-
-  return updatedTeacher
+  return await updateResource(teacherRef, data, { marge })
 }
 
 export async function deleteTeacher (roomId, teacherId) {
   const teacherRef = getTeacherRef(roomId, teacherId)
-
-  await deleteDoc(teacherRef)
-
-  return null
+  return await deleteResource(teacherRef)
 }
 
 export async function getTeacherSubjects (roomId, teacherId) {
@@ -65,18 +44,52 @@ export async function getTeacherSubjects (roomId, teacherId) {
   return subjects
 }
 
-export async function getTeacherSchedules (roomId, teacherId) {
-  const teacherRef = getTeacherRef(roomId, teacherId)
-  const teacherSnapshot = await getDoc(teacherRef)
-  const teacher = docSnapshotToData(teacherSnapshot)
-
-  return teacher.schedules || []
+function getTeacherSchedulesRef (roomId, teacherId) {
+  const firestore = getFirestore(app)
+  return collection(firestore, `/rooms/${roomId}/teachers/${teacherId}/schedules`)
 }
 
-export async function getTeacherRelations (roomId, teacherId) {
-  const teacherRef = getTeacherRef(roomId, teacherId)
-  const teacherSnapshot = await getDoc(teacherRef)
-  const teacher = docSnapshotToData(teacherSnapshot)
+function getTeacherScheduleRef (roomId, teacherId, scheduleId) {
+  const schedulesRef = getTeacherSchedulesRef(roomId, teacherId)
+  return doc(schedulesRef, scheduleId)
+}
 
-  return teacher.relations || []
+export async function createTeacherSchedule(roomId, teacherId, data) {
+  const schedulesRef = getTeacherSchedulesRef(roomId, teacherId)
+  return await createResource(schedulesRef, data)
+}
+
+export async function updateTeacherSchedule(roomId, teacherId, scheduleId, data, { marge = true } = {}) {
+  const scheduleRef = getTeacherScheduleRef(roomId, teacherId, scheduleId)
+  return await updateResource(scheduleRef, data, { marge })
+}
+
+export async function deleteTeacherSchedule(roomId, teacherId, scheduleId) {
+  const scheduleRef = getTeacherScheduleRef(roomId, teacherId, scheduleId)
+  return await deleteResource(scheduleRef)
+}
+
+function getTeacherRelationsRef (roomId, teacherId) {
+  const firestore = getFirestore(app)
+  return collection(firestore, `/rooms/${roomId}/teachers/${teacherId}/relations`)
+}
+
+function getTeacherRelationRef (roomId, teacherId, relationId) {
+  const relationsRef = getTeacherRelationsRef(roomId, teacherId)
+  return doc(relationsRef, relationId)
+}
+
+export async function createTeacherRelation(roomId, teacherId, data) {
+  const relationsRef = getTeacherRelationsRef(roomId, teacherId)
+  return await createResource(relationsRef, data)
+}
+
+export async function updateTeacherRelation(roomId, teacherId, relationId, data, { marge = true } = {}) {
+  const scheduleRef = getTeacherRelationRef(roomId, teacherId, relationId)
+  return await updateResource(scheduleRef, data, { marge })
+}
+
+export async function deleteTeacherRelation(roomId, teacherId, relationId) {
+  const scheduleRef = getTeacherRelationRef(roomId, teacherId, relationId)
+  return await deleteResource(scheduleRef)
 }

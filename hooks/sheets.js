@@ -1,4 +1,3 @@
-import useSWR from 'swr'
 import { useMemo } from 'react'
 import * as Yup from 'yup'
 
@@ -6,10 +5,12 @@ import {
   createSheet,
   updateSheet,
   deleteSheet,
-  getSheetSchedules,
+  createSheetSchedule,
+  updateSheetSchedule,
+  deleteSheetSchedule,
 } from '../services/api/sheets'
 
-import { useDocumentQuery, useCollectionQuery, useMutation, expandSWR } from './api'
+import { useDocumentQuery, useCollectionQuery, useMutation } from './api'
 
 import { useFamily } from './families'
 
@@ -67,6 +68,33 @@ export function useSheetOptions (sheets) {
 }
 
 export function useSheetSchedules (roomId, sheetId) {
-  const swr = useSWR([roomId, sheetId], getSheetSchedules)
-  return expandSWR(swr)
+  return useCollectionQuery(`/rooms/${roomId}/sheets/${sheetId}/schedules`)
+}
+
+export function useSheetSchedule (roomId, sheetId, scheduleId) {
+  return useDocumentQuery(`/rooms/${roomId}/sheets/${sheetId}/schedules/${scheduleId}`)
+}
+
+export function useCreateSheetSchedule (roomId, sheetId) {
+    return useMutation(
+    async (schedule) => {
+      return await createSheetSchedule(roomId, sheetId, schedule)
+    }
+  )
+}
+
+export function useUpdateSheetSchedule (roomId, sheetId, scheduleId) {
+  return useMutation(
+    async (schedule) => {
+      return await updateSheetSchedule(roomId, sheetId, scheduleId, schedule)
+    }
+  )
+}
+
+export function useDeleteSheetSchedule (roomId, sheetId, scheduleId) {
+  return useMutation(
+    async () => {
+      return await deleteSheetSchedule(roomId, sheetId, scheduleId)
+    }
+  )
 }

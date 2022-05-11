@@ -8,8 +8,12 @@ import {
   updateTeacher,
   deleteTeacher,
   getTeacherSubjects,
-  getTeacherRelations,
-  getTeacherSchedules
+  createTeacherSchedule,
+  updateTeacherSchedule,
+  deleteTeacherSchedule,
+  createTeacherRelation,
+  updateTeacherRelation,
+  deleteTeacherRelation
 } from '../services/api/teachers'
 
 import { useDocumentQuery, useCollectionQuery, useMutation, expandSWR } from './api'
@@ -64,16 +68,6 @@ export function useDeleteTeacher (roomId, teacherId,) {
   )
 }
 
-export function useTeacherSchedules (roomId, teacherId) {
-  const swr = useSWR([roomId, teacherId], getTeacherSchedules)
-  return expandSWR(swr)
-}
-
-export function useTeacherRelations (roomId, teacherId) {
-  const swr = useSWR([roomId, teacherId], getTeacherRelations)
-  return expandSWR(swr)
-}
-
 export function useTeacherOptions (teachers) {
   return useMemo(() =>
     teachers?.map(teacher => ({
@@ -81,4 +75,68 @@ export function useTeacherOptions (teachers) {
       label: teacher.name
     })) || []
   ,[teachers])
+}
+
+export function useTeacherSchedules (roomId, teacherId) {
+  return useCollectionQuery(`/rooms/${roomId}/teachers/${teacherId}/schedules`)
+}
+
+export function useTeacherSchedule (roomId, teacherId, scheduleId) {
+  return useDocumentQuery(`/rooms/${roomId}/teachers/${teacherId}/schedules/${scheduleId}`)
+}
+
+export function useCreateTeacherSchedule (roomId, teacherId) {
+    return useMutation(
+    async (schedule) => {
+      return await createTeacherSchedule(roomId, teacherId, schedule)
+    }
+  )
+}
+
+export function useUpdateTeacherSchedule (roomId, teacherId, scheduleId) {
+  return useMutation(
+    async (schedule) => {
+      return await updateTeacherSchedule(roomId, teacherId, scheduleId, schedule)
+    }
+  )
+}
+
+export function useDeleteTeacherSchedule (roomId, teacherId, scheduleId) {
+  return useMutation(
+    async () => {
+      return await deleteTeacherSchedule(roomId, teacherId, scheduleId)
+    }
+  )
+}
+
+export function useTeacherRelations (roomId, teacherId) {
+  return useCollectionQuery(`/rooms/${roomId}/teachers/${teacherId}/relations`)
+}
+
+export function useTeacherRelation (roomId, teacherId, relationId) {
+  return useDocumentQuery(`/rooms/${roomId}/teachers/${teacherId}/relations/${relationId}`)
+}
+
+export function useCreateTeacherRelation (roomId, teacherId) {
+    return useMutation(
+    async (relation) => {
+      return await createTeacherRelation(roomId, teacherId, relation)
+    }
+  )
+}
+
+export function useUpdateTeacherRelation (roomId, teacherId, relationId) {
+  return useMutation(
+    async (relation) => {
+      return await updateTeacherRelation(roomId, teacherId, relationId, relation)
+    }
+  )
+}
+
+export function useDeleteTeacherRelation (roomId, teacherId, relationId) {
+  return useMutation(
+    async () => {
+      return await deleteTeacherRelation(roomId, teacherId, relationId)
+    }
+  )
 }
