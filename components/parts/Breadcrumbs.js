@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Breadcrumbs ({ children }) {
   return (
-    <div className="text-sm flex gap-1 text-gray-600 px-4 py-2">{children}</div>
+    <div className="text-sm flex gap-1 text-gray-600 py-2">{children}</div>
   )
 }
 

@@ -37,8 +37,8 @@ export default function ViewFeatures () {
           description="授業の登録や編集ができます"  />
         <FeatureCard
           href={getRoomPath('/settings')}
-          icon="🚪" label="設定"
-          description="教室の予定や授業枠の設定ができます"  />
+          icon="🚪" label="教室"
+          description="営業日や授業枠などの教室の設定ができます"  />
       </div>
     </Feature>
   )

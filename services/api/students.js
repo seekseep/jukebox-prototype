@@ -1,11 +1,8 @@
-import { getFirestore, collection, doc, getDoc } from 'firebase/firestore'
-
-import { app } from '../../firebase'
-
+import { collection, doc, getDoc } from 'firebase/firestore'
+import { firestore } from '../../firebase'
 import { createResource, deleteResource, docSnapshotToData, updateResource } from './utils'
 
 export function getStudentsRef (roomId) {
-  const firestore = getFirestore(app)
   return collection(firestore, `rooms/${roomId}/students`)
 }
 
@@ -30,7 +27,6 @@ export async function deleteStudent (roomId, studentId) {
 }
 
 function getStudentSchedulesRef (roomId, studentId) {
-  const firestore = getFirestore(app)
   return collection(firestore, `/rooms/${roomId}/students/${studentId}/schedules`)
 }
 
@@ -55,7 +51,6 @@ export async function deleteStudentSchedule(roomId, studentId, scheduleId) {
 }
 
 function getStudentRelationsRef (roomId, studentId) {
-  const firestore = getFirestore(app)
   return collection(firestore, `/rooms/${roomId}/students/${studentId}/relations`)
 }
 

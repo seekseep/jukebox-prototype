@@ -1,14 +1,12 @@
 import {
-  getFirestore,
   collection, doc,
 } from 'firebase/firestore'
 
-import { app } from '../../firebase'
+import { firestore } from '../../firebase'
 
 import { createResource, deleteResource, updateResource } from './utils'
 
 export function getSchoolsRef () {
-  const firestore = getFirestore(app)
   return collection(firestore, '/schools')
 }
 

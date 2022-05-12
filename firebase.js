@@ -1,4 +1,6 @@
 import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 
 export const app = initializeApp({
   apiKey           : process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -9,3 +11,10 @@ export const app = initializeApp({
   appId            : process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId    : process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 })
+
+export const firestore = getFirestore(app)
+if (process.env.NODE_ENV === 'development') {
+  connectFirestoreEmulator(firestore, 'localhost', 8080)
+}
+
+export const auth = getAuth(app)

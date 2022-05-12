@@ -1,11 +1,10 @@
 import {
-  getFirestore,
   collection, doc,
   query, where,
   getDoc, getDocs
 } from 'firebase/firestore'
 
-import { app } from '../../firebase'
+import { firestore } from '../../firebase'
 import { getSubjectRef } from './subjects'
 
 import {
@@ -15,11 +14,6 @@ import {
   updateResource,
   deleteResource
 } from './utils'
-
-export function getLessonsRef (roomId) {
-  const firestore = getFirestore(app)
-  return collection(firestore, `rooms/${roomId}/lessons`)
-}
 
 export function getLessonRef (roomId, lessonId) {
   const lessonsRef = getLessonsRef(roomId)
@@ -76,6 +70,10 @@ async function getReferedSheets (sheets = []) {
     referedSheets.push(sheet)
   }
   return referedSheets
+}
+
+export function getLessonsRef (roomId) {
+  return collection(firestore, `rooms/${roomId}/lessons`)
 }
 
 export async function getSubjectLessons(roomId, subjectId) {

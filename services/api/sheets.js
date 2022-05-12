@@ -1,11 +1,11 @@
-import { getFirestore, collection, doc } from 'firebase/firestore'
 
-import { app } from '../../firebase'
+import { collection, doc } from 'firebase/firestore'
+
+import { firestore } from '../../firebase'
 
 import { createResource, deleteResource, updateResource } from './utils'
 
 export function getSheetsRef (roomId) {
-  const firestore = getFirestore(app)
   return collection(firestore, `rooms/${roomId}/sheets`)
 }
 
