@@ -1,13 +1,11 @@
 import {
-  getFirestore,
   collection, doc,
   getDoc, addDoc, updateDoc, deleteDoc,
 } from 'firebase/firestore'
-import { app } from '../../firebase'
+import { firestore } from '../../firebase'
 import { docSnapshotToData } from './utils'
 
 export function getSubjectsRef (roomId) {
-  const firestore = getFirestore(app)
   return collection(firestore, `rooms/${roomId}/subjects`)
 }
 

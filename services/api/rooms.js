@@ -1,17 +1,15 @@
 import {
-  getFirestore,
   collection, doc,
   query, where,
   getDocs, getDoc, addDoc, updateDoc, deleteDoc
 } from 'firebase/firestore'
 
-import { app } from '../../firebase'
+import { firestore } from '../../firebase'
 import { getSchoolRef } from './schools'
 
 import { docSnapshotToData, collectionSnapshotToDataArray } from './utils'
 
 export function getRoomsRef () {
-  const firestore = getFirestore(app)
   return collection(firestore, 'rooms')
 }
 
