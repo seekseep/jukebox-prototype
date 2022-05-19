@@ -6,6 +6,7 @@
     "jsx-quotes": ["error", "prefer-double"],
     "quotes": ["error", "single"],
     "object-curly-spacing": ["error", "always"],
-    "no-multiple-empty-lines": "error"
+    "no-multiple-empty-lines": "error",
+    "no-unused-vars": ["error"]
   }
 }

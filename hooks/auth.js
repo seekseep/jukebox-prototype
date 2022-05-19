@@ -1,12 +1,16 @@
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 
-import { signUp, signIn, signOut, getCurrentUser,  } from '../services/api/auth'
+import { signUp, signIn, signOut, getCurrentUser, onCurrentUserChange } from '@/services/api/auth'
 
 import { useMutation, expandSWR }  from './api'
 
 export function useCurrentUser () {
-  const swr = useSWR('currentUser', () => getCurrentUser())
-  return expandSWR(swr)
+  const [currentUser, setCurrentUser] = useState(undefined)
+
+  useEffect(() => onCurrentUserChange(setCurrentUser), [])
+
+  return { currentUser, isLoading: currentUser === undefined }
 }
 
 export function useSignUp () {

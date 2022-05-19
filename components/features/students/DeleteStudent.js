@@ -2,25 +2,23 @@ import { useRouter } from 'next/router'
 import { useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 
+import { useGetRoomPath } from '@/hooks/router'
 import { useDeleteStudent, useStudent } from '@/hooks/students'
 
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 
 import { Button } from '@/components/parts/buttons'
-import Loading from '@/components/parts/Loading'
+import Suspension from '@/components/parts/Suspension'
 import Card, { CardBody } from '@/components/parts/Card'
 import ErrorAlert from '@/components/parts/ErrorAlert'
-import { useGetRoomPath } from '@/hooks/router'
 
 export default function DeleteStudent () {
   const { query:{ roomId, studentId }, replace } = useRouter()
   const getRoomPath = useGetRoomPath(roomId)
 
   const {
-    isLoading,
-    error: gettingError,
-    isSuccess: isReady,
-    mutate
+    mutate,
+    ...result
   } = useStudent(roomId, studentId)
   const [deleteStudent, {
     isSuccess: isDeleted,
@@ -44,18 +42,18 @@ export default function DeleteStudent () {
       <FeatureHead>
         <FeatureTitle>生徒の削除</FeatureTitle>
       </FeatureHead>
-      {isLoading && <Loading />}
-      {gettingError && <ErrorAlert error={gettingError} />}
-      {deletingError && <ErrorAlert error={deletingError} />}
-      {isReady && (
+      <Suspension {...result}>
+        {() => (
         <Card>
-            <CardBody>
-              <div className="flex flex-row-reverse">
-                <Button danger type="button" onClick={handleSubmit}>生徒の情報を削除する</Button>
-              </div>
-            </CardBody>
+          <CardBody>
+            {deletingError && <ErrorAlert error={deletingError} />}
+            <div className="flex flex-row-reverse">
+              <Button danger type="button" onClick={handleSubmit}>生徒を削除する</Button>
+            </div>
+          </CardBody>
         </Card>
-      )}
+        )}
+      </Suspension>
     </Feature>
   )
 }

@@ -4,27 +4,27 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 
-import { FORM_ERROR_REQUIRED } from '../../../messages'
+import { STUDENT_SCHEDULE_TYPE_LABEL } from '@/constatnts'
+
+import { getOption } from '@/services/input'
 
 import { useToggleState } from '@/hooks/ui'
-import { useStudentSchedule, useUpdateStudentSchedule } from '@/hooks/students'
+import { useSchedule, useUpdateSchedule } from '@/hooks/schedules'
+import { useScheduleValidationSchema, valuesToSchedule } from '@/components/parts/schedules/ScheduleFormFields/hooks'
 
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
-import { Form, Field, SelectField } from '@/components/parts/forms'
+import { Form } from '@/components/parts/forms'
+import { REPEAT_TYPE_OPTIONS } from '@/components/parts/forms/RepeatTypeSelectField'
 import { Button } from '@/components/parts/buttons'
 import Loading from '@/components/parts/Loading'
 import Card, { CardActions, CardBody } from '@/components/parts/Card'
-import PropertySet, {
-  PropertyItem,
-  PropertyLabel,
-  PropertyDateTimeContents,
-  PropertyContents
-} from '@/components/parts/PropertySet'
 import ErrorAlert from '@/components/parts/ErrorAlert'
-import { getDatetimeLocalValue } from '@/services/input'
+import SchedulePropertySet from '@/components/parts/schedules/SchedulePropertySet'
+import ScheduleFormFields from '@/components/parts/schedules/ScheduleFormFields'
+
 
 export default function ManageStudentSchedule () {
-  const { query:{ roomId, studentId, scheduleId } } = useRouter()
+  const { query:{ roomId, scheduleId } } = useRouter()
   const [isEditing, toggleEditing, setIsEditing] = useToggleState()
 
   const {
@@ -33,31 +33,26 @@ export default function ManageStudentSchedule () {
     error: gettingError,
     isSuccess: isReady,
     mutate
-  } = useStudentSchedule(roomId, studentId, scheduleId)
+  } = useSchedule(roomId, scheduleId)
   const [update, {
     data: updatedSchedule,
     isLoading: isUpdating,
     isSuccess: isUpdated,
     error: updatingError
-  }] = useUpdateStudentSchedule(roomId, studentId, scheduleId)
+  }] = useUpdateSchedule(roomId, scheduleId)
 
+  const scheduleValidationSchema = useScheduleValidationSchema()
   const validationSchema = useMemo(() => Yup.object().shape({
-    startedAt : Yup.string().required(FORM_ERROR_REQUIRED),
-    finishedAt: Yup.string().required(FORM_ERROR_REQUIRED),
-    type      : Yup.object().shape({ label: Yup.string(), value: Yup.string() }).required(FORM_ERROR_REQUIRED).default({
-      label: '休み',
-      value: 'DISABLED'
-    }),
-  }), [])
+    ...scheduleValidationSchema.fields
+  }), [scheduleValidationSchema.fields])
   const initialValues = useMemo(() => validationSchema.cast({
-    startedAt : getDatetimeLocalValue(schedule?.startedAt.toDate()),
-    finishedAt: getDatetimeLocalValue(schedule?.finishedAt.toDate()),
-    type      : {
-      label: '休み',
-      value: 'DISABLED'
-    }
-  }, { stripUnknown: true }), [schedule?.finishedAt, schedule?.startedAt, validationSchema])
-  const handleSubmit = useCallback((student) => update(student), [update])
+    ...schedule,
+    repeat: getOption(schedule?.repeat, Object.values(REPEAT_TYPE_OPTIONS)),
+  }, { stripUnknown: true }), [schedule, validationSchema])
+  const handleSubmit = useCallback((values) => update({
+    ...valuesToSchedule(values)
+  }), [update])
+
   useEffect(() => {
     if (!isUpdated) return
     toast.success('生徒の予定を保存しました')
@@ -68,7 +63,7 @@ export default function ManageStudentSchedule () {
   return(
     <Feature>
       <FeatureHead>
-        <FeatureTitle>生徒の情報</FeatureTitle>
+        <FeatureTitle>予定の内容</FeatureTitle>
       </FeatureHead>
       {isLoading && <Loading />}
       {gettingError && <ErrorAlert error={gettingError} />}
@@ -79,17 +74,9 @@ export default function ManageStudentSchedule () {
               <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
                 {({ isValid }) => (
                   <Form>
-                    <Field name="startedAt" label="開始日時" type="datetime-local" />
-                    <Field name="finishedAt" label="終了日時" type="datetime-local" />
-                    <SelectField name="type" label="種別" options={[
-                      {
-                        label: '登校可能',
-                        value: 'ENABLED'
-                      },{
-                        label: '休み',
-                        value: 'DISABLED'
-                      },
-                    ]} />
+                    <ScheduleFormFields
+                      ableableLabel={STUDENT_SCHEDULE_TYPE_LABEL.AVAILABLE}
+                      disableableLabel={STUDENT_SCHEDULE_TYPE_LABEL.DISAVAILABLE} />
                     {updatingError && <ErrorAlert error={updatingError} />}
                     <div className="flex flex-row-reverse justify-between">
                       <Button primary type="submit" disabled={!isValid || isUpdating}>保存する</Button>
@@ -104,22 +91,7 @@ export default function ManageStudentSchedule () {
               <CardActions>
                 <Button secondary sm onClick={toggleEditing}>編集する</Button>
               </CardActions>
-              <PropertySet>
-                <PropertyItem>
-                  <PropertyLabel>開始日時</PropertyLabel>
-                  <PropertyDateTimeContents value={schedule?.finishedAt?.toDate()} />
-                </PropertyItem>
-                <PropertyItem>
-                  <PropertyLabel>終了日時</PropertyLabel>
-                  <PropertyDateTimeContents value={schedule?.finishedAt?.toDate()} />
-                </PropertyItem>
-                <PropertyItem>
-                  <PropertyLabel>終了日時</PropertyLabel>
-                  <PropertyContents>
-                    {schedule.type === 'DISABLED' ? '休み': '登校可能'}
-                  </PropertyContents>
-                </PropertyItem>
-              </PropertySet>
+              <SchedulePropertySet schedule={schedule} />
             </>
           )}
         </Card>

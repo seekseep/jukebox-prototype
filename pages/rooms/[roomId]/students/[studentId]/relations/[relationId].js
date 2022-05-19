@@ -7,8 +7,10 @@ import DeleteStudentRelation from '@/components/features/students/DeleteStudentR
 
 export default function StudentRelation () {
   return (
-    <RoomDashboard title="生徒の関係性">
-      <ViewStudentNavigation />
+    <RoomDashboard title="生徒の関係">
+      <DashboardSection>
+        <ViewStudentNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageStudentRelation />
       </DashboardSection>

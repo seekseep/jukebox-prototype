@@ -1,6 +1,4 @@
-import Link from 'next/link'
-
-import { LinkButton } from './buttons'
+import { LinkButton } from '@/components/parts/buttons'
 
 export default function Unauthorized () {
   return (
@@ -10,7 +8,6 @@ export default function Unauthorized () {
         <h1 className="text-2xl">未認証</h1>
         <LinkButton href="/signin">ログインする</LinkButton>
       </div>
-
     </div>
   )
 }

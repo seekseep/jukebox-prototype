@@ -1,38 +1,45 @@
-import { useSchools } from '@/hooks/schools'
+import { useSchoolRefs } from '@/hooks/schools'
 
+import { WithDocRefs } from '@/components/utilities/withDocRefs'
+
+import Suspension from '@/components/parts/Suspension'
 import Card from '@/components/parts/Card'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
-import Loading from '@/components/parts/Loading'
 import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
 import { LinkButton } from '@/components/parts/buttons'
+import { SchoolIcon } from '@/components/parts/icons'
 
 export default function ManageSchools () {
   const {
-    data: schools,
-    isSuccess,
-    isLoading
-  } = useSchools()
+    data: schoolRefs,
+    ...result
+  } = useSchoolRefs()
 
   return (
     <Feature>
       <FeatureHead>
-        <FeatureTitle>学校の一覧</FeatureTitle>
+        <FeatureTitle>
+          <SchoolIcon />学校の一覧
+        </FeatureTitle>
         <div>
           <LinkButton href="/schools/new">学校を登録する</LinkButton>
         </div>
       </FeatureHead>
-      <Card>
-        {isLoading && <Loading />}
-        {isSuccess && (
+      <Suspension {...result}>
+      {()=>(
+        <Card>
           <Collection>
-            {schools.map(school => (
-              <CollectionLinkItem key={school.id} href={`/schools/${school.id}`}>
-                {school.name}
-              </CollectionLinkItem>
-            ))}
+            <WithDocRefs docRefs={schoolRefs}>
+              {({ data: school }) => (
+                <CollectionLinkItem href={`/schools/${school.id}`}>
+                  {school.name}
+                </CollectionLinkItem>
+              )}
+            </WithDocRefs>
           </Collection>
+        </Card>
         )}
-      </Card>
+      </Suspension>
     </Feature>
   )
 }

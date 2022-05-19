@@ -7,7 +7,9 @@ import ViewTeacherNavigation from '@/components/features/teachers/ViewTeacherNav
 export default function TeacherSubjects () {
   return (
     <RoomDashboard title="講師の科目">
-      <ViewTeacherNavigation />
+      <DashboardSection>
+        <ViewTeacherNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageTeacherSubjects />
       </DashboardSection>

@@ -6,8 +6,10 @@ import ViewStudentNavigation from '@/components/features/students/ViewStudentNav
 
 export default function StudentSubjects () {
   return (
-    <RoomDashboard title="生徒の科目">
-      <ViewStudentNavigation />
+    <RoomDashboard title="生徒の履修科目の一覧">
+      <DashboardSection>
+        <ViewStudentNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageStudentSubjects />
       </DashboardSection>

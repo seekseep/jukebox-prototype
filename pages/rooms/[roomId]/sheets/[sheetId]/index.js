@@ -8,7 +8,9 @@ import ViewSheetNavigation from '@/components/features/sheets/ViewSheetNavigatio
 export default function Sheet () {
   return (
     <RoomDashboard title="席">
-      <ViewSheetNavigation />
+      <DashboardSection>
+        <ViewSheetNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageSheet />
       </DashboardSection>

@@ -3,24 +3,22 @@ import { useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 
 import { useDeleteSheet, useSheet } from '@/hooks/sheets'
+import { useGetRoomPath } from '@/hooks/router'
 
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 
 import { Button } from '@/components/parts/buttons'
-import Loading from '@/components/parts/Loading'
+import Suspension from '@/components/parts/Suspension'
 import Card, { CardBody } from '@/components/parts/Card'
 import ErrorAlert from '@/components/parts/ErrorAlert'
-import { useGetRoomPath } from '@/hooks/router'
 
 export default function DeleteSheet () {
   const { query:{ roomId, sheetId }, replace } = useRouter()
   const getRoomPath = useGetRoomPath()
 
   const {
-    isLoading,
-    error: gettingError,
-    isSuccess: isReady,
-    mutate
+    mutate,
+    ...result
   } = useSheet(roomId, sheetId)
   const [deleteSheet, {
     isSuccess: isDeleted,
@@ -44,18 +42,18 @@ export default function DeleteSheet () {
       <FeatureHead>
         <FeatureTitle>席の削除</FeatureTitle>
       </FeatureHead>
-      {isLoading && <Loading />}
-      {gettingError && <ErrorAlert error={gettingError} />}
-      {deletingError && <ErrorAlert error={deletingError} />}
-      {isReady && (
+      <Suspension {...result}>
+      {()=>(
         <Card>
-            <CardBody>
-              <div className="flex flex-row-reverse">
-                <Button danger type="button" onClick={handleSubmit}>席の情報を削除する</Button>
-              </div>
-            </CardBody>
+          <CardBody>
+            {deletingError && <ErrorAlert error={deletingError} />}
+            <div className="flex flex-row-reverse">
+              <Button danger type="button" onClick={handleSubmit}>席を削除する</Button>
+            </div>
+          </CardBody>
         </Card>
-      )}
+        )}
+      </Suspension>
     </Feature>
   )
 }

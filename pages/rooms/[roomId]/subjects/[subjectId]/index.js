@@ -8,7 +8,9 @@ import DeleteSubject from '@/components/features/subjects/DeleteSubject'
 export default function Subject () {
   return (
     <RoomDashboard title="科目">
-      <ViewSubjectNavigation />
+      <DashboardSection>
+        <ViewSubjectNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageSubject />
       </DashboardSection>

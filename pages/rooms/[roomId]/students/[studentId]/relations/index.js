@@ -6,8 +6,10 @@ import ViewStudentNavigation from '@/components/features/students/ViewStudentNav
 
 export default function StudentRelations () {
   return (
-    <RoomDashboard title="生徒の関係">
-      <ViewStudentNavigation />
+    <RoomDashboard title="生徒の関係の一覧">
+      <DashboardSection>
+        <ViewStudentNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageStudentRelations />
       </DashboardSection>

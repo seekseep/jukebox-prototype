@@ -7,7 +7,9 @@ import ViewStudentNavigation from '@/components/features/students/ViewStudentNav
 export default function StudentSchedules () {
   return (
     <RoomDashboard title="生徒の予定の一覧">
-      <ViewStudentNavigation />
+      <DashboardSection>
+        <ViewStudentNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageStudentSchedules />
       </DashboardSection>

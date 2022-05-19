@@ -1,45 +1,53 @@
 import { useRouter } from 'next/router'
 
+import { TEACHER_SCHEDULE_TYPE_LABEL } from '@/constatnts'
+
 import { useGetTeacherPath } from '@/hooks/router'
-import { useTeacherSchedules } from '@/hooks/teachers'
+import { useTeacherScheduleRefs } from '@/hooks/schedules'
+
+import { WithDocRefs } from '@/components/utilities/withDocRefs'
 
 import Card from '@/components/parts/Card'
-import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
-import Loading from '@/components/parts/Loading'
 import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
 import { LinkButton } from '@/components/parts/buttons'
+import Suspension from '@/components/parts/Suspension'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
+import ScheduleCollectionItem from '@/components/parts/schedules/ScheduleCollectionItem'
 
 export default function ManageTeacherSchedules () {
-  const { query: { schoolId, roomId, teacherId } } = useRouter()
+  const { query: { roomId, teacherId } } = useRouter()
 
-  const getTeacherPath = useGetTeacherPath(schoolId, roomId, teacherId)
-
-  const {
-    data: schedules,
-    isSuccess,
-    isLoading
-  } = useTeacherSchedules(schoolId, roomId, teacherId)
+  const getTeacherPath = useGetTeacherPath(roomId, teacherId)
+  const result = useTeacherScheduleRefs(roomId, teacherId)
 
   return (
     <Feature>
       <FeatureHead>
         <FeatureTitle>予定の一覧</FeatureTitle>
         <div>
-          <LinkButton href={getTeacherPath('/relations/new')}>予定を登録する</LinkButton>
+          <LinkButton href={getTeacherPath('/schedules/new')}>予定を登録する</LinkButton>
         </div>
       </FeatureHead>
-      <Card>
-        {isLoading && <Loading />}
-        {isSuccess && (
-          <Collection>
-            {schedules.map(schedule => (
-              <CollectionLinkItem key={schedule.id} href={getTeacherPath(`/schedules/${schedule.id}`)}>
-                {schedule.id}
-              </CollectionLinkItem>
-            ))}
-          </Collection>
+      <Suspension {...result}>
+        {({ data: scheduleRefs }) => (
+          <Card>
+            <Collection>
+              {scheduleRefs.length > 0 && (
+                <WithDocRefs docRefs={scheduleRefs}>
+                  {({ data: schedule }) => (
+                    <CollectionLinkItem href={getTeacherPath(`/schedules/${schedule.id}`)}>
+                      <ScheduleCollectionItem
+                        schedule={schedule}
+                        availableLabel={TEACHER_SCHEDULE_TYPE_LABEL.AVAILABLE}
+                        disavailableLabel={TEACHER_SCHEDULE_TYPE_LABEL.DISAVAILABLE} />
+                    </CollectionLinkItem>
+                  )}
+                </WithDocRefs>
+              )}
+            </Collection>
+          </Card>
         )}
-      </Card>
+      </Suspension>
     </Feature>
   )
 }

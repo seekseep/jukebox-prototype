@@ -1,26 +1,15 @@
-import { useRouter } from 'next/router'
-
-import { useGetRoomPath } from '@/hooks/router'
-
 import { DashboardSection } from '@/components/parts/dashboard'
-import Breadcrumbs, {
-  BreadcrumbsLinkItem as BLink,
-  BreadcrumbsCurrentItem as BCurrent,
-} from '@/components/parts/Breadcrumbs'
 
-import ManageTeachers from '@/components/features/teachers/ManageTeachers'
 import RoomDashboard from '@/components/features/rooms/RoomDashboard'
+import ViewTeachersNavigaion from '@/components/features/teachers/ViewTeachersNavigation'
+import ManageTeachers from '@/components/features/teachers/ManageTeachers'
 
 export default function Teachers () {
-  const { query: { roomId } } = useRouter()
-  const getRoomPath = useGetRoomPath(roomId)
-
   return (
-    <RoomDashboard title="講師">
-      <Breadcrumbs>
-        <BLink href={getRoomPath('/')}>🏠</BLink>
-        <BCurrent>講師の一覧</BCurrent>
-      </Breadcrumbs>
+    <RoomDashboard title="講師の一覧">
+      <DashboardSection>
+        <ViewTeachersNavigaion />
+      </DashboardSection>
       <DashboardSection>
         <ManageTeachers />
       </DashboardSection>

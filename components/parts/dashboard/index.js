@@ -27,7 +27,7 @@ export function DashboardMain ({ children }) {
 }
 
 export function DashboardContents ({ children }) {
-  return <div className="max-w-4xl flex flex-col gap-4 items-stretch py-4">{children}</div>
+  return <div className="max-w-4xl flex flex-col items-stretch py-4">{children}</div>
 }
 
 export function DashboardHeader ({ children }) {

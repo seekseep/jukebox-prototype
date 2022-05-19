@@ -10,9 +10,29 @@ export const SCHEDULE_RULE_TERM_TYPE = Object.freeze({
   MONTHLY: 'MONTHLY'
 })
 
-export const SCHEDULE_RULE_TYPE = Object.freeze({
+export const SCHEDULE_TYPE = Object.freeze({
   AVAILABLE   : 'AVAILABLE',
   DISAVAILABLE: 'DISAVAILABLE'
+})
+
+export const SCHEDULE_TYPE_LABEL = Object.freeze({
+  AVAILABLE   : '利用可能',
+  DISAVAILABLE: '利用不可能'
+})
+
+export const STUDENT_SCHEDULE_TYPE_LABEL = Object.freeze({
+  AVAILABLE   : '登校可能',
+  DISAVAILABLE: '休み'
+})
+
+export const TEACHER_SCHEDULE_TYPE_LABEL = Object.freeze({
+  AVAILABLE   : '出勤可能',
+  DISAVAILABLE: '休み'
+})
+
+export const SHEET_SCHEDULE_TYPE_LABEL = Object.freeze({
+  AVAILABLE   : '利用可能',
+  DISAVAILABLE: '利用不可能'
 })
 
 export const SCHEDULE_UNIT_TERM = Object.freeze({
@@ -40,6 +60,47 @@ export const WEEK_DAY = Object.freeze({
 
 export const WEEK_DAY_ALL = -1
 
-export const REPEAT_TERM_TYPE = Object.freeze({
-  WEEKLY: 'WEEKLY'
+export const REPEAT_TYPE = Object.freeze({
+  NONE   : 'NONE',
+  DAILY  : 'DAILY',
+  WEEKLY : 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+  YEARLY : 'YEARLY',
+  CUSOTM : 'CUSTOM'
+})
+
+export const ACCOUNT_TYPE = Object.freeze({
+  STUDENT: 'STUDENT',
+  TEACHER: 'TEACHER',
+  PARENT : 'PARENT'
+})
+
+export const ICON = Object.freeze({
+  TEACHER: '👨‍🏫',
+  STUDENT: '👩‍🎓',
+  PARENT : '👪',
+  SCHOOL : '🏫',
+  ROOM   : '🚪',
+  SUBJECT: '📕',
+  LESSON : '📖',
+  SHEET  : '🪑',
+  ADMIN  : '🚧',
+  FAMILY : '🏠'
+})
+
+export const RESOURCE_TYPE = Object.freeze({
+  STUDENT: 'STUDENT',
+  PARENT : 'PARENT',
+  TEACHER: 'TEACHER',
+  SHEET  : 'SHEET',
+  SUBJECT: 'SUBJECT',
+  LESSON : 'LESSON',
+})
+
+export const RELATION_SCORE = Object.freeze({
+  BEST  : 2,
+  BETTER: 1,
+  NORMAL: 0,
+  WORTH : -1,
+  WORST : -2,
 })

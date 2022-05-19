@@ -1,66 +1,68 @@
-import { startOfMonth, endOfMonth, format } from 'date-fns'
-import { useMutation, useDocumentQuery, useCollectionQuery } from './api'
-
-import { SCHEDULE_STATUS } from '../constatnts'
+import { useCallback } from 'react'
+import useSWR from 'swr'
+import { format } from 'date-fns'
 
 import {
   createSchedule,
   updateSchedule,
   deleteSchedule,
-} from '../services/api/schedules'
-import { useMemo } from 'react'
-import * as Yup from 'yup'
-import { Timestamp } from 'firebase/firestore'
+  getSheetScheduleRefs,
+  getStudentScheduleRefs,
+  getTeacherScheduleRefs
+} from '@/services/api/schedules'
+import {
+  useMutation,
+  useDocAsObjectQuery,
+  useCollectioDocRefsQuery,
+  expandSWR
+} from '@/hooks/api'
 
-export function useScheduleSchema () {
-  return useMemo(() => Yup.object().shape({
-    status    : Yup.string().oneOf(Object.values(SCHEDULE_STATUS)).default(SCHEDULE_STATUS.UNSUBMITTED),
-    startedAt : Yup.string().default(format(startOfMonth(new Date()), 'yyyy-MM-dd')),
-    finishedAt: Yup.string().default(format(endOfMonth(new Date()), 'yyyy-MM-dd'))
-  }),[])
+export function useScheduleRefs(roomId) {
+  return useCollectioDocRefsQuery(`/rooms/${roomId}/schedules`)
 }
 
-export function useSchedules(schoolId, roomId) {
-  return useCollectionQuery(`/schools/${schoolId}/rooms/${roomId}/schedules`)
+export function useSchedule(roomId, scheduleId) {
+  return useDocAsObjectQuery(`/rooms/${roomId}/schedules/${scheduleId}`)
 }
 
-export function useSchedule(schoolId, roomId, scheduleId) {
-  return useDocumentQuery(`/schools/${schoolId}/rooms/${roomId}/schedules/${scheduleId}`)
+export function useStudentScheduleRefs(roomId, studentId) {
+  const swr = useSWR([roomId, studentId], getStudentScheduleRefs)
+  return expandSWR(swr)
 }
 
-export function useCreateSchedule (schoolId, roomId) {
+export function useTeacherScheduleRefs(roomId, teacherId) {
+  const swr = useSWR([roomId, teacherId], getTeacherScheduleRefs)
+  return expandSWR(swr)
+}
+
+export function useSheetScheduleRefs(roomId, sheetId) {
+  const swr = useSWR([roomId, sheetId], getSheetScheduleRefs)
+  return expandSWR(swr)
+}
+
+export function useCreateSchedule (roomId) {
   return useMutation(
-    async (schedule) => {
-
-      schedule.startedAt = Timestamp.fromDate(new Date(schedule.startedAt))
-      schedule.finishedAt = Timestamp.fromDate(new Date(schedule.finishedAt))
-
-      await createSchedule(schoolId, roomId, schedule)
-    }
+    async (schedule) => await createSchedule(roomId, schedule)
   )
 }
 
-export function useUpdateSchedule (schoolId, roomId, scheduleId) {
+export function useUpdateSchedule (roomId, scheduleId) {
   return useMutation(
-    async (schedule) => {
-      await updateSchedule(schoolId, roomId, scheduleId, schedule)
-    }
+    async (schedule) => await updateSchedule(roomId, scheduleId, schedule)
   )
 }
 
-export function useDeleteSchedule (schoolId, roomId, scheduleId) {
+export function useDeleteSchedule (roomId, scheduleId) {
   return useMutation(
-    async () => {
-      await deleteSchedule(schoolId, roomId, scheduleId)
-    }
+    async () => await deleteSchedule(roomId, scheduleId)
   )
 }
 
-export function useScheduleOptions (schedules) {
-  return useMemo(() =>
-    schedules?.map(schedule => ({
-      value: schedule.id,
-      label: `${format(schedule.startedAt.toDate(), 'yyyy年MM月dd日')} ~ ${format(schedule.finishedAt.toDate(), 'yyyy年MM月dd日')}`
-    })) || []
-  ,[schedules])
+export function useGetScheduleLabel () {
+  return useCallback((schedule) => {
+    const startedAt = schedule.startedAt.toDate()
+    const finishedAt = schedule.finishedAt.toDate()
+
+    return `${format(startedAt, 'yyyy/MM/dd HH:mm')} ~ ${format(finishedAt, 'yyyy/MM/dd HH:mm')}`
+  }, [])
 }

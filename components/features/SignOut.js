@@ -14,7 +14,7 @@ export default function SignUp () {
   useEffect(() => {
     if(!isSuccess) return
     toast.success('ログアウトしました')
-    router.push('/')
+    location.href = '/'
   }, [isSuccess, router])
 
   return null

@@ -6,8 +6,10 @@ import RegisterStudentRelation from '@/components/features/students/RegisterStud
 
 export default function NewStudentRelation () {
   return (
-    <RoomDashboard title="生徒の関係性の登録">
-      <ViewStudentNavigation />
+    <RoomDashboard title="生徒の関係の登録">
+      <DashboardSection>
+        <ViewStudentNavigation />
+      </DashboardSection>
       <DashboardSection>
         <RegisterStudentRelation />
       </DashboardSection>

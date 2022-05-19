@@ -1,9 +1,5 @@
-import {
-  collection, doc,
-} from 'firebase/firestore'
-
-import { firestore } from '../../firebase'
-
+import { collection, doc } from 'firebase/firestore'
+import { firestore } from '@/firebase'
 import { createResource, deleteResource, updateResource } from './utils'
 
 export function getSchoolsRef () {
@@ -20,9 +16,9 @@ export async function createSchool(data) {
   return createResource(schoolsRef, data)
 }
 
-export async function updateSchool (schoolId, data, { marge = true } = { }) {
+export async function updateSchool (schoolId, data) {
   const schoolRef = getSchoolRef(schoolId)
-  return await updateResource(schoolRef, data, { marge })
+  return await updateResource(schoolRef, data)
 }
 
 export async function deleteSchool (schoolId) {

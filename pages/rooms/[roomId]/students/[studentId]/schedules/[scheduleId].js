@@ -8,7 +8,9 @@ import DeleteStudentSchedule from '@/components/features/students/DeleteStudentS
 export default function StudentSchedule () {
   return (
     <RoomDashboard title="生徒の予定">
-      <ViewStudentNavigation />
+      <DashboardSection>
+        <ViewStudentNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageStudentSchedule />
       </DashboardSection>

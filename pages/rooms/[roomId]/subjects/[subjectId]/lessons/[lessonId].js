@@ -5,10 +5,12 @@ import ViewSubjectLessonNavigation from '@/components/features/subjects/ViewSubj
 import ManageLesson from '@/components/features/lessons/ManageLesson'
 import DeleteSubjectLesson from '@/components/features/subjects/DeleteSubjectLesson'
 
-export default function Lesson () {
+export default function SubjectLesson () {
   return (
-    <RoomDashboard title="授業">
-      <ViewSubjectLessonNavigation />
+    <RoomDashboard title="科目の授業">
+      <DashboardSection>
+        <ViewSubjectLessonNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageLesson />
       </DashboardSection>

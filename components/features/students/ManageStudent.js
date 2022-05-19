@@ -12,7 +12,7 @@ import { useStudent, useUpdateStudent } from '@/hooks/students'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 import { Form, Field } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
-import Loading from '@/components/parts/Loading'
+import Suspension from '@/components/parts/Suspension'
 import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import PropertySet, {
   PropertyItem,
@@ -27,10 +27,8 @@ export default function ManageStudent () {
 
   const {
     data: student,
-    isLoading,
-    error: gettingError,
-    isSuccess: isReady,
-    mutate
+    mutate,
+    ...result
   } = useStudent(roomId, studentId)
   const [update, {
     data: updatedStudent,
@@ -54,11 +52,10 @@ export default function ManageStudent () {
   return(
     <Feature>
       <FeatureHead>
-        <FeatureTitle>生徒の情報</FeatureTitle>
+        <FeatureTitle>生徒</FeatureTitle>
       </FeatureHead>
-      {isLoading && <Loading />}
-      {gettingError && <ErrorAlert error={gettingError} />}
-      {isReady && (
+      <Suspension {...result}>
+        {() => (
         <Card>
           {isEditing ? (
             <CardBody>
@@ -89,7 +86,8 @@ export default function ManageStudent () {
             </>
           )}
         </Card>
-      )}
+        )}
+      </Suspension>
     </Feature>
   )
 }

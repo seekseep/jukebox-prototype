@@ -1,24 +1,20 @@
 import { useRouter } from 'next/router'
 
 import { useGetTeacherPath } from '@/hooks/router'
-import { useTeacherRelations } from '@/hooks/teachers'
+import { useTeacherRelationRefs } from '@/hooks/relations'
+
+import { WithDocRefs } from '@/components/utilities/withDocRefs'
 
 import Card from '@/components/parts/Card'
 import { LinkButton } from '@/components/parts/buttons'
-import Loading from '@/components/parts/Loading'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
+import Suspension from '@/components/parts/Suspension'
 
 export default function ManageTeacherRelations () {
-  const { query: { schoolId, roomId, teacherId } } = useRouter()
-
-  const getTeacherPath = useGetTeacherPath(schoolId, roomId, teacherId)
-
-  const {
-    data: relations,
-    isSuccess,
-    isLoading
-  } = useTeacherRelations(schoolId, roomId, teacherId)
+  const { query: { roomId, teacherId } } = useRouter()
+  const getTeacherPath = useGetTeacherPath(roomId, teacherId)
+  const result = useTeacherRelationRefs(roomId, teacherId)
 
   return (
     <Feature>
@@ -28,18 +24,23 @@ export default function ManageTeacherRelations () {
           <LinkButton href={getTeacherPath('/relations/new')}>関係を登録する</LinkButton>
         </div>
       </FeatureHead>
-      <Card>
-        {isLoading && <Loading />}
-        {isSuccess && (
-          <Collection>
-            {relations.map(relation => (
-              <CollectionLinkItem key={relation.id} href={getTeacherPath(`/relations/${relation.id}`)}>
-                {relation.id}
-              </CollectionLinkItem>
-            ))}
-          </Collection>
+      <Suspension {...result}>
+        {({ data: relationRefs }) => (
+          <Card>
+            <Collection>
+              {relationRefs.length > 0 && (
+                <WithDocRefs docRefs={relationRefs}>
+                  {({ data: relation }) => (
+                    <CollectionLinkItem href={getTeacherPath(`/relations/${relation.id}`)}>
+                      {relation.id}
+                    </CollectionLinkItem>
+                  )}
+                </WithDocRefs>
+              )}
+            </Collection>
+          </Card>
         )}
-      </Card>
+      </Suspension>
     </Feature>
   )
 }

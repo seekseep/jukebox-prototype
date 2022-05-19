@@ -4,14 +4,14 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 
-import { FORM_ERROR_REQUIRED } from '../../../messages'
+import { FORM_ERROR_REQUIRED } from '@/messages'
 
 import { useToggleState } from '@/hooks/ui'
+import { useTeacher, useUpdateTeacher } from '@/hooks/teachers'
 
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 import { Form, Field } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
-import Loading from '@/components/parts/Loading'
 import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import PropertySet, {
   PropertyItem,
@@ -19,7 +19,7 @@ import PropertySet, {
   PropertyContents
 } from '@/components/parts/PropertySet'
 import ErrorAlert from '@/components/parts/ErrorAlert'
-import { useTeacher, useUpdateTeacher } from '@/hooks/teachers'
+import Suspension from '@/components/parts/Suspension'
 
 export default function ManageTeacher () {
   const { query:{ roomId, teacherId } } = useRouter()
@@ -27,10 +27,8 @@ export default function ManageTeacher () {
 
   const {
     data: teacher,
-    isLoading,
-    error: gettingError,
-    isSuccess: isReady,
-    mutate
+    mutate,
+    ...result
   } = useTeacher(roomId, teacherId)
   const [update, {
     data: updatedTeacher,
@@ -54,11 +52,10 @@ export default function ManageTeacher () {
   return(
     <Feature>
       <FeatureHead>
-        <FeatureTitle>講師の情報</FeatureTitle>
+        <FeatureTitle>講師</FeatureTitle>
       </FeatureHead>
-      {isLoading && <Loading />}
-      {gettingError && <ErrorAlert error={gettingError} />}
-      {isReady && (
+      <Suspension {...result}>
+      {()=>(
         <Card>
           {isEditing ? (
             <CardBody>
@@ -89,7 +86,8 @@ export default function ManageTeacher () {
             </>
           )}
         </Card>
-      )}
+        )}
+      </Suspension>
     </Feature>
   )
 }

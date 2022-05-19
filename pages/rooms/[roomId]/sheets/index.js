@@ -1,26 +1,15 @@
-import { useRouter } from 'next/router'
-
-import { useGetRoomPath } from '@/hooks/router'
-
 import { DashboardSection } from '@/components/parts/dashboard'
-import Breadcrumbs, {
-  BreadcrumbsLinkItem as BLink,
-  BreadcrumbsCurrentItem as BCurrent,
-} from '@/components/parts/Breadcrumbs'
 
-import ManageSheets from '@/components/features/sheets/ManageSheets'
 import RoomDashboard from '@/components/features/rooms/RoomDashboard'
+import ViewSheetsNavigation from '@/components/features/sheets/ViewSheetsNavigation'
+import ManageSheets from '@/components/features/sheets/ManageSheets'
 
 export default function Sheets () {
-  const { query: { roomId } } = useRouter()
-  const getRoomPath = useGetRoomPath(roomId)
-
   return (
-    <RoomDashboard title="席">
-      <Breadcrumbs>
-        <BLink href={getRoomPath('/')}>🏠</BLink>
-        <BCurrent>席の一覧</BCurrent>
-      </Breadcrumbs>
+    <RoomDashboard title="席の一覧">
+      <DashboardSection>
+        <ViewSheetsNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageSheets />
       </DashboardSection>

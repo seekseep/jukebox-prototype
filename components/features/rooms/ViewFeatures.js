@@ -36,6 +36,10 @@ export default function ViewFeatures () {
           icon="📖" label="授業"
           description="授業の登録や編集ができます"  />
         <FeatureCard
+          href={getRoomPath('/parents')}
+          icon="👪" label="保護者"
+          description="保護者の登録や予定を登録できます"  />
+        <FeatureCard
           href={getRoomPath('/settings')}
           icon="🚪" label="教室"
           description="営業日や授業枠などの教室の設定ができます"  />

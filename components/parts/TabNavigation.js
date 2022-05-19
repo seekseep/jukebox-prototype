@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
-import { useMemo } from 'react'
+
 import { useIsActive } from '@/hooks/router'
 
 export default function TabNavigation ({ children }) {
   return (
-    <nav className="border-b flex flex-row gap-2 p-2 px-4">
+    <nav className="border-b flex flex-row gap-2 py-2">
       {children}
     </nav>
   )

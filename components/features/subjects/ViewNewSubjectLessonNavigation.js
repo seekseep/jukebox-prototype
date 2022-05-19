@@ -8,9 +8,6 @@ import Breadcrumbs, {
   BreadcrumbsLinkItem as BLink,
   BreadcrumbsCurrentItem as BCurrent,
 } from '@/components/parts/Breadcrumbs'
-import TabNavigation, {
-  Tab
-} from '@/components/parts/TabNavigation'
 
 export default function ViewNewSubjectLessonNavigation () {
   const { query: { roomId, subjectId } } = useRouter()
@@ -26,10 +23,6 @@ export default function ViewNewSubjectLessonNavigation () {
         <BLink href={getRoomPath(`/subjects/${subjectId}/lessons`)}>授業の一覧</BLink>
         <BCurrent>授業の登録</BCurrent>
       </Breadcrumbs>
-      <TabNavigation>
-        <Tab href={getRoomPath(`/subjects/${subjectId}/lessons/new`)} exact>単一</Tab>
-        <Tab href={getRoomPath(`/subjects/${subjectId}/lessons/new/multi`)}>複数</Tab>
-      </TabNavigation>
     </>
   )
 }

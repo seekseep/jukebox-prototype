@@ -7,7 +7,9 @@ import RegisterStudentSchedule from '@/components/features/students/RegisterStud
 export default function NewStudentSchedule () {
   return (
     <RoomDashboard title="生徒の予定の登録">
-      <ViewStudentNavigation />
+      <DashboardSection>
+        <ViewStudentNavigation />
+      </DashboardSection>
       <DashboardSection>
         <RegisterStudentSchedule />
       </DashboardSection>

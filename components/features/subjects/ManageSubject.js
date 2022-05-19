@@ -12,8 +12,8 @@ import { useToggleState } from '@/hooks/ui'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 import { Form, Field } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
-import Loading from '@/components/parts/Loading'
 import ErrorAlert from '@/components/parts/ErrorAlert'
+import Suspension from '@/components/parts/Suspension'
 import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import PropertySet, {
   PropertyItem,
@@ -27,10 +27,8 @@ export default function ManageSubject () {
 
   const {
     data: subject,
-    isLoading,
-    error: gettingError,
-    isSuccess: isReady,
-    mutate
+    mutate,
+    ...result
   } = useSubject(roomId, subjectId)
   const [update, {
     data: updatedTeacher,
@@ -54,11 +52,10 @@ export default function ManageSubject () {
   return(
     <Feature>
       <FeatureHead>
-        <FeatureTitle>科目の情報</FeatureTitle>
+        <FeatureTitle>科目</FeatureTitle>
       </FeatureHead>
-      {isLoading && <Loading />}
-      {gettingError && <ErrorAlert error={gettingError} />}
-      {isReady && (
+      <Suspension {...result}>
+        {() => (
         <Card>
           {isEditing ? (
             <CardBody>
@@ -89,7 +86,8 @@ export default function ManageSubject () {
             </>
           )}
         </Card>
-      )}
+        )}
+      </Suspension>
     </Feature>
   )
 }
