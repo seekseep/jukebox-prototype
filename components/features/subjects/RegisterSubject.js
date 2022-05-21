@@ -54,7 +54,9 @@ export default function RegisterSubject () {
             <Form>
               <Field name="name" label="名称" />
               {error && <ErrorAlert error={error} />}
-              <Button type="submit">科目を登録する</Button>
+              <div className="flex justify-end">
+                <Button type="submit">科目を登録する</Button>
+              </div>
             </Form>
           </Formik>
         </CardBody>

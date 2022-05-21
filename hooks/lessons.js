@@ -1,63 +1,44 @@
-import { useMutation, useCollectionQuery, expandSWR } from './api'
-
-import {
-  getLessons,
-  getLesson,
-  createLesson,
-  updateLesson,
-  deleteLesson,
-} from '../services/api/lessons'
-import { getStudentRef } from '../services/api/students'
-import { getTeacherRef } from '../services/api/teachers'
-import { getSheetRef } from '../services/api/sheets'
 import useSWR from 'swr'
-import { getSubjectRef } from '@/services/api/subjects'
 
-function getTransformLessonForFirestore (roomId) {
-  return function transformLesson ({ subject: subjectId, students, teachers, sheets, ...lesson }) {
-    if (subjectId) {
-      lesson.subject = getSubjectRef(roomId, subjectId)
-    }
+import { useMutation, useDocAsObjectQuery, expandSWR, useCollectioDocRefsQuery } from './api'
+import { createLesson, updateLesson, deleteLesson, getSubjectLessonRefs } from '@/services/api/lessons'
 
-    if(students){
-      lesson.students = students.map(studentId => getStudentRef(roomId, studentId))
-    }
-
-    if(teachers){
-      lesson.teachers = teachers.map(teacherId => getTeacherRef(roomId, teacherId))
-    }
-
-    if(sheets)  {
-      lesson.sheets = sheets.map(sheetId => getSheetRef(roomId, sheetId))
-    }
-
-    return lesson
-  }
-}
-
-export function useLessons(roomId) {
-  const swr = useSWR([roomId, 'lessons'], getLessons)
-  return expandSWR(swr)
+export function useLessonRefs(roomId) {
+  return useCollectioDocRefsQuery(`/rooms/${roomId}/lessons`)
 }
 
 export function useLesson(roomId, lessonId) {
-  const swr = useSWR([roomId, lessonId], getLesson)
+  return useDocAsObjectQuery(`/rooms/${roomId}/lessons/${lessonId}`)
+}
+
+export function useSubjectLessonRefs(roomId, subjectId) {
+  const swr = useSWR([roomId, subjectId, 'lessons'], getSubjectLessonRefs)
   return expandSWR(swr)
 }
 
+export function useCreateLesson (roomId) {
+  return useMutation(
+    async (lesson) => await createLesson(roomId, lesson)
+  )
+}
+
 export function useCreateLessons(roomId) {
-  const transform = getTransformLessonForFirestore(roomId)
   return useMutation(
     async (lessons) => {
-      const createdLessons = []
-
-      for (let lesson of lessons) {
-        const createdLesson = await createLesson(roomId, transform(lesson))
-        createdLessons.push(createdLesson)
-      }
-
-      return createdLessons
+      for (let lesson of lessons) await createLesson(roomId, lesson)
     }
+  )
+}
+
+export function useUpdateLesson (roomId, lessonId) {
+  return useMutation(
+    async (lesson) => await updateLesson(roomId, lessonId,lesson)
+  )
+}
+
+export function useDeleteLesson (roomId, lessonId) {
+  return useMutation(
+    async () => await deleteLesson(roomId, lessonId)
   )
 }
 
@@ -65,40 +46,6 @@ export function useDeleteLessons(roomId) {
   return useMutation(
     async (lessonIds) => {
       for (let lessonId of lessonIds) await deleteLesson(roomId, lessonId)
-      return
-    }
-  )
-}
-
-export function useCreateLesson (roomId) {
-  const transform = getTransformLessonForFirestore(roomId)
-  return useMutation(
-    async (lesson) => {
-      return await createLesson(
-        roomId,
-        transform(lesson),
-      )
-    }
-  )
-}
-
-export function useUpdateLesson (roomId, lessonId) {
-  const transform = getTransformLessonForFirestore(roomId)
-  return useMutation(
-    async (lesson) => {
-      return await updateLesson(
-        roomId,
-        lessonId,
-        transform(lesson)
-      )
-    }
-  )
-}
-
-export function useDeleteLesson (roomId, lessonId) {
-  return useMutation(
-    async () => {
-      return await deleteLesson(roomId, lessonId)
     }
   )
 }

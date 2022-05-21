@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import { useCallback, useState } from 'react'
 
-import { getDocument, getCollection } from '../services/api'
+import { getCollectioDocRefs, getDocAsObject, getCollectionAsObjectArray } from '@/services/api'
 
 export function expandSWR ({ data, error, ...remain }) {
   return {
@@ -13,13 +13,18 @@ export function expandSWR ({ data, error, ...remain }) {
   }
 }
 
-export function useDocumentQuery (pathanme) {
-  const swr = useSWR(pathanme, getDocument)
+export function useCollectionAsObjectArrayQuery(path) {
+  const swr = useSWR(path, getCollectionAsObjectArray)
   return expandSWR(swr)
 }
 
-export function useCollectionQuery (pathname) {
-  const swr = useSWR(pathname, getCollection)
+export function useDocAsObjectQuery (path) {
+  const swr = useSWR(path, getDocAsObject)
+  return expandSWR(swr)
+}
+
+export function useCollectioDocRefsQuery (path) {
+  const swr = useSWR(path, getCollectioDocRefs)
   return expandSWR(swr)
 }
 

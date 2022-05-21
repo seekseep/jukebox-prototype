@@ -9,9 +9,11 @@ import ViewFeatures from '@/components/features/rooms/ViewFeatures'
 export default function Room () {
   return (
     <RoomDashboard title="ホーム">
-      <Breadcrumbs>
-        <BCurrent>🏠</BCurrent>
-      </Breadcrumbs>
+      <DashboardSection>
+        <Breadcrumbs>
+          <BCurrent>🏠</BCurrent>
+        </Breadcrumbs>
+      </DashboardSection>
       <DashboardSection>
         <ViewFeatures />
       </DashboardSection>

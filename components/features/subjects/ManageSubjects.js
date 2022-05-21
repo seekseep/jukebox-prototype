@@ -1,26 +1,20 @@
 import { useRouter } from 'next/router'
 
 import { useGetRoomPath } from '@/hooks/router'
-import { useSubjects } from '@/hooks/subjects'
+import { useSubjectRefs } from '@/hooks/subjects'
+
+import { WithDocRefs } from '@/components/utilities/withDocRefs'
 
 import Card from '@/components/parts/Card'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
-import Loading from '@/components/parts/Loading'
 import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
 import { LinkButton } from '@/components/parts/buttons'
-import ErrorAlert from '@/components/parts/ErrorAlert'
+import Suspension from '@/components/parts/Suspension'
 
 export default function ManageSubjects () {
   const { query:{ roomId } } = useRouter()
-
   const getRoomPath = useGetRoomPath(roomId)
-
-  const {
-    data: subjects,
-    isSuccess,
-    isLoading,
-    error
-  } = useSubjects(roomId)
+  const result = useSubjectRefs(roomId)
 
   return (
     <Feature>
@@ -30,19 +24,23 @@ export default function ManageSubjects () {
           <LinkButton href={getRoomPath('/subjects/new')}>科目を登録する</LinkButton>
         </div>
       </FeatureHead>
-      {error && <ErrorAlert error={error} />}
-      <Card>
-        {isLoading && <Loading />}
-        {isSuccess && (
-          <Collection>
-            {subjects.map(subject => (
-              <CollectionLinkItem key={subject.id} href={getRoomPath(`/subjects/${subject.id}`)}>
-                {subject.name}
-              </CollectionLinkItem>
-            ))}
-          </Collection>
+      <Suspension {...result}>
+        {({ data: subjectRefs }) => (
+          <Card>
+            <Collection>
+              {subjectRefs.length > 0 && (
+                <WithDocRefs docRefs={subjectRefs}>
+                  {({ data: subject }) => (
+                    <CollectionLinkItem href={getRoomPath(`/subjects/${subject.id}`)}>
+                      {subject.name}
+                    </CollectionLinkItem>
+                  )}
+                </WithDocRefs>
+              )}
+            </Collection>
+          </Card>
         )}
-      </Card>
+      </Suspension>
     </Feature>
   )
 }

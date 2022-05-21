@@ -51,7 +51,7 @@ export default function DeleteSubjectLesson () {
         <Card>
             <CardBody>
               <div className="flex flex-row-reverse">
-                <Button danger type="button" onClick={handleSubmit}>授業の情報を削除する</Button>
+                <Button danger type="button" onClick={handleSubmit}>授業を削除する</Button>
               </div>
             </CardBody>
         </Card>

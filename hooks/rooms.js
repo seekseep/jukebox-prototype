@@ -1,23 +1,35 @@
 import useSWR from 'swr'
 
-import { useCollectionQuery, useDocumentQuery, useMutation, expandSWR } from '@/hooks/api'
+import { useCollectionAsObjectArrayQuery, useDocAsObjectQuery, useMutation, expandSWR } from '@/hooks/api'
+import { createRoom, getSchoolRoomRefs, updateRoom, deleteRoom } from '@/services/api/rooms'
 
-import { getSchoolRef } from '@/services/api/schools'
-import { createRoom } from '@/services/api/rooms'
-
-export function useRooms(schoolId) {
-  return useCollectionQuery(`/schools/${schoolId}/rooms`)
+export function useRoomRefs() {
+  return useCollectionAsObjectArrayQuery('/rooms')
 }
 
-export function useRoom(schoolId, roomId) {
-  return useDocumentQuery(`/schools/${schoolId}/rooms/${roomId}`)
+export function useRoom(roomId) {
+  return useDocAsObjectQuery(`/rooms/${roomId}`)
+}
+
+export function useSchoolRoomRefs (schoolId) {
+  const swr = useSWR([schoolId, 'rooms'], getSchoolRoomRefs)
+  return expandSWR(swr)
 }
 
 export function useCreateRoom () {
   return useMutation(
-    async ({ school: schoolId, ...room }) => {
-      room.school = getSchoolRef(schoolId)
-      return await createRoom(room)
-    }
+    async (room) => await createRoom(room)
+  )
+}
+
+export function useUpdateRoom (roomId) {
+  return useMutation(
+    async (room) => await updateRoom(roomId, room)
+  )
+}
+
+export function useDeleteRoom (roomId) {
+  return useMutation(
+    async () => await deleteRoom(roomId)
   )
 }

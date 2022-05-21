@@ -1,93 +1,53 @@
 import useSWR from 'swr'
-
 import { useMemo } from 'react'
-import * as Yup from 'yup'
+
+import { ACCOUNT_TYPE } from '@/constatnts'
 
 import {
-  createStudent,
-  updateStudent,
-  deleteStudent,
-  getStudentSubjects,
-  getStudentSchedules,
-  getStudentRelations
-} from '../services/api/students'
+  getStudentAccounts,
+  getStudentAccountRefs,
+  createAccount,
+  deleteAccount,
+  updateAccount
+} from '@/services/api/accounts'
 
-import { useDocumentQuery, useCollectionQuery, useMutation, expandSWR } from './api'
+import { useMutation, expandSWR } from '@/hooks/api'
+import { useAccount } from '@/hooks/accounts'
 
-import { useFamily } from './families'
-import { useRoom } from './rooms'
-
-
-export function useStudentSchema () {
-  return useMemo(() => Yup.object().shape({
-    name: Yup.string().required().default(''),
-  }),[])
-}
-
-export function useStudentsByRoomId (roomId) {
-  const room = useRoom(roomId)
-  const students = useMemo(() => room?.students || null, [room])
-  return students
+export function useStudentRefs(roomId) {
+  const swr = useSWR([roomId, 'students'], getStudentAccountRefs)
+  return expandSWR(swr)
 }
 
 export function useStudents(roomId) {
-  return useCollectionQuery(`/rooms/${roomId}/students`)
+  const swr = useSWR([roomId, 'students', 'as-objects'], getStudentAccounts)
+  return expandSWR(swr)
 }
 
 export function useStudent(roomId, studentId) {
-  return useDocumentQuery(`/rooms/${roomId}/students/${studentId}`)
-}
-
-export function useStudentsByFamilyId(familyId) {
-  const family = useFamily(familyId)
-  const students = useMemo(() => family?.students || null, [family])
-  return students
+  return useAccount(roomId, studentId)
 }
 
 export function useCreateStudent (roomId) {
   return useMutation(
     async (student) => {
-      return await createStudent(roomId, student)
+      return await createAccount(roomId, { type: ACCOUNT_TYPE.STUDENT, ...student })
     }
   )
 }
 
 export function useUpdateStudent (roomId, studentId) {
   return useMutation(
-    async (student) => {
-      return await updateStudent(roomId, studentId, student)
-    }
+    async (student) => await updateAccount(roomId, studentId, student)
   )
 }
 
 export function useDeleteStudent (roomId, studentId) {
   return useMutation(
-    async () => {
-      return await deleteStudent(roomId, studentId)
-    }
+    async () => await deleteAccount(roomId, studentId)
   )
 }
 
-export function useStudentSubjects (roomId, studentId) {
-  const swr = useSWR([roomId, studentId], getStudentSubjects)
-  return expandSWR(swr)
-}
-
-export function useStudentSchedules (roomId, studentId) {
-  const swr = useSWR([roomId, studentId], getStudentSchedules)
-  return expandSWR(swr)
-}
-
-export function useStudentRelations (roomId, studentId) {
-  const swr = useSWR([roomId, studentId], getStudentRelations)
-  return expandSWR(swr)
-}
-
 export function useStudentOptions (students) {
-  return useMemo(() =>
-    students?.map(student => ({
-      value: student.id,
-      label: student.name
-    })) || []
-  ,[students])
+  return useMemo(() => students?.map(({ id: value, name:label }) => ({ label, value })) || [], [students])
 }

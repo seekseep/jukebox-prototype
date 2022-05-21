@@ -25,7 +25,7 @@ export default function RegisterStudent () {
 
   const [create, {
     isSuccess,
-    data: createdStudent,
+    isLoading,
     error,
   }] = useCreateStudent(roomId)
 
@@ -40,8 +40,8 @@ export default function RegisterStudent () {
   useEffect(() => {
     if (!isSuccess) return
     toast.success('生徒を登録しました')
-    router.push(getRoomPath(`/students/${createdStudent?.id}`))
-  }, [createdStudent?.id, getRoomPath, isSuccess, router])
+    router.push(getRoomPath('/students'))
+  }, [getRoomPath, isSuccess, router])
 
   return (
     <Feature>
@@ -51,11 +51,15 @@ export default function RegisterStudent () {
       <Card>
         <CardBody>
           <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleSubmit}>
-            <Form>
-              <Field name="name" label="氏名" />
-              {error && <ErrorAlert error={error} />}
-              <Button type="submit">生徒を登録する</Button>
-            </Form>
+            {({ isValid }) => (
+              <Form>
+                <Field name="name" label="氏名" />
+                {error && <ErrorAlert error={error} />}
+                <div className="flex justify-end">
+                  <Button disabled={!isValid || isLoading} type="submit">生徒を登録する</Button>
+                </div>
+              </Form>
+            )}
           </Formik>
         </CardBody>
       </Card>

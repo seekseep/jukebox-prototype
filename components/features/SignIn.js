@@ -33,12 +33,12 @@ export default function SignIn () {
     email: Yup.string()
       .email(FORM_ERROR_EMAIL)
       .required(FORM_ERROR_REQUIRED)
-      .default(''),
+      .default('admin@jukebox.jp'),
     password: Yup.string()
       .required(FORM_ERROR_REQUIRED)
       .max(8, FORM_ERROR_TOO_SHORT)
       .max(64, FORM_ERROR_TOO_LONG)
-      .default('')
+      .default('password')
   }), [])
 
   const initialValues = useMemo(() => validationSchema.cast({

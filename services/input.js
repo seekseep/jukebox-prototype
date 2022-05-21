@@ -11,3 +11,13 @@ export function getDateValue(date = new Date()) {
 export function getTimeValue(date = new Date()) {
   return format(date, 'HH:mm')
 }
+
+export function getOption(value, options, defaultValues) {
+  const option = options.find(option => option.value === value)
+
+  if (!option) {
+    return defaultValues || options[0]
+  }
+
+  return option
+}

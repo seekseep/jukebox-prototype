@@ -1,46 +1,46 @@
 import { useRouter } from 'next/router'
 
-import { useGetRoomPath,  useGetTeacherPath } from '@/hooks/router'
-import { useTeacherSubjects } from '@/hooks/teachers'
+import { useGetRoomPath } from '@/hooks/router'
+
+import { useTeacherSubjectRefs } from '@/hooks/subjects'
+
+import { WithDocRefs } from '@/components/utilities/withDocRefs'
 
 import Card from '@/components/parts/Card'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
-import Loading from '@/components/parts/Loading'
+import Suspension from '@/components/parts/Suspension'
 import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
-import { LinkButton } from '@/components/parts/buttons'
 
 export default function ManageTeacherSubjects () {
-  const { query: { schoolId, roomId, teacherId } } = useRouter()
+  const { query: { roomId, teacherId } } = useRouter()
 
-  const getRoomPath = useGetRoomPath(schoolId, roomId)
-  const getTeacherPath = useGetTeacherPath(schoolId, roomId, teacherId)
+  const getRoomPath = useGetRoomPath(roomId)
 
   const {
-    data: subjects,
-    isSuccess,
-    isLoading
-  } = useTeacherSubjects(schoolId, roomId, teacherId)
+    data: subjectRefs,
+    ...result
+  } = useTeacherSubjectRefs(roomId, teacherId)
 
   return (
     <Feature>
       <FeatureHead>
         <FeatureTitle>科目の一覧</FeatureTitle>
-        <div>
-          <LinkButton href={getTeacherPath('/subjects/new')}>科目を登録する</LinkButton>
-        </div>
       </FeatureHead>
-      <Card>
-        {isLoading && <Loading />}
-        {isSuccess && (
+      <Suspension {...result}>
+      {()=>(
+        <Card>
           <Collection>
-            {subjects.map(subject => (
-              <CollectionLinkItem key={subject.id} href={getRoomPath(`/subjects/${subject.id}`)}>
-                {subject.name}
-              </CollectionLinkItem>
-            ))}
+            <WithDocRefs docRefs={subjectRefs}>
+              {({ data: subject }) => (
+                <CollectionLinkItem href={getRoomPath(`/subjects/${subject.id}`)}>
+                  {subject.name}
+                </CollectionLinkItem>
+              )}
+            </WithDocRefs>
           </Collection>
+        </Card>
         )}
-      </Card>
+      </Suspension>
     </Feature>
   )
 }

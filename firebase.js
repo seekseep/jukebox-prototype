@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
+import { getAuth, connectAuthEmulator } from 'firebase/auth'
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 
 export const app = initializeApp({
@@ -13,8 +13,9 @@ export const app = initializeApp({
 })
 
 export const firestore = getFirestore(app)
+export const auth = getAuth(app)
+
 if (process.env.NODE_ENV === 'development') {
   connectFirestoreEmulator(firestore, 'localhost', 8080)
+  connectAuthEmulator(auth, 'http://localhost:9099')
 }
-
-export const auth = getAuth(app)

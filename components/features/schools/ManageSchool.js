@@ -4,7 +4,7 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 
-import { FORM_ERROR_REQUIRED } from '../../../messages'
+import { FORM_ERROR_REQUIRED } from '@/messages'
 
 import { useSchool, useUpdateSchool } from '@/hooks/schools'
 import { useToggleState } from '@/hooks/ui'
@@ -12,7 +12,7 @@ import { useToggleState } from '@/hooks/ui'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 import { Form, Field } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
-import Loading from '@/components/parts/Loading'
+import Suspension from '@/components/parts/Suspension'
 import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import PropertySet, {
   PropertyItem,
@@ -20,6 +20,7 @@ import PropertySet, {
   PropertyContents
 } from '@/components/parts/PropertySet'
 import ErrorAlert from '@/components/parts/ErrorAlert'
+import { SchoolIcon } from '@/components/parts/icons'
 
 export default function ManageSchool () {
   const {
@@ -29,10 +30,8 @@ export default function ManageSchool () {
 
   const {
     data:school,
-    isLoading,
-    error: gettingError,
-    isSuccess: isReady,
-    mutate
+    mutate,
+    ...result
   } = useSchool(schoolId)
   const [update, {
     data: updatedSchool,
@@ -56,11 +55,12 @@ export default function ManageSchool () {
   return(
     <Feature>
       <FeatureHead>
-        <FeatureTitle>学校の基本情報</FeatureTitle>
+        <FeatureTitle>
+          <SchoolIcon />学校
+        </FeatureTitle>
       </FeatureHead>
-      {isLoading && <Loading />}
-      {gettingError && <ErrorAlert error={gettingError} />}
-      {isReady && (
+      <Suspension {...result}>
+      {()=>(
         <Card>
           {isEditing ? (
             <CardBody>
@@ -91,7 +91,8 @@ export default function ManageSchool () {
             </>
           )}
         </Card>
-      )}
+        )}
+      </Suspension>
     </Feature>
   )
 }

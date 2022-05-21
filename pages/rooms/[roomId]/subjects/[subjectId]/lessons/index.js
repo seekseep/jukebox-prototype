@@ -6,8 +6,10 @@ import ManageSubjectLessons from '@/components/features/subjects/ManageSubjectLe
 
 export default function SubjectLessons () {
   return (
-    <RoomDashboard title="授業の一覧">
-      <ViewSubjectLessonsNavigation />
+    <RoomDashboard title="科目の授業の一覧">
+      <DashboardSection>
+        <ViewSubjectLessonsNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageSubjectLessons />
       </DashboardSection>

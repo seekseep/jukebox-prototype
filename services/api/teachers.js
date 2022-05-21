@@ -1,14 +1,9 @@
-import {
-  collection, doc,
-  getDoc, addDoc, updateDoc, deleteDoc
-} from 'firebase/firestore'
-
-import { firestore } from '../../firebase'
-
-import { docSnapshotToData } from './utils'
+import { doc } from 'firebase/firestore'
+import { createResource, deleteResource, updateResource } from './utils'
+import { getAccountsRef } from './accounts'
 
 export function getTeachersRef (roomId) {
-  return collection(firestore, `rooms/${roomId}/teachers`)
+  return getAccountsRef(roomId)
 }
 
 export function getTeacherRef (roomId, teacherId) {
@@ -18,63 +13,15 @@ export function getTeacherRef (roomId, teacherId) {
 
 export async function createTeacher(roomId, data) {
   const teachersRef = getTeachersRef(roomId)
-
-  const teacherRef = await addDoc(teachersRef, data)
-
-  const teacherSnapshot = await getDoc(teacherRef)
-  const createdTeacher = docSnapshotToData(teacherSnapshot)
-
-  return createdTeacher
+  return await createResource(teachersRef, data)
 }
 
-export async function updateTeacher (roomId, teacherId, data, { merge = true } = { }) {
+export async function updateTeacher (roomId, teacherId, data) {
   const teacherRef = getTeacherRef(roomId, teacherId)
-
-  await updateDoc(teacherRef, data, { merge })
-
-  const teacherSnapshot = await getDoc(teacherRef)
-  const updatedTeacher = docSnapshotToData(teacherSnapshot)
-
-  return updatedTeacher
+  return await updateResource(teacherRef, data)
 }
 
 export async function deleteTeacher (roomId, teacherId) {
   const teacherRef = getTeacherRef(roomId, teacherId)
-
-  await deleteDoc(teacherRef)
-
-  return null
-}
-
-export async function getTeacherSubjects (roomId, teacherId) {
-  const teacherRef = getTeacherRef(roomId, teacherId)
-  const teacherSnapshot = await getDoc(teacherRef)
-  const teacher = docSnapshotToData(teacherSnapshot)
-
-  if (!teacher.subjects) return []
-
-  const subjects = []
-  for (let subjectRef of teacher.subjects) {
-    const subjectSnapshot = await getDoc(subjectRef)
-    const subject = docSnapshotToData(subjectSnapshot)
-    subjects.push(subject)
-  }
-
-  return subjects
-}
-
-export async function getTeacherSchedules (roomId, teacherId) {
-  const teacherRef = getTeacherRef(roomId, teacherId)
-  const teacherSnapshot = await getDoc(teacherRef)
-  const teacher = docSnapshotToData(teacherSnapshot)
-
-  return teacher.schedules || []
-}
-
-export async function getTeacherRelations (roomId, teacherId) {
-  const teacherRef = getTeacherRef(roomId, teacherId)
-  const teacherSnapshot = await getDoc(teacherRef)
-  const teacher = docSnapshotToData(teacherSnapshot)
-
-  return teacher.relations || []
+  return await deleteResource(teacherRef)
 }

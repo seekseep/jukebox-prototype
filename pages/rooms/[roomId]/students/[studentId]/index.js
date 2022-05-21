@@ -8,7 +8,9 @@ import DeleteStudent from '@/components/features/students/DeleteStudent'
 export default function Student () {
   return (
     <RoomDashboard title="生徒">
-      <ViewStudentNavigation />
+      <DashboardSection>
+        <ViewStudentNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageStudent />
       </DashboardSection>

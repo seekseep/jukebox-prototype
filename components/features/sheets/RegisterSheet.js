@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 
 import {
   FORM_ERROR_REQUIRED,
-} from '../../../messages'
+} from '@/messages'
 
 import { useGetRoomPath } from '@/hooks/router'
 import { useCreateSheet } from '@/hooks/sheets'
@@ -54,7 +54,9 @@ export default function RegisterSheet () {
             <Form>
               <Field name="name" label="名称" />
               {error && <ErrorAlert error={error} />}
-              <Button type="submit">席を登録する</Button>
+              <div className="flex justify-end">
+                <Button type="submit">席を登録する</Button>
+              </div>
             </Form>
           </Formik>
         </CardBody>

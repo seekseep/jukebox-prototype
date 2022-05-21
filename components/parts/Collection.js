@@ -2,7 +2,7 @@ import Link from 'next/link'
 import classNames from 'classnames'
 
 export default function Collection ({ children, header, placeholder = '項目が存在しません' }) {
-  if (children.length < 1) {
+  if (!children || children.length < 1) {
     return (
       <CollectionPlaceholder>{placeholder}</CollectionPlaceholder>
     )
@@ -22,20 +22,31 @@ export default function Collection ({ children, header, placeholder = '項目が
   return body
 }
 
-export function CollectionItem ({ clickable = false, isActive = false, ...props }) {
+export function CollectionItemContainer ({ isClickable = false, isActive = false, children, ...props }) {
   return (
     <li
       className={
         classNames(
           'border-b flex-row px-2 py-1',
           {
-            'cursor-pointer hover:bg-gray-50 active:bg-gray-50': clickable,
+            'cursor-pointer hover:bg-gray-50 active:bg-gray-50': isClickable,
             'bg-white text-black'                              : !isActive,
             'bg-blue-50 text-blue-500'                         : isActive
           }
         )
       }
-      {...props} />)
+      {...props}>
+        {children}
+    </li>
+  )
+}
+
+export function CollectionItem ({ isClickable = false, isActive = false, children, ...props }) {
+  return (
+    <CollectionItemContainer isClickable={isClickable} isActive={isActive} {...props}>
+      {children}
+    </CollectionItemContainer>
+  )
 }
 
 export function CollectionLinkItem ({ href, ...props }) {

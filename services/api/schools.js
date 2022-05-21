@@ -1,11 +1,6 @@
-import {
-  collection, doc,
-  getDoc, addDoc, updateDoc, deleteDoc
-} from 'firebase/firestore'
-
-import { firestore } from '../../firebase'
-
-import { docSnapshotToData } from './utils'
+import { collection, doc } from 'firebase/firestore'
+import { firestore } from '@/firebase'
+import { createResource, deleteResource, updateResource } from './utils'
 
 export function getSchoolsRef () {
   return collection(firestore, '/schools')
@@ -18,30 +13,15 @@ export function getSchoolRef (schoolId) {
 
 export async function createSchool(data) {
   const schoolsRef = getSchoolsRef()
-
-  const schoolRef = await addDoc(schoolsRef, data)
-
-  const schooolSnapshot = await getDoc(schoolRef)
-  const createdSchool = docSnapshotToData(schooolSnapshot)
-
-  return createdSchool
+  return createResource(schoolsRef, data)
 }
 
-export async function updateSchool (schoolId, data, { merge = true } = { }) {
+export async function updateSchool (schoolId, data) {
   const schoolRef = getSchoolRef(schoolId)
-
-  await updateDoc(schoolRef, data, { merge })
-
-  const schooolSnapshot = await getDoc(schoolRef)
-  const updatedSchool = docSnapshotToData(schooolSnapshot)
-
-  return updatedSchool
+  return await updateResource(schoolRef, data)
 }
 
 export async function deleteSchool (schoolId) {
   const schoolRef = getSchoolRef(schoolId)
-
-  await deleteDoc(schoolRef)
-
-  return null
+  return await deleteResource(schoolRef)
 }

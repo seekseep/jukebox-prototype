@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 
 import {
   FORM_ERROR_REQUIRED,
-} from '../../../messages'
+} from '@/messages'
 
 import { useGetRoomPath } from '@/hooks/router'
 import { useCreateTeacher } from '@/hooks/teachers'
@@ -54,7 +54,9 @@ export default function RegisterTeacher () {
             <Form>
               <Field name="name" label="氏名" />
               {error && <ErrorAlert error={error} />}
-              <Button type="submit">講師を登録する</Button>
+              <div className="flex justify-end">
+                <Button type="submit">講師を登録する</Button>
+              </div>
             </Form>
           </Formik>
         </CardBody>

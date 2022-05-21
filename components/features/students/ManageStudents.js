@@ -1,26 +1,22 @@
 import { useRouter } from 'next/router'
 
 import { useGetRoomPath } from '@/hooks/router'
-import { useStudents } from '@/hooks/students'
+import { useStudentRefs } from '@/hooks/students'
+
+import { WithDocRefs } from '@/components//utilities/withDocRefs'
 
 import Card from '@/components/parts/Card'
+import Suspension from '@/components/parts/Suspension'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
-import Loading from '@/components/parts/Loading'
 import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
 import { LinkButton } from '@/components/parts/buttons'
-import ErrorAlert from '@/components/parts/ErrorAlert'
 
 export default function ManageStudents () {
   const { query:{ roomId } } = useRouter()
 
   const getRoomPath = useGetRoomPath(roomId)
 
-  const {
-    data: students,
-    isSuccess,
-    isLoading,
-    error
-  } = useStudents(roomId)
+  const result = useStudentRefs(roomId)
 
   return (
     <Feature>
@@ -30,19 +26,23 @@ export default function ManageStudents () {
           <LinkButton href={getRoomPath('/students/new')}>生徒を登録する</LinkButton>
         </div>
       </FeatureHead>
-      {error && <ErrorAlert error={error} />}
-      <Card>
-        {isLoading && <Loading />}
-        {isSuccess && (
-          <Collection>
-            {students.map(student => (
-              <CollectionLinkItem key={student.id} href={getRoomPath(`/students/${student.id}`)}>
-                {student.name}
-              </CollectionLinkItem>
-            ))}
+      <Suspension {...result}>
+        {({ data: studentRefs }) => (
+          <Card>
+            <Collection>
+              {studentRefs.length > 0 && (
+                <WithDocRefs docRefs={studentRefs}>
+                  {({ data: student }) => (
+                    <CollectionLinkItem href={getRoomPath(`/students/${student.id}`)}>
+                      {student.name}
+                    </CollectionLinkItem>
+                  )}
+                </WithDocRefs>
+              )}
           </Collection>
+        </Card>
         )}
-      </Card>
+      </Suspension>
     </Feature>
   )
 }

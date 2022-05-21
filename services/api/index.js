@@ -1,20 +1,25 @@
 import { collection, doc, getDoc, getDocs, } from 'firebase/firestore'
 
-import { firestore } from '../../firebase'
+import { firestore } from '@/firebase'
 
-import { docSnapshotToData } from './utils'
+import { docSnapshotToObject, querySnapshotToRefs } from './utils'
 
-export async function getCollection (path) {
+export async function getCollectioDocRefs (path) {
   const reference = collection(firestore, path)
-  const { docs } = await getDocs(reference)
-  const models = docs.map(doc => docSnapshotToData(doc))
-  return models
+  const querySnapshot = await getDocs(reference)
+  return querySnapshotToRefs(querySnapshot)
 }
 
-export async function getDocument (path)  {
+export async function getCollectionAsObjectArray (path)  {
+  const reference = collection(firestore, path)
+  const querySnapshot = await getDocs(reference)
+  return querySnapshot.docs.map(doc => docSnapshotToObject(doc))
+}
+
+
+export async function getDocAsObject (path)  {
   const reference = doc(firestore, path)
   const snapshot = await getDoc(reference)
-  const model = docSnapshotToData(snapshot)
-
-  return model
+  const object = docSnapshotToObject(snapshot)
+  return object
 }

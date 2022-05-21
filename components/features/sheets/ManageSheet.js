@@ -4,14 +4,15 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 
-import { FORM_ERROR_REQUIRED } from '../../../messages'
+import { FORM_ERROR_REQUIRED } from '@/messages'
 
 import { useToggleState } from '@/hooks/ui'
+import { useSheet, useUpdateSheet } from '@/hooks/sheets'
 
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 import { Form, Field } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
-import Loading from '@/components/parts/Loading'
+import Suspension from '@/components/parts/Suspension'
 import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import PropertySet, {
   PropertyItem,
@@ -19,7 +20,6 @@ import PropertySet, {
   PropertyContents
 } from '@/components/parts/PropertySet'
 import ErrorAlert from '@/components/parts/ErrorAlert'
-import { useSheet, useUpdateSheet } from '@/hooks/sheets'
 
 export default function ManageSheet () {
   const { query:{ roomId, sheetId } } = useRouter()
@@ -27,10 +27,8 @@ export default function ManageSheet () {
 
   const {
     data: sheet,
-    isLoading,
-    error: gettingError,
-    isSuccess: isReady,
-    mutate
+    mutate,
+    ...result
   } = useSheet(roomId, sheetId)
   const [update, {
     data: updatedSheet,
@@ -54,11 +52,10 @@ export default function ManageSheet () {
   return(
     <Feature>
       <FeatureHead>
-        <FeatureTitle>席の情報</FeatureTitle>
+        <FeatureTitle>席</FeatureTitle>
       </FeatureHead>
-      {isLoading && <Loading />}
-      {gettingError && <ErrorAlert error={gettingError} />}
-      {isReady && (
+      <Suspension {...result}>
+      {()=>(
         <Card>
           {isEditing ? (
             <CardBody>
@@ -89,7 +86,8 @@ export default function ManageSheet () {
             </>
           )}
         </Card>
-      )}
+        )}
+      </Suspension>
     </Feature>
   )
 }

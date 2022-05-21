@@ -8,7 +8,9 @@ import ViewLessonNavigation from '@/components/features/lessons/ViewLessonNaviga
 export default function Lesson () {
   return (
     <RoomDashboard title="授業">
-      <ViewLessonNavigation />
+      <DashboardSection>
+        <ViewLessonNavigation />
+      </DashboardSection>
       <DashboardSection>
         <ManageLesson />
       </DashboardSection>

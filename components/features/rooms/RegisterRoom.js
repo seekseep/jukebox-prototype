@@ -4,9 +4,9 @@ import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 
-import {
-  FORM_ERROR_REQUIRED,
-} from '../../../messages'
+import { FORM_ERROR_REQUIRED } from '@/messages'
+
+import { getSchoolRef } from '@/services/api/schools'
 
 import { useGetSchoolPath } from '@/hooks/router'
 import { useCreateRoom } from '@/hooks/rooms'
@@ -25,24 +25,30 @@ export default function RegisterRoom () {
 
   const [create, {
     isSuccess,
-    data: createdRoom,
     error,
   }] = useCreateRoom()
 
   const validationSchema = useMemo(() => Yup.object().shape({
-    school: Yup.string().required(FORM_ERROR_REQUIRED).default(''),
-    name  : Yup.string().required(FORM_ERROR_REQUIRED).default(''),
+    schoolId: Yup.string().required(FORM_ERROR_REQUIRED),
+    name    : Yup.string().required(FORM_ERROR_REQUIRED).default(''),
   }), [])
+
   const initialValues = useMemo(() => validationSchema.cast({
-    school: schoolId
+    schoolId
   }, { stripUnknown: true }), [schoolId, validationSchema])
-  const handleSubmit = useCallback((room) => create(room), [create])
+
+  const handleSubmit = useCallback(({ schoolId, ...room }) => {
+    create({
+      school: getSchoolRef(schoolId),
+      ...room,
+    })
+  }, [create])
 
   useEffect(() => {
     if (!isSuccess) return
     toast.success('教室を登録しました')
-    router.push(`/rooms/${createdRoom?.id}`)
-  }, [createdRoom?.id, getSchoolPath, isSuccess, router])
+    router.push(getSchoolPath('/'))
+  }, [getSchoolPath, isSuccess, router])
 
   const isReady = !!schoolId
 

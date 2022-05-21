@@ -1,17 +1,22 @@
 import { useMemo, useCallback } from 'react'
 
-export function useIsActive (pathanme, currentPathname, exact = false) {
+export function useIsActive (pathame, currentPathname, exact = false) {
   const isActive = useMemo(() => {
-    const _pathanme = pathanme.replace(/\/$/, '')
+    const _pathame = pathame.replace(/\/$/, '')
     const _currentPathname = currentPathname.replace(/\/$/, '')
 
-    if (exact) return _pathanme === _currentPathname
+    if (exact) return _pathame === _currentPathname
 
-    return !!new RegExp(`^${_pathanme}`).test(_currentPathname)
-  }, [currentPathname, exact, pathanme])
+    return !!new RegExp(`^${_pathame}`).test(_currentPathname)
+  }, [currentPathname, exact, pathame])
 
   return isActive
 }
+
+export function useGetAdminPath() {
+  return useCallback((pathname = '/') => `/admin${pathname}`, [])
+}
+
 
 export function useGetSchoolPath (schoolId) {
   return useCallback((pathname = '') => `/schools/${schoolId}${pathname}`, [schoolId])
@@ -44,4 +49,8 @@ export function useGetSubjectPath(roomId, subjectId) {
 export function useGetLessonPath(roomId, subjectId, lessonId) {
   const getSubjectPath = useGetSubjectPath(roomId, subjectId)
   return useCallback((pathname = '') => getSubjectPath(`/lessons/${lessonId}${pathname}`), [getSubjectPath, lessonId])
+}
+
+export function useGetFamilyPath(familyId) {
+  return useCallback((pathname = '') => `/families/${familyId}${pathname}`, [familyId])
 }
