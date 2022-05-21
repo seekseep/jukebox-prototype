@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 
 import { useGetRoomPath } from '@/hooks/router'
-import { useSubjects } from '@/hooks/subjects'
+import { useSubjectRefs } from '@/hooks/subjects'
 
 import { WithDocRefs } from '@/components/utilities/withDocRefs'
 
@@ -14,7 +14,7 @@ import Suspension from '@/components/parts/Suspension'
 export default function ManageSubjects () {
   const { query:{ roomId } } = useRouter()
   const getRoomPath = useGetRoomPath(roomId)
-  const result = useSubjects(roomId)
+  const result = useSubjectRefs(roomId)
 
   return (
     <Feature>
