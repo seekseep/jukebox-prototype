@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import classNames from 'classnames'
 import { useFormikContext, useField } from 'formik'
 import ReactSelect from 'react-select'
@@ -11,9 +11,22 @@ export function Select ({ className, ...props }) {
 }
 
 export function Form ({ ...props }) {
-  const { handleSubmit } = useFormikContext()
+  const { handleSubmit, errors } = useFormikContext()
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.info(
+        Object.entries(([key, value]) => `${key}: ${value}`).join('\n'),
+        errors
+      )
+    }
+  }, [errors])
 
   return <form onSubmit={handleSubmit} className="flex flex-col gap-4" {...props} />
+}
+
+export function FormActions ({ ...props }) {
+  return <div className="flex flex-row-reverse justify-between" {...props} />
 }
 
 export function Label ({ ...props }) {

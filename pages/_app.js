@@ -3,10 +3,14 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import '@/styles/globals.css'
 
+import { AuthProvider } from '@/hooks/auth'
+
 function App ({ Component, pageProps }) {
   return (
     <>
-      <Component {...pageProps} />
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
       <ToastContainer />
     </>
   )

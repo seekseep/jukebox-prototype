@@ -14,3 +14,5 @@ export const numberOptionSchema = Yup.object().shape({
   label: Yup.string(),
   value: Yup.number(),
 })
+
+export const dateSchema = Yup.date().nullable()

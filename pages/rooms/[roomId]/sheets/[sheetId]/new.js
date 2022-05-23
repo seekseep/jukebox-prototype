@@ -1,8 +1,8 @@
 import { DashboardSection } from '@/components/parts/dashboard'
 
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ViewSheetNavigation from '@/components/features/sheets/ViewSheetNavigation'
-import RegisterSheetSchedule from '@/components/features/sheets/RegisterSheetSchedule'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ViewSheetNavigation from '@/modules/rooms/components/features/sheets/ViewSheetNavigation'
+import RegisterSheetSchedule from '@/modules/rooms/components/features/sheets/RegisterSheetSchedule'
 
 export default function NewSheetSchedule () {
   return (

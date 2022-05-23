@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
-function useClassName({ disabled, sm=false, primary = true, secondary = false, danger = false }) {
+function useClassName({ disabled, sm = false, primary = true, secondary = false, danger = false }) {
   primary = primary && !secondary && !danger
   secondary = secondary && !danger
   danger = danger && !secondary

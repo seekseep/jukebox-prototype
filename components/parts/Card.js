@@ -1,7 +1,7 @@
 import { forwardRef, createElement } from 'react'
 import classNames from 'classnames'
 
-const Card = forwardRef(function Card ({ type='div', elevation = 1, ...props }, ref) {
+const Card = forwardRef(function Card ({ type = 'div', elevation = 1, ...props }, ref) {
   return createElement(
     type,
     {

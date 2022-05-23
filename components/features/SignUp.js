@@ -1,82 +1,60 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import * as Yup from 'yup'
 import { Formik } from 'formik'
 import { toast } from 'react-toastify'
-
-import {
-  FORM_ERROR_EMAIL,
-  FORM_ERROR_REQUIRED,
-  FORM_ERROR_TOO_SHORT,
-  FORM_ERROR_TOO_LONG
-} from '../../messages'
-
-import { useSignUp } from '@/hooks/auth'
 
 import Card, { CardBody } from '@/components/parts/Card'
 import AuthorizeHeader from '@/components/parts/AuthorizeHeader'
 import ErrorAlert from '@/components/parts/ErrorAlert'
-import { Form, Field } from '@/components/parts/forms'
+import { Form, FormActions } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
 
-export default function SignUp () {
+import { useSignUp } from '@/hooks/auth'
+import { useValidationSchema, useInitialValues, useValuesToReult } from '@/components/parts/auth/SignUpFormFields/hooks'
+import SignUpFormFields from '@/components/parts/auth/SignUpFormFields'
+import { ICON } from '@/constatnts'
+
+export default function SignIn () {
   const router = useRouter()
 
   const [signUp, {
-    data: user,
+    isLoading: isSigningUp,
     isSuccess: isSignedUp,
-    error
+    error: signingUpError
   }] = useSignUp()
 
-  const validationSchema = useMemo(() => Yup.object().shape({
-    email: Yup.string()
-      .email(FORM_ERROR_EMAIL)
-      .required(FORM_ERROR_REQUIRED)
-      .default(''),
-    name: Yup.string()
-      .required(FORM_ERROR_REQUIRED)
-      .max(64, FORM_ERROR_TOO_LONG)
-      .default(''),
-    password: Yup.string()
-      .required(FORM_ERROR_REQUIRED)
-      .max(8, FORM_ERROR_TOO_SHORT)
-      .max(64, FORM_ERROR_TOO_LONG)
-      .default(''),
-  }), [])
-
-  const initialValues = useMemo(() => validationSchema.cast({
-
-  }, { stripUnknown: true }), [validationSchema])
-
-  const handleSubmit = useCallback(({ email, password, name }) => {
-    signUp(email, password, name)
-  }, [signUp])
+  const validationSchema = useValidationSchema()
+  const initialValues = useInitialValues()
+  const valuesToResult = useValuesToReult()
+  const handleSubmit = useCallback((values) => signUp(valuesToResult(values)), [signUp, valuesToResult])
 
   useEffect(() => {
     if(!isSignedUp) return
     toast.success('アカウントを作成しました')
     router.push('/')
-  }, [isSignedUp, router, user?.id])
+  }, [isSignedUp, router])
 
   return (
     <>
       <Card>
         <CardBody>
-          <AuthorizeHeader icon="👤" title="アカウント登録" />
+          <AuthorizeHeader icon={ICON.USER} title="アカウント作成" />
           <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-            <Form>
-              <Field label="名前" type="text" name="name" />
-              <Field label="メールアドレス" type="text" name="email" />
-              <Field label="パスワード" type="password" name="password" />
-              {error && <ErrorAlert error={error} />}
-              <Button type="submit">アカウントを登録する</Button>
-            </Form>
+            {({ isValid }) => (
+              <Form>
+                <SignUpFormFields />
+                <ErrorAlert error={signingUpError} />
+                <FormActions>
+                  <Button disabled={!isValid || isSigningUp } type="submit">アカウントを作成する</Button>
+                </FormActions>
+              </Form>
+            )}
           </Formik>
         </CardBody>
       </Card>
       <div className="flex justify-center py-4">
-        <Link href="/">
+        <Link href="/signin">
           <a className="text-blue-500 underline">ログインする</a>
         </Link>
       </div>

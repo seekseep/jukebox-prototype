@@ -1,9 +1,9 @@
 import { DashboardSection } from '@/components/parts/dashboard'
 
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ViewStudentNavigation from '@/components/features/students/ViewStudentNavigation'
-import ManageStudentSchedule from '@/components/features/students/ManageStudentSchedule'
-import DeleteStudentSchedule from '@/components/features/students/DeleteStudentSchedule'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ViewStudentNavigation from '@rooms/components/features/students/ViewStudentNavigation'
+import ManageStudentSchedule from '@rooms/components/features/students/ManageStudentSchedule'
+import DeleteStudentSchedule from '@rooms/components/features/students/DeleteStudentSchedule'
 
 export default function StudentSchedule () {
   return (

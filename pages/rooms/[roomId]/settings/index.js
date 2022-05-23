@@ -1,8 +1,8 @@
 import { DashboardSection } from '@/components/parts/dashboard'
 
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ViewSettingsNavigation from '@/components/features/rooms/ViewSettingsNavigation'
-import ViewSettingItems from '@/components/features/rooms/ViewSettingItems'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ViewSettingsNavigation from '@rooms/components/features/rooms/ViewSettingsNavigation'
+import ViewSettingItems from '@rooms/components/features/rooms/ViewSettingItems'
 
 export default function Settings () {
   return (

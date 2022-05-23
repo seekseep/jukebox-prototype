@@ -1,9 +1,9 @@
 import { DashboardSection } from '@/components/parts/dashboard'
 
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ViewTeacherNavigation from '@/components/features/teachers/ViewTeacherNavigation'
-import ManageTeacherSchedule from '@/components/features/teachers/ManageTeacherSchedule'
-import DeleteTeacherSchedule from '@/components/features/teachers/DeleteTeacherSchedule'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ViewTeacherNavigation from '@rooms/components/features/teachers/ViewTeacherNavigation'
+import ManageTeacherSchedule from '@rooms/components/features/teachers/ManageTeacherSchedule'
+import DeleteTeacherSchedule from '@rooms/components/features/teachers/DeleteTeacherSchedule'
 
 export default function TeacherSchedule () {
   return (

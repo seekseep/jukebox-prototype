@@ -1,9 +1,9 @@
 import { DashboardSection } from '@/components/parts/dashboard'
 
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ViewLessonFrameNavigation from '@/components/features/lessonframes/ViewLessonFrameNavigation'
-import ManageLessonFrame from '@/components/features/lessonframes/ManageLessonFrame'
-import DeleteLessonFrame from '@/components/features/lessonframes/DeleteLessonFrame'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ViewLessonFrameNavigation from '@/modules/rooms/components/features/lessonFrames/ViewLessonFrameNavigation'
+import ManageLessonFrame from '@/modules/rooms/components/features/lessonFrames/ManageLessonFrame'
+import DeleteLessonFrame from '@/modules/rooms/components/features/lessonFrames/DeleteLessonFrame'
 
 export default function LessonFrame () {
   return (

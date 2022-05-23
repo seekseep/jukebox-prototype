@@ -1,16 +1,24 @@
-import SimplePage from '@/components/parts/SimplePage'
+import Page, { PageContainer, PageSection } from '@/components/parts/Page'
 
 import Authorized from '@/components/features/Authorized'
-import ManageSchools from '@/components/features/schools/ManageSchools'
-import ViewSchoolsNavigation from '@/components/features/schools/ViewSchoolsNavigation'
+import ViewAppNavigation from '@/components/features/ViewAppNavigation'
+import ViewSchoolsNavigation from '@/modules/schools/components/features/schools/ViewSchoolsNavigation'
+import ManageSchools from '@/modules/schools/components/features/schools/ManageSchools'
 
 export default function Schools () {
   return (
     <Authorized>
-      <SimplePage size="2xl">
-        <ViewSchoolsNavigation />
-        <ManageSchools />
-      </SimplePage>
+      <Page>
+        <ViewAppNavigation />
+        <PageContainer>
+          <PageSection>
+            <ViewSchoolsNavigation />
+          </PageSection>
+          <PageSection>
+            <ManageSchools />
+          </PageSection>
+        </PageContainer>
+      </Page>
     </Authorized>
   )
 }

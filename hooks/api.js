@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import { useCallback, useState } from 'react'
 
-import { getCollectioDocRefs, getDocAsObject, getCollectionAsObjectArray } from '@/services/api'
+import { getCollectioDocRefs, getDocAsObject, getCollectionAsObjectArray, updateDoc, createDoc, deleteDoc } from '@/services/api'
 
 export function expandSWR ({ data, error, ...remain }) {
   return {
@@ -18,7 +18,7 @@ export function useCollectionAsObjectArrayQuery(path) {
   return expandSWR(swr)
 }
 
-export function useDocAsObjectQuery (path) {
+export function useDocAsObjectQuery (path = null) {
   const swr = useSWR(path, getDocAsObject)
   return expandSWR(swr)
 }
@@ -72,4 +72,16 @@ export function useMutation (execute) {
     data,
     error
   }]
+}
+
+export function useCreateDocMutation(path) {
+  return useMutation((data) => createDoc(path, data))
+}
+
+export function useUpdateDocMutation(path) {
+  return useMutation((data) => updateDoc(path, data))
+}
+
+export function useDeleteDocMutation(path) {
+  return useMutation(() => deleteDoc(path))
 }

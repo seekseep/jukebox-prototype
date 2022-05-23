@@ -1,3 +1,9 @@
+export const AUTH_STATE = Object.freeze({
+  LOADING     : 'LOADING',
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  AUTHORIZED  : 'AUTHORIZED'
+})
+
 export const STUDENT_STATUS = Object.freeze({
   ALL      : 'ALL',
   ACTIVE   : 'ACTIVE',
@@ -76,6 +82,7 @@ export const ACCOUNT_TYPE = Object.freeze({
 })
 
 export const ICON = Object.freeze({
+  USER   : '👤',
   TEACHER: '👨‍🏫',
   STUDENT: '👩‍🎓',
   PARENT : '👪',
@@ -89,6 +96,8 @@ export const ICON = Object.freeze({
 })
 
 export const RESOURCE_TYPE = Object.freeze({
+  SCHOOL : 'SCHOOL',
+  ROOM   : 'ROOM',
   STUDENT: 'STUDENT',
   PARENT : 'PARENT',
   TEACHER: 'TEACHER',
@@ -103,4 +112,10 @@ export const RELATION_SCORE = Object.freeze({
   NORMAL: 0,
   WORTH : -1,
   WORST : -2,
+})
+
+export const GENDER_TYPE = Object.freeze({
+  MALE  : 'MALE',
+  FEMALE: 'FEMALE',
+  OTHER : 'OTHER',
 })

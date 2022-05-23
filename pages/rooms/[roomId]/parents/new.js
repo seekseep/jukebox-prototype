@@ -1,8 +1,8 @@
 import { DashboardSection } from '@/components/parts/dashboard'
 
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ViewNewParentNavigation from '@/components/features/parents/ViewNewParentNavigation'
-import RegisterParent from '@/components/features/parents/RegisterParent'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ViewNewParentNavigation from '@rooms/components/features/parents/ViewNewParentNavigation'
+import RegisterParent from '@rooms/components/features/parents/RegisterParent'
 
 export default function NewParent () {
   return (

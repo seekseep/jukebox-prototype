@@ -3,6 +3,7 @@
   "rules": {
     "semi": ["error", "never"],
     "key-spacing": ["error", { "align": "colon" }],
+    "space-infix-ops": ["error"],
     "jsx-quotes": ["error", "prefer-double"],
     "quotes": ["error", "single"],
     "object-curly-spacing": ["error", "always"],

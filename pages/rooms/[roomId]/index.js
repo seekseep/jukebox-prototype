@@ -3,8 +3,8 @@ import Breadcrumbs, {
   BreadcrumbsCurrentItem as BCurrent,
 } from '@/components/parts/Breadcrumbs'
 
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ViewFeatures from '@/components/features/rooms/ViewFeatures'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ViewFeatures from '@rooms/components/features/rooms/ViewFeatures'
 
 export default function Room () {
   return (

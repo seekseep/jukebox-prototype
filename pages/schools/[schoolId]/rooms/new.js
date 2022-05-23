@@ -1,16 +1,24 @@
+import Page, { PageContainer, PageSection } from '@/components/parts/Page'
+
 import Authorized from '@/components/features/Authorized'
-import RegisterRoom from '@/components/features/rooms/RegisterRoom'
-import ViewRegisterRoomNavigation from '@/components/features/rooms/ViewRegisterRoomNavigation'
+import ViewAppNavigation from '@/components/features/ViewAppNavigation'
+import ViewRegisterRoomNavigation from '@schools/components/features/rooms/ViewRegisterRoomNavigation'
+import RegisterRoom from '@schools/components/features/rooms/RegisterRoom'
 
-import SimplePage from '@/components/parts/SimplePage'
-
-export default function NewRoom () {
+export default function Schools () {
   return (
     <Authorized>
-      <SimplePage size="2xl">
-        <ViewRegisterRoomNavigation />
-        <RegisterRoom />
-      </SimplePage>
+      <Page>
+        <ViewAppNavigation />
+        <PageContainer>
+          <PageSection>
+            <ViewRegisterRoomNavigation />
+          </PageSection>
+          <PageSection>
+            <RegisterRoom />
+          </PageSection>
+        </PageContainer>
+      </Page>
     </Authorized>
   )
 }

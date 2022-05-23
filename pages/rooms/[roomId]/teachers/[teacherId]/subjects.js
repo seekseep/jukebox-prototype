@@ -1,8 +1,8 @@
 import { DashboardSection } from '@/components/parts/dashboard'
 
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ManageTeacherSubjects from '@/components/features/teachers/ManageTeacherSubjects'
-import ViewTeacherNavigation from '@/components/features/teachers/ViewTeacherNavigation'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ManageTeacherSubjects from '@rooms/components/features/teachers/ManageTeacherSubjects'
+import ViewTeacherNavigation from '@rooms/components/features/teachers/ViewTeacherNavigation'
 
 export default function TeacherSubjects () {
   return (

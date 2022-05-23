@@ -1,9 +1,9 @@
 import { DashboardSection } from '@/components/parts/dashboard'
 
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ViewTeacherNavigation from '@/components/features/teachers/ViewTeacherNavigation'
-import ManageTeacherRelation from '@/components/features/teachers/ManageTeacherRelation'
-import DeleteTeacherRelation from '@/components/features/teachers/DeleteTeacherRelation'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ViewTeacherNavigation from '@rooms/components/features/teachers/ViewTeacherNavigation'
+import ManageTeacherRelation from '@rooms/components/features/teachers/ManageTeacherRelation'
+import DeleteTeacherRelation from '@rooms/components/features/teachers/DeleteTeacherRelation'
 
 export default function TeacherRelation () {
   return (

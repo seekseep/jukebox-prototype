@@ -8,12 +8,28 @@ import { setDoc, getDoc } from 'firebase/firestore'
 
 import { auth } from '@/firebase'
 
-import { getUserRef } from './users'
 import { docSnapshotToObject } from './utils'
+import { getUserRef } from './users'
+import { getRolesByUserRef } from './roles'
 
 export function onCurrentUserChange (observer) {
   const unsubscribe = onAuthStateChanged(auth, observer)
   return unsubscribe
+}
+
+export async function getCurrentUser(uid) {
+  if (!uid) return null
+
+  const userRef = getUserRef(uid)
+  const userSnapshot = await getDoc(userRef)
+  const user = docSnapshotToObject(userSnapshot)
+
+  const roles = await getRolesByUserRef(userRef)
+
+  return {
+    ...user,
+    roles,
+  }
 }
 
 export async function signUp(email, password, name) {

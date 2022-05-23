@@ -1,4 +1,21 @@
+import { REPEAT_TYPE } from '@/constatnts'
 import { add } from 'date-fns'
+
+export function createLessons({ subject, students, teachers, sheets, startedAt, finishedAt, repeat, repeatCount }) {
+  switch (repeat) {
+    case REPEAT_TYPE.DAILY:
+      return createDailyLessons({ subject, students, teachers, sheets, startedAt, finishedAt, repeatCount })
+    case REPEAT_TYPE.WEEKLY:
+      return createWeeklyLessons({ subject, students, teachers, sheets, startedAt, finishedAt, repeatCount })
+    case REPEAT_TYPE.MONTHLY:
+      return createMonthlyLessons({ subject, students, teachers, sheets, startedAt, finishedAt, repeatCount })
+    case REPEAT_TYPE.YEARLY:
+      return createYearlyLessons({ subject, students, teachers, sheets, startedAt, finishedAt, repeatCount })
+    case REPEAT_TYPE.NONE:
+    default:
+      return [createLesson({ subject, students, teachers, sheets, startedAt, finishedAt, repeatCount })]
+  }
+}
 
 export function createLesson ({ subject, teachers, sheets, students, startedAt, finishedAt }) {
   return { subject, students, teachers, sheets, startedAt, finishedAt }

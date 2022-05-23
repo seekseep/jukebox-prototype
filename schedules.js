@@ -1,8 +1,8 @@
 import { DashboardSection } from '@/components/parts/dashboard'
 
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ManageSheetSchedules from '@/components/features/sheets/ManageSheetSchedules'
-import ViewSheetNavigation from '@/components/features/sheets/ViewSheetNavigation'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ManageSheetSchedules from '@/modules/rooms/components/features/sheets/ManageSheetSchedules'
+import ViewSheetNavigation from '@/modules/rooms/components/features/sheets/ViewSheetNavigation'
 
 export default function Sheet () {
   return (

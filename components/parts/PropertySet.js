@@ -27,11 +27,11 @@ export function PropertyContents ({ noPadding = false, ...props }) {
 }
 
 export function PropertyDateTimeContents({ value: date }) {
-  return <PropertyContents>{date ? format(date, 'yyyy年MM月dd日 HH時mm分'): ''}</PropertyContents>
+  return <PropertyContents>{date ? format(date, 'yyyy年MM月dd日 HH時mm分') : ''}</PropertyContents>
 }
 
 export function PropertyDateContents({ value: date }) {
-  return <PropertyContents>{date ? format(date, 'yyyy年MM月dd日'): ''}</PropertyContents>
+  return <PropertyContents>{date ? format(date, 'yyyy年MM月dd日') : ''}</PropertyContents>
 }
 
 export function PropertyBooleanContents({ value = false, trueLabel = 'はい', falseLabel = 'いいえ' }) {

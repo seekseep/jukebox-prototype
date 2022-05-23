@@ -2,6 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@users/*": ["./modules/users/*"],
+      "@rooms/*": ["./modules/rooms/*"],
+      "@schools/*": ["./modules/schools/*"],
+      "@admin/*": ["./modules/admin/*"],
       "@/*": ["./*"]
     }
   }

@@ -6,7 +6,7 @@ export default function SignUpPage () {
   return (
     <>
       <Head>
-        <title>アカウント登録 | JUKEBOX</title>
+        <title>ユーザ登録 | JUKEBOX</title>
       </Head>
       <SimplePage>
         <SignUp />

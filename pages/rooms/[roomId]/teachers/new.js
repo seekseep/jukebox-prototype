@@ -1,6 +1,6 @@
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ViewNewTeacherNavigaion from '@/components/features/teachers/ViewNewTeacherNavigation'
-import RegisterTeacher from '@/components/features/teachers/RegisterTeacher'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ViewNewTeacherNavigaion from '@rooms/components/features/teachers/ViewNewTeacherNavigation'
+import RegisterTeacher from '@rooms/components/features/teachers/RegisterTeacher'
 
 import { DashboardSection } from '@/components/parts/dashboard'
 

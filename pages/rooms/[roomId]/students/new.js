@@ -1,8 +1,8 @@
 import { DashboardSection } from '@/components/parts/dashboard'
 
-import RoomDashboard from '@/components/features/rooms/RoomDashboard'
-import ViewNewStudentNavigation from '@/components/features/students/ViewNewStudentNavigation'
-import RegisterStudent from '@/components/features/students/RegisterStudent'
+import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
+import ViewNewStudentNavigation from '@rooms/components/features/students/ViewNewStudentNavigation'
+import RegisterStudent from '@rooms/components/features/students/RegisterStudent'
 
 export default function NewStudent () {
   return (
