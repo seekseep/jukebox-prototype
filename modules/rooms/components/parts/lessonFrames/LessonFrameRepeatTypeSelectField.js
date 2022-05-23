@@ -1,4 +1,4 @@
-import { REPEAT_TYPE } from '@/constatnts'
+import { REPEAT_TYPE } from '@/constants'
 
 import { SelectField } from '@/components/parts/forms'
 

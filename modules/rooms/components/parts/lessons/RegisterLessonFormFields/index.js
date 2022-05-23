@@ -7,7 +7,7 @@ import { useSheetOptions } from '@rooms/hooks/sheets'
 
 import { SelectField, Field, DateField } from '@/components/parts/forms'
 import RepeatTypeSelectField from '@/modules/rooms/components/parts/RepeatTypeSelectField'
-import { REPEAT_TYPE } from '@/constatnts'
+import { REPEAT_TYPE } from '@/constants'
 
 export default function RegisterLessonFormFields ({ subjects, students, teachers, sheets }) {
   const { values } = useFormikContext()

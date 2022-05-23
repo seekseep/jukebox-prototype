@@ -13,7 +13,7 @@ import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 
 import { useSheetQuery, useUpdateSheetMutation } from '@rooms/hooks/sheets'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@rooms/components/parts/sheets/SheetFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@rooms/components/parts/sheets/SheetFormFields/hooks'
 
 import SheetFormFields from '@rooms/components/parts/sheets/SheetFormFields'
 import SheetPropertySet from '@rooms/components/parts/sheets/SheetPropertySet'
@@ -36,7 +36,7 @@ export default function ManageSheet () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues(sheet)
-  const valuesToResult = useValuesToReult()
+  const valuesToResult = useValuesToResult()
   const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update])
 
   useEffect(() => {

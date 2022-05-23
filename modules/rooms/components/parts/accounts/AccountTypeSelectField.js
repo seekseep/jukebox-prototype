@@ -1,5 +1,5 @@
-import { ACCOUNT_TYPE } from '@/constatnts'
-import { SelectField } from '../../../../../components/parts/forms'
+import { ACCOUNT_TYPE } from '@rooms/constants'
+import { SelectField } from '@/components/parts/forms'
 
 const SELECT_OPTIONS = [{
   value: ACCOUNT_TYPE.STUDENT,

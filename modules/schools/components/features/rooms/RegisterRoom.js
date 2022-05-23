@@ -14,7 +14,7 @@ import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 
 import { useGetSchoolPath } from '@schools/hooks/router'
 import { useSetUpRoomMutation } from '@schools/hooks/rooms'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@schools/components/parts/rooms/RoomFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@schools/components/parts/rooms/RoomFormFields/hooks'
 import RoomFormFields from '@schools/components/parts/rooms/RoomFormFields'
 
 export default function RegisterRoom () {
@@ -32,7 +32,7 @@ export default function RegisterRoom () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues()
-  const valuesToResult = useValuesToReult()
+  const valuesToResult = useValuesToResult()
   const handleSubmit = useCallback(values => setUp(valuesToResult(values)), [setUp, valuesToResult])
 
   useEffect(() => {

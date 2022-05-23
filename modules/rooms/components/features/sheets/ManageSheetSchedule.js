@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react'
 import { Formik } from 'formik'
 import { toast } from 'react-toastify'
 
-import { SHEET_SCHEDULE_TYPE_LABEL } from '@/constatnts'
+import { SHEET_SCHEDULE_TYPE_LABEL } from '@/constants'
 import { useToggleState } from '@/hooks/ui'
 
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'

@@ -3,7 +3,7 @@ import { Formik } from 'formik'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 
-import { TEACHER_SCHEDULE_TYPE_LABEL } from '@/constatnts'
+import { TEACHER_SCHEDULE_TYPE_LABEL } from '@/constants'
 
 import Card, { CardBody } from '@/components/parts/Card'
 import ErrorAlert from '@/components/parts/ErrorAlert'

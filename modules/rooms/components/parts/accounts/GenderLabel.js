@@ -1,4 +1,4 @@
-import { GENDER_TYPE } from '@/constatnts'
+import { GENDER_TYPE } from '@/constants'
 
 export default function GenderLabel ( { gender }) {
   switch (gender) {

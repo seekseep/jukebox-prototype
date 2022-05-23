@@ -2,7 +2,7 @@ import { addDoc, collection, doc, getDoc, runTransaction } from 'firebase/firest
 import { firestore } from '@/firebase'
 import { createResource, deleteResource, updateResource, docSnapshotToObject } from '../utils'
 import { getRolesRef } from '../roles'
-import { RESOURCE_TYPE } from '@/constatnts'
+import { RESOURCE_TYPE } from '@/constants'
 import { getAccountsRef } from './accounts'
 
 export function getSchoolsRef () {
@@ -25,7 +25,8 @@ export async function setUpSchool (data, userRef) {
     const schoolId = schoolRef.id
     const accountsRef = getAccountsRef(schoolId)
     const accountRef = await addDoc(accountsRef, {
-      name: user.name
+      name: user.name,
+
     })
 
     const rolesRef = getRolesRef()

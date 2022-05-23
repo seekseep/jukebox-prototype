@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { RELATION_SCORE } from '@/constatnts'
+import { RELATION_SCORE } from '@/constants'
 import classNames from 'classnames'
 
 export default function RelationScoreLabel ({ score }) {

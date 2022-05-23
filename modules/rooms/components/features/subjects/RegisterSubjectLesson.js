@@ -43,7 +43,6 @@ export default function RegisterSubjectLesson () {
     error: gettingSheetsError
   } = useSheetsQuery(roomId)
 
-  console.log(roomId, subjectId)
   const [create, {
     isLoading: isCreating,
     isSuccess: isCreated,

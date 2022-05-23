@@ -1,4 +1,4 @@
-import { ICON } from '@/constatnts'
+import { ICON } from '@/constants'
 
 const iconStyle = { fontSize: '125%', lineHeight: 1 }
 

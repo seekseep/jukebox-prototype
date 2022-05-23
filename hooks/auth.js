@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { signUp, signIn, signOut, getCurrentUser, onCurrentUserChange } from '@/services/api/auth'
 
 import { expandSWR, useMutation }  from '@/hooks/api'
-import { AUTH_STATE } from '@/constatnts'
+import { AUTH_STATE } from '@/constants'
 
 const AuthContext = createContext()
 

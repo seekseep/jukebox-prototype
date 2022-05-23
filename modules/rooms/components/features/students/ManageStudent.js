@@ -13,7 +13,7 @@ import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 
 import { useStudentQuery, useUpdateStudentMutation } from '@rooms/hooks/students'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@rooms/components/parts/students/StudentFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@rooms/components/parts/students/StudentFormFields/hooks'
 
 import StudentFormFields from '@rooms/components/parts/students/StudentFormFields'
 import StudentPropertySet from '@rooms/components/parts/students/StudentPropertySet'
@@ -36,8 +36,8 @@ export default function ManageStudent () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues(student)
-  const valuesToResult = useValuesToReult()
-  const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update])
+  const valuesToResult = useValuesToResult()
+  const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update, valuesToResult])
 
   useEffect(() => {
     if (!isUpdated) return

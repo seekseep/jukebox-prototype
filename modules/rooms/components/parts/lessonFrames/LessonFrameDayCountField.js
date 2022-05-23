@@ -3,7 +3,7 @@ import { format, add } from 'date-fns'
 import locale from 'date-fns/locale/ja'
 
 import { Field } from '@/components/parts/forms'
-import { REPEAT_TYPE } from '@/constatnts'
+import { REPEAT_TYPE } from '@/constants'
 
 const WEEKLY_OPTIONS = new Array(7).fill(null).map((_, i) => {
   const date = add(new Date(1970, 0, 4), { days: i })

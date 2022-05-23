@@ -11,6 +11,10 @@ export default function UserPropertySet ({ user }) {
         <PropertyLabel>名前</PropertyLabel>
         <PropertyContents>{user.name}</PropertyContents>
       </PropertyItem>
+      <PropertyItem>
+        <PropertyLabel>ID</PropertyLabel>
+        <PropertyContents>{user.id}</PropertyContents>
+      </PropertyItem>
     </PropertySet>
   )
 }

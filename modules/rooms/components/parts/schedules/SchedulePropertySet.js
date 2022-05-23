@@ -1,4 +1,4 @@
-import { SCHEDULE_TYPE_LABEL } from '@/constatnts'
+import { SCHEDULE_TYPE_LABEL } from '@/constants'
 import PropertySet, {
   PropertyItem,
   PropertyLabel,

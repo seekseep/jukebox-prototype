@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import locale from 'date-fns/locale/ja'
 import { format } from 'date-fns'
 
-import { REPEAT_TYPE, SCHEDULE_TYPE_LABEL } from '@/constatnts'
+import { REPEAT_TYPE, SCHEDULE_TYPE_LABEL } from '@/constants'
 import ScheduleTypeBadge from '@rooms/components/parts/schedules/ScheduleTypeBadge'
 
 export default function ScheduleCollectionItem ({

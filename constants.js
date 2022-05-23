@@ -75,12 +75,6 @@ export const REPEAT_TYPE = Object.freeze({
   CUSOTM : 'CUSTOM'
 })
 
-export const ACCOUNT_TYPE = Object.freeze({
-  STUDENT: 'STUDENT',
-  TEACHER: 'TEACHER',
-  PARENT : 'PARENT'
-})
-
 export const ICON = Object.freeze({
   USER   : '👤',
   TEACHER: '👨‍🏫',
@@ -119,3 +113,5 @@ export const GENDER_TYPE = Object.freeze({
   FEMALE: 'FEMALE',
   OTHER : 'OTHER',
 })
+
+export const ROLE_TYPE = Object.freeze({})

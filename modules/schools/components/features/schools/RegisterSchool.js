@@ -10,7 +10,7 @@ import ErrorAlert from '@/components/parts/ErrorAlert'
 import { Form, FormActions } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@schools/components/parts/schools/SchoolFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@schools/components/parts/schools/SchoolFormFields/hooks'
 import { useCurrentUserId } from '@/hooks/auth'
 import SchoolFormFields from '@schools/components/parts/schools/SchoolFormFields'
 
@@ -27,7 +27,7 @@ export default function RegisterSchool () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues()
-  const valuesToResult = useValuesToReult()
+  const valuesToResult = useValuesToResult()
   const handleSubmit = useCallback((values) => {
     setUp(valuesToResult(values))
   }, [setUp, valuesToResult])

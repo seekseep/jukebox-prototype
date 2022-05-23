@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import * as Yup from 'yup'
 import { add, startOfHour } from 'date-fns'
 
-import { REPEAT_TYPE, SCHEDULE_TYPE } from '@/constatnts'
+import { REPEAT_TYPE, SCHEDULE_TYPE } from '@/constants'
 import { FORM_ERROR_REQUIRED } from '@/messages'
 import { dateSchema, optionSchema } from '@/schemas/forms'
 

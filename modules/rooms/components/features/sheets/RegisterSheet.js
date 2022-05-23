@@ -13,7 +13,7 @@ import { Button } from '@/components/parts/buttons'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 
 import SheetFormFields from '@rooms/components/parts/sheets/SheetFormFields'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@rooms/components/parts/sheets/SheetFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@rooms/components/parts/sheets/SheetFormFields/hooks'
 
 export default function RegisterSheet () {
   const router = useRouter()
@@ -29,7 +29,7 @@ export default function RegisterSheet () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues()
-  const valuesToResult = useValuesToReult()
+  const valuesToResult = useValuesToResult()
   const handleSubmit = useCallback((values) => create(valuesToResult((values))), [create, valuesToResult])
 
   useEffect(() => {

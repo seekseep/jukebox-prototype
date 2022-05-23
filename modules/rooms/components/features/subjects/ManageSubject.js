@@ -13,7 +13,7 @@ import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 
 import { useSubjectQuery, useUpdateSubjectMutation } from '@rooms/hooks/subjects'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@rooms/components/parts/subjects/SubjectFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@rooms/components/parts/subjects/SubjectFormFields/hooks'
 
 import SubjectFormFields from '@rooms/components/parts/subjects/SubjectFormFields'
 import SubjectPropertySet from '@rooms/components/parts/subjects/SubjectPropertySet'
@@ -36,7 +36,7 @@ export default function ManageSubject () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues(subject)
-  const valuesToResult = useValuesToReult()
+  const valuesToResult = useValuesToResult()
   const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update])
 
   useEffect(() => {

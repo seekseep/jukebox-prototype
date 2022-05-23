@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 
-import { TEACHER_SCHEDULE_TYPE_LABEL } from '@/constatnts'
+import { TEACHER_SCHEDULE_TYPE_LABEL } from '@/constants'
 
 import { WithDocRefs } from '@/components/utilities/withDocRefs'
 

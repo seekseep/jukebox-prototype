@@ -1,8 +1,8 @@
 import { collection, doc, query, where, getDocs } from 'firebase/firestore'
 
 import { firestore } from '@/firebase'
-import { createResource, deleteResource, updateResource, querySnapshotToRefs, docsSnapshotToObjects } from '@/services/api/utils'
-import { RESOURCE_TYPE } from '@/constatnts'
+import { createResource, deleteResource, updateResource, querySnapshotToRefs, docsSnapshotToObjects, docSnapshotToObject } from '@/services/api/utils'
+import { RESOURCE_TYPE } from '@/constants'
 import { getUserRef } from './users'
 
 export function getRolesRef () {
@@ -54,4 +54,18 @@ export async function updateRole (roleId, data) {
 export async function deleteRole (roleId) {
   const roleRef = getRoleRef(roleId)
   return await deleteResource(roleRef)
+}
+
+export async function getRoleByResourceAndAccount(resourceRef, accountRef) {
+  const rolesRef = getRolesRef()
+  const rolesQuery = query(
+    rolesRef,
+    where('resource', '==', resourceRef),
+    where('account', '==', accountRef)
+  )
+  const snapshot = await getDocs(rolesQuery)
+
+  if (snapshot.empty) return null
+
+  return docSnapshotToObject(snapshot.docs[0])
 }

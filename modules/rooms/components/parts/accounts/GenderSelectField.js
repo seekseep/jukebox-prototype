@@ -1,5 +1,5 @@
 import { Field } from '@/components/parts/forms'
-import { GENDER_TYPE } from '@/constatnts'
+import { GENDER_TYPE } from '@/constants'
 
 export default function GenderSelectField (props) {
   return (

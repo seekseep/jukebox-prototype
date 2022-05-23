@@ -1,8 +1,9 @@
 import { collection, doc, where, query, getDocs } from 'firebase/firestore'
 
-import { ACCOUNT_TYPE } from '@/constatnts'
 import { firestore } from '@/firebase'
 import { createResource, deleteResource, updateResource, querySnapshotToRefs, docSnapshotToObject } from '@/services/api/utils'
+
+import { ACCOUNT_TYPE } from '@rooms/constants'
 
 export function getAccountsRef (roomId) {
   return collection(firestore, `/rooms/${roomId}/accounts`)

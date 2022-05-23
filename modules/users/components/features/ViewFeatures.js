@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { ICON } from '@/constatnts'
+import { ICON } from '@/constants'
 import FeatureCard from '@/components/parts/FeatureCard'
 import { useCurrentUser } from '@/hooks/auth'
 import Suspension from '@/components/parts/Suspension'

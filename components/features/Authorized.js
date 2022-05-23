@@ -2,7 +2,7 @@ import { useAuthState } from '@/hooks/auth'
 
 import Loading from '@/components/parts/Loading'
 import Unauthorized from '@/components/parts/Unauthorized'
-import { AUTH_STATE } from '@/constatnts'
+import { AUTH_STATE } from '@/constants'
 
 export default function Authorized ({ children }) {
   const authState = useAuthState()

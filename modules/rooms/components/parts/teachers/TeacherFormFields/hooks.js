@@ -28,7 +28,7 @@ export function useInitialValues (teacher) {
   }, [teacher, validationSchema])
 }
 
-export function useValuesToReult() {
+export function useValuesToResult() {
   return useCallback(({ ...values }) => {
     return {
         ...values

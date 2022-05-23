@@ -15,7 +15,8 @@ export default function ViewNewLessonFrameNavigation () {
     <>
       <Breadcrumbs>
         <BLink href={getRoomPath('/')}>🏠</BLink>
-        <BLink href={getRoomPath('/lessonFrames')}>授業枠の一覧</BLink>
+        <BLink href={getRoomPath('/settings')}>教室の設定</BLink>
+        <BLink href={getRoomPath('/settings/lessonFrames')}>授業枠の一覧</BLink>
         <BCurrent>授業枠の登録</BCurrent>
       </Breadcrumbs>
     </>

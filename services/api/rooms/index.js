@@ -1,6 +1,7 @@
 import { collection, doc, getDoc, addDoc, getDocs, query, where, runTransaction } from 'firebase/firestore'
 
-import { RESOURCE_TYPE } from '@/constatnts'
+import { RESOURCE_TYPE } from '@/constants'
+import { ACCOUNT_TYPE } from '@rooms/constants'
 
 import { firestore } from '@/firebase'
 
@@ -36,7 +37,8 @@ export async function setUpRoom (data, userRef, schoolRef) {
 
     const accountsRef = getAccountsRef(roomRef.id)
     const accountRef = await addDoc(accountsRef, {
-      name: user.name
+      name: user.name,
+      type: ACCOUNT_TYPE.TEACHER
     })
 
     const rolesRef = getRolesRef()

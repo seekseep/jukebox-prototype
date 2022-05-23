@@ -1,4 +1,4 @@
-import { RELATION_SCORE } from '@/constatnts'
+import { RELATION_SCORE } from '@/constants'
 import { SelectField } from '@/components/parts/forms'
 
 export const RELATION_SCORE_OPTIONS = [{

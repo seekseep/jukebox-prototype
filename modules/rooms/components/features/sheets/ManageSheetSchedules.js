@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 
-import { SHEET_SCHEDULE_TYPE_LABEL } from '@/constatnts'
+import { SHEET_SCHEDULE_TYPE_LABEL } from '@/constants'
 
 import { useGetSheetPath } from '@rooms/hooks/router'
 import { useSheetScheduleRefsQuery } from '@rooms/hooks/schedules'

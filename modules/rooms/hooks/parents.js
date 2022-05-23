@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 
-import { ACCOUNT_TYPE } from '@/constatnts'
+import { ACCOUNT_TYPE } from '@rooms/constants'
 
 import { createAccount, getParentAccountRefs } from '@/services/api/rooms/accounts'
 

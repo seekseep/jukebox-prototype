@@ -25,7 +25,7 @@ export function useInitialValues (user) {
   }, [user, validationSchema])
 }
 
-export function useValuesToReult() {
+export function useValuesToResult() {
   return useCallback(({ ...values }) => {
     return {
       ...values

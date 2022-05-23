@@ -13,7 +13,7 @@ import { Button } from '@/components/parts/buttons'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 
 import TeacherFormFields from '@rooms/components/parts/teachers/TeacherFormFields'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@rooms/components/parts/teachers/TeacherFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@rooms/components/parts/teachers/TeacherFormFields/hooks'
 
 export default function RegisterTeacher () {
   const router = useRouter()
@@ -29,7 +29,7 @@ export default function RegisterTeacher () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues()
-  const valuesToResult = useValuesToReult()
+  const valuesToResult = useValuesToResult()
   const handleSubmit = useCallback((values) => create(valuesToResult((values))), [create, valuesToResult])
 
   useEffect(() => {

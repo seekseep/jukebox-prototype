@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import locale from 'date-fns/locale/ja'
 
-import { REPEAT_TYPE } from '@/constatnts'
+import { REPEAT_TYPE } from '@/constants'
 
 export function getDayCountLabel(dayCount, repeat) {
   switch (repeat) {

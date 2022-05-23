@@ -13,7 +13,7 @@ import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 
 import { useParentQuery, useUpdateParentMutation } from '@rooms/hooks/parents'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@rooms/components/parts/parents/ParentFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@rooms/components/parts/parents/ParentFormFields/hooks'
 
 import ParentFormFields from '@rooms/components/parts/parents/ParentFormFields'
 import ParentPropertySet from '@rooms/components/parts/parents/ParentPropertySet'
@@ -36,7 +36,7 @@ export default function ManageParent () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues(parent)
-  const valuesToResult = useValuesToReult()
+  const valuesToResult = useValuesToResult()
   const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update])
 
   useEffect(() => {

@@ -21,7 +21,7 @@ import PropertySet, {
 } from '@/components/parts/PropertySet'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 import { SchoolIcon } from '@/components/parts/icons'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@schools/components/parts/schools/SchoolFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@schools/components/parts/schools/SchoolFormFields/hooks'
 import SchoolFormFields from '@schools/components/parts/schools/SchoolFormFields'
 import SchoolPropertySet from '@schools/components/parts/schools/SchoolPropertySet'
 
@@ -43,7 +43,7 @@ export default function ManageSchool () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues(school)
-  const valuesToSchool = useValuesToReult()
+  const valuesToSchool = useValuesToResult()
   const handleSubmit = useCallback((values) => update(valuesToSchool(values)), [update, valuesToSchool])
 
   useEffect(() => {

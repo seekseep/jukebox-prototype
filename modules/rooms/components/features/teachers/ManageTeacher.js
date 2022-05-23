@@ -13,7 +13,7 @@ import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 
 import { useTeacherQuery, useUpdateTeacherMutation } from '@rooms/hooks/teachers'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@rooms/components/parts/teachers/TeacherFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@rooms/components/parts/teachers/TeacherFormFields/hooks'
 
 import TeacherFormFields from '@rooms/components/parts/teachers/TeacherFormFields'
 import TeacherPropertySet from '@rooms/components/parts/teachers/TeacherPropertySet'
@@ -36,7 +36,7 @@ export default function ManageTeacher () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues(teacher)
-  const valuesToResult = useValuesToReult()
+  const valuesToResult = useValuesToResult()
   const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update, valuesToResult])
 
   useEffect(() => {

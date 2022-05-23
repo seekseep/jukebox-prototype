@@ -1,4 +1,4 @@
-import { REPEAT_TYPE } from '@/constatnts'
+import { REPEAT_TYPE } from '@/constants'
 import { SelectField } from '../../../../components/parts/forms'
 
 export const REPEAT_TYPE_OPTIONS = Object.freeze({

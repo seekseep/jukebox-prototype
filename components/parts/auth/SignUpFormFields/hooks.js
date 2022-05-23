@@ -36,7 +36,7 @@ export function useInitialValues () {
   }, [validationSchema])
 }
 
-export function useValuesToReult() {
+export function useValuesToResult() {
   return useCallback(({ ...values }) => {
     return {
         ...values

@@ -15,7 +15,7 @@ import ErrorAlert from '@/components/parts/ErrorAlert'
 
 import UserPropertySet from '@users/components/parts/users/UserPropertySet'
 import UserFormFields from '@users/components/parts/users/UserFormFields'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@users/components/parts/users/UserFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@users/components/parts/users/UserFormFields/hooks'
 
 export default function ManageUser () {
   const { query:{ userId } } = useRouter()
@@ -35,7 +35,7 @@ export default function ManageUser () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues(user)
-  const valuesToReult = useValuesToReult()
+  const valuesToReult = useValuesToResult()
   const handleSubmit = useCallback((values) => update(valuesToReult(values)), [update, valuesToReult])
 
   useEffect(() => {

@@ -13,7 +13,7 @@ import { Button } from '@/components/parts/buttons'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 
 import ParentFormFields from '@rooms/components/parts/parents/ParentFormFields'
-import { useInitialValues, useValidationSchema, useValuesToReult } from '@rooms/components/parts/parents/ParentFormFields/hooks'
+import { useInitialValues, useValidationSchema, useValuesToResult } from '@rooms/components/parts/parents/ParentFormFields/hooks'
 
 export default function RegisterParent () {
   const router = useRouter()
@@ -29,7 +29,7 @@ export default function RegisterParent () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues()
-  const valuesToResult = useValuesToReult()
+  const valuesToResult = useValuesToResult()
   const handleSubmit = useCallback((values) => create(valuesToResult((values))), [create, valuesToResult])
 
   useEffect(() => {

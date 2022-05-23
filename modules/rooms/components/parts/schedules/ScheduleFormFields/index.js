@@ -1,6 +1,6 @@
 import { useFormikContext } from 'formik'
 
-import { SCHEDULE_TYPE } from '@/constatnts'
+import { SCHEDULE_TYPE } from '@/constants'
 
 import { getRepeatLabel } from '@/services/schedule'
 

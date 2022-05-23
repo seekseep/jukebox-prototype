@@ -15,7 +15,6 @@ import { getTeacherRef } from '@/services/api/rooms/teachers'
 import { getSheetRef } from '@/services/api/rooms/sheets'
 
 function appendReferncesToLesson ({ subject, students, teachers, sheets, ...lesson }, roomId) {
-  console.log({ subject })
   if (subject) lesson.subject = getSubjectRef(roomId, subject)
   if (students) lesson.students = students.map(studentId => getStudentRef(roomId, studentId))
   if (teachers) lesson.teachers = teachers.map(teacherId => getTeacherRef(roomId, teacherId))

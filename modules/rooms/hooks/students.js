@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import { useMemo } from 'react'
 
-import { ACCOUNT_TYPE } from '@/constatnts'
+import { ACCOUNT_TYPE } from '@rooms/constants'
 
 import { useMutation, expandSWR } from '@/hooks/api'
 import {

@@ -30,7 +30,7 @@ export function useInitialValues (student) {
   }, [student, validationSchema])
 }
 
-export function useValuesToReult() {
+export function useValuesToResult() {
   return useCallback(({ ...values }) => {
     return {
         ...values

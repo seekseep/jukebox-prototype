@@ -11,7 +11,7 @@ import { Form, FormActions } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
 
 import { useSignInMutation } from '@/hooks/auth'
-import { useValidationSchema, useInitialValues, useValuesToReult } from '@/components/parts/auth/SignInFormFields/hooks'
+import { useValidationSchema, useInitialValues, useValuesToResult } from '@/components/parts/auth/SignInFormFields/hooks'
 import SignInFormFields from '@/components/parts/auth/SignInFormFields'
 
 export default function SignIn () {
@@ -25,7 +25,7 @@ export default function SignIn () {
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues()
-  const valuesToResult = useValuesToReult()
+  const valuesToResult = useValuesToResult()
   const handleSubmit = useCallback((values) => signIn(valuesToResult(values)), [signIn, valuesToResult])
 
   useEffect(() => {
