@@ -14,17 +14,17 @@ export function expandSWR ({ data, error, ...remain }) {
 }
 
 export function useCollectionAsObjectArrayQuery(path) {
-  const swr = useSWR(path, getCollectionAsObjectArray)
+  const swr = useSWR([path, 'as-object'], getCollectionAsObjectArray)
   return expandSWR(swr)
 }
 
 export function useDocAsObjectQuery (path = null) {
-  const swr = useSWR(path, getDocAsObject)
+  const swr = useSWR([path, 'as-object'], getDocAsObject)
   return expandSWR(swr)
 }
 
 export function useCollectioDocRefsQuery (path) {
-  const swr = useSWR(path, getCollectioDocRefs)
+  const swr = useSWR([path, 'as-ref'], getCollectioDocRefs)
   return expandSWR(swr)
 }
 

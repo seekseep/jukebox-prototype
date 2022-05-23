@@ -10,7 +10,7 @@ import ErrorAlert from '@/components/parts/ErrorAlert'
 import { Form, FormActions } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
 
-import { useSignIn } from '@/hooks/auth'
+import { useSignInMutation } from '@/hooks/auth'
 import { useValidationSchema, useInitialValues, useValuesToReult } from '@/components/parts/auth/SignInFormFields/hooks'
 import SignInFormFields from '@/components/parts/auth/SignInFormFields'
 
@@ -21,7 +21,7 @@ export default function SignIn () {
     isLoading: isSigningIn,
     isSuccess: isSignedIn,
     error: signingInError
-  }] = useSignIn()
+  }] = useSignInMutation()
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues()

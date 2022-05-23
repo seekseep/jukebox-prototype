@@ -47,15 +47,15 @@ export function useCurrentUser () {
   return expandSWR(swr)
 }
 
-export function useSignUp () {
+export function useSignUpMutation () {
   return useMutation(
-    async (email, password, name) => await signUp(email, password, name)
+    async ({ email, password, name }) => await signUp(email, password, name)
   )
 }
 
-export function useSignIn () {
+export function useSignInMutation () {
   return useMutation(
-    async (email, password) => await signIn(email, password)
+    async ({ email, password }) => await signIn(email, password)
   )
 }
 

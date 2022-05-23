@@ -1,21 +1,15 @@
 import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { toast } from 'react-toastify'
-
-import { useSignOut } from '@/hooks/auth'
+import { useSignOutMutation } from '@/hooks/auth'
 
 export default function SignUp () {
-  const router = useRouter()
-
-  const [signOut, { isSuccess }] = useSignOut()
+  const [signOut, { isSuccess }] = useSignOutMutation()
 
   useEffect(() => signOut(), [signOut])
 
   useEffect(() => {
     if(!isSuccess) return
-    toast.success('ログアウトしました')
     location.href = '/'
-  }, [isSuccess, router])
+  }, [isSuccess])
 
   return null
 }

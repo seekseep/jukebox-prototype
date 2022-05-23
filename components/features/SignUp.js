@@ -4,16 +4,17 @@ import { useRouter } from 'next/router'
 import { Formik } from 'formik'
 import { toast } from 'react-toastify'
 
+import { ICON } from '@/constatnts'
+
 import Card, { CardBody } from '@/components/parts/Card'
 import AuthorizeHeader from '@/components/parts/AuthorizeHeader'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 import { Form, FormActions } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
 
-import { useSignUp } from '@/hooks/auth'
+import { useSignUpMutation } from '@/hooks/auth'
 import { useValidationSchema, useInitialValues, useValuesToReult } from '@/components/parts/auth/SignUpFormFields/hooks'
 import SignUpFormFields from '@/components/parts/auth/SignUpFormFields'
-import { ICON } from '@/constatnts'
 
 export default function SignIn () {
   const router = useRouter()
@@ -22,7 +23,7 @@ export default function SignIn () {
     isLoading: isSigningUp,
     isSuccess: isSignedUp,
     error: signingUpError
-  }] = useSignUp()
+  }] = useSignUpMutation()
 
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues()
