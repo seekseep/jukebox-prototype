@@ -59,7 +59,7 @@ export function useSignInMutation () {
   )
 }
 
-export function useSignOut () {
+export function useSignOutMutation () {
   return useMutation(
     async () => await signOut()
   )
