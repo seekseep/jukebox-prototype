@@ -204,7 +204,7 @@ export default function ManageLessons () {
                       </div>
                       <div className="py-2 px-1 w-32">
                         {lesson.students ? (
-                          <div className="flex gap-1">
+                          <div className="flex gap-1 flex-wrap">
                             <WithDocRefs docRefs={lesson.students}>
                               {({ data: student }) => (
                                 <div>{student.name}</div>
@@ -215,7 +215,7 @@ export default function ManageLessons () {
                       </div>
                       <div className="py-2 px-1 w-32">
                         {lesson.teachers ? (
-                          <div className="flex gap-1">
+                          <div className="flex gap-1 flex-wrap">
                             <WithDocRefs docRefs={lesson.teachers}>
                               {({ data: teacher }) => (
                                 <div>{teacher.name}</div>
@@ -229,7 +229,7 @@ export default function ManageLessons () {
                       </div>
                       <div className="py-2 px-1 w-32">
                         {lesson.sheets ? (
-                          <div className="flex gap-1">
+                          <div className="flex gap-1 flex-wrap">
                             <WithDocRefs docRefs={lesson.sheets}>
                               {({ data: sheet }) => (
                                 <div>{sheet.name}</div>
