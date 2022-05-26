@@ -7,7 +7,7 @@ export default function LessonCollectionItem ({
 }) {
   return (
     <div className="flex flex-col gap-1">
-    <div className="flex flex-grow items-center gap-2">
+    <div className="flex grow items-center gap-2">
       <div>{format(lesson.startedAt, 'yyyy/MM/dd HH:mm')}</div>
       <div>~</div>
       <div>{format(lesson.finishedAt, 'yyyy/MM/dd HH:mm')}</div>

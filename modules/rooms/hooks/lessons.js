@@ -9,6 +9,7 @@ import {
   expandSWR,
   useCollectioDocRefsQuery
 } from '@/hooks/api'
+import { searchLessonRefs } from '@/services/api/rooms/lessons'
 import { getSubjectRef } from '@/services/api/rooms/subjects'
 import { getStudentRef } from '@/services/api/rooms/students'
 import { getTeacherRef } from '@/services/api/rooms/teachers'
@@ -23,7 +24,12 @@ function appendReferncesToLesson ({ subject, students, teachers, sheets, ...less
 }
 
 export function useLessonRefsQuery(roomId) {
-  return useCollectioDocRefsQuery(`/rooms/${roomId}/lessons`)
+  return useCollectioDocRefsQuery(roomId && `/rooms/${roomId}/lessons`)
+}
+
+export function useSearchLessonsQuery(roomId, query) {
+  const swr = useSWR(roomId && [roomId, query, 'lessons', new URLSearchParams(query).toString()], searchLessonRefs)
+  return expandSWR(swr)
 }
 
 export function useLessonQuery(roomId, lessonId) {
@@ -74,7 +80,7 @@ export function useCreateSubjectLessonsMutation(roomId, subjectId) {
 export function useUpdateLessonsMutation(roomId) {
   return useMutation(
     async (lessons) => {
-      for (let lesson of lessons) await updateLesson(roomId, appendReferncesToLesson(lesson, roomId))
+      for (let { id:lessonId, ...lesson } of lessons) await updateLesson(roomId, lessonId, appendReferncesToLesson(lesson, roomId))
     }
   )
 }

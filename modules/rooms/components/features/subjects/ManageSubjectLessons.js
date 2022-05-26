@@ -25,7 +25,7 @@ export default function ManageSubjectLessons () {
     selectedKeys,
     isAllSelected,
     isSomeSelected,
-    setKeys,
+    setItems,
     setAll,
     getIsSelected,
     setItem,
@@ -45,8 +45,8 @@ export default function ManageSubjectLessons () {
 
   useEffect(() => {
     if (!lessonDocRefs) return
-    setKeys(lessonDocRefs.map(doc => doc.id), false)
-  }, [lessonDocRefs, setKeys])
+    setItems(lessonDocRefs.map(doc => doc.id), false)
+  }, [lessonDocRefs, setItems])
 
   useEffect(() => {
     if(!isDeleted) return
@@ -86,7 +86,7 @@ export default function ManageSubjectLessons () {
                             onChange={({ target: { checked } }) => setItem(lesson.id, checked)} />
                         </label>
                         <Link href={getSubjectPath(`/lessons/${lesson.id}`)} passHref>
-                          <a className="flex flex-grow">
+                          <a className="flex grow">
                             <LessonCollectionItem lesson={lesson} />
                           </a>
                         </Link>

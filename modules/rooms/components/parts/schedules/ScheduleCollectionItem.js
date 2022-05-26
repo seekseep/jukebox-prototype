@@ -56,7 +56,7 @@ export default function ScheduleCollectionItem ({
         type={schedule.type}
         availableLabel={availableLabel}
         disavailableLabel={disavailableLabel} />
-      <div className="flex-grow flex-col gap-2">
+      <div className="grow flex-col gap-2">
         <div>{label}</div>
         {helper && <div className="text-gray-700 text-sm">{helper}</div>}
       </div>

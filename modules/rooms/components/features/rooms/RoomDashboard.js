@@ -70,8 +70,8 @@ export default function RoomDashboard ({ title, children }) {
                   <div className="w-10 h-10 bg-gray-100 text-gray-800 rounded-full flex justify-center items-center">
                     <div>{getFirstChar(account?.name)}</div>
                   </div>
-                  <div className="flex-grow">{account?.name}</div>
-                  <div className="w-16 flex-shrink-0 text-xs bg-gray-100 text-gray-900 px-2 text-center py-1 rounded">
+                  <div className="grow">{account?.name}</div>
+                  <div className="w-16 shrink-0 text-xs bg-gray-100 text-gray-900 px-2 text-center py-1 rounded">
                     <AccountTypeLabel type={account?.type} />
                   </div>
                 </>
@@ -81,6 +81,7 @@ export default function RoomDashboard ({ title, children }) {
         </DashboardHeader>
         <DashboardContents>
           {typeof children === 'function' ? children({ getRoomPath }) : children}
+          <div className="h-72" />
         </DashboardContents>
       </DashboardMain>
     </Dashboard>

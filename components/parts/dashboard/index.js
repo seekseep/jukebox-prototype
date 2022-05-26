@@ -20,7 +20,7 @@ export function Dashboard ({ title, children }) {
 
 export function DashboardNavigation ({ children }) {
   return (
-    <nav className="bg-gray-800 text-white w-48 border-r border-gray-600 flex-shrink-0 flex flex-col">
+    <nav className="bg-gray-800 text-white w-48 border-r border-gray-600 shrink-0 flex flex-col">
       {children}
     </nav>
   )
@@ -36,7 +36,7 @@ export function DashboardNavigationHeader ({ ...props }) {
 }
 
 export function DashboardNavigationBody ({ ...props }) {
-  return <DashboardNavigationSection className="flex-grow sticky top-0" {...props} />
+  return <DashboardNavigationSection className="grow sticky top-0" {...props} />
 }
 
 export function DashboardNavigationFooter ({ ...props }) {
@@ -45,7 +45,7 @@ export function DashboardNavigationFooter ({ ...props }) {
 
 
 export function DashboardMain ({ children }) {
-  return <main className="flex-grow bg-gray-50">{children}</main>
+  return <main className="grow bg-gray-50">{children}</main>
 }
 
 export function DashboardContents ({ children }) {

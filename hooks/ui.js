@@ -10,8 +10,8 @@ function keysToSelectionState (keys = [], defaultValue = false) {
   return keys.reduce((selection, key) => ({ ...selection, [key]: defaultValue }), [])
 }
 
-export function useSelectCollection (defaultKeys = []) {
-  const [selection, setSelection] = useState(keysToSelectionState(defaultKeys))
+export function useSelectCollection (defaultState = {}) {
+  const [selection, setSelection] = useState(defaultState)
 
   const getIsSelected = useCallback((key) => !!selection[key], [selection])
 
@@ -30,21 +30,25 @@ export function useSelectCollection (defaultKeys = []) {
     })
   }, [])
 
-  const setKeys = useCallback((keys, defaultValue = false) => {
+  const setItems = useCallback((keys, defaultValue = false) => {
     setSelection(keysToSelectionState(keys, defaultValue))
   }, [])
 
   const {
     isAllSelected,
     isSomeSelected,
-    selectedKeys
+    selectedKeys,
+    selectedItems
   } = useMemo(() => {
     const selectedKeys = []
-    let isAllSelected = true
+    const selectedItems = []
+    const entries = Object.entries(selection)
+    let isAllSelected = entries.length > 0
     let isSomeSelected = false
 
-    for (let [key, value] of Object.entries(selection)) {
-      if (value)  {
+    for (let [key, item] of entries) {
+      if (!!item)  {
+        selectedItems.push(item)
         selectedKeys.push(key)
         isSomeSelected = true
         continue
@@ -52,7 +56,7 @@ export function useSelectCollection (defaultKeys = []) {
       isAllSelected = false
     }
 
-    return { isAllSelected, isSomeSelected, selectedKeys }
+    return { isAllSelected, isSomeSelected, selectedKeys, selectedItems }
   }, [selection])
 
   return {
@@ -60,8 +64,9 @@ export function useSelectCollection (defaultKeys = []) {
     setItem,
     getIsSelected,
     setSelection,
-    setKeys,
+    setItems,
     selection,
+    selectedItems,
     isAllSelected,
     isSomeSelected,
     selectedKeys

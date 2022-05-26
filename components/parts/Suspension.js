@@ -6,7 +6,9 @@ export default function Suspension ({ data, isLoading, error, isSuccess, childre
     <>
       {error && <ErrorAlert error={error} />}
       {isLoading && <Loading />}
-      {isSuccess && children({ data })}
+      {isSuccess && (
+        typeof children === 'function' ? children({ data }) : children
+      )}
     </>
   )
 }

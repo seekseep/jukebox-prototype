@@ -115,3 +115,24 @@ export const GENDER_TYPE = Object.freeze({
 })
 
 export const ROLE_TYPE = Object.freeze({})
+
+export const QUERY_OPERATOR = Object.freeze({
+  AND: 'AND'
+})
+
+export const FIELD_OPERATOR = Object.freeze({
+  LESS_THAN               : 'LESS_THAN',
+  LESS_THAN_OR_EQUAL_TO   : 'LESS_THAN_OR_EQUAL_TO',
+  EQUAL_TO                : 'EQUAL_TO',
+  GREATER_THAN            : 'GREATER_THAN',
+  GREATER_THAN_OR_EQUAL_TO: 'GREATER_THAN_OR_EQUAL_TO',
+  NOT_EQUAL_TO            : 'NOT_EQUAL_TO',
+  ARRAY_CONTAINS          : 'ARRAY_CONTAINS',
+  ARRAY_CONTAINS_ANY      : 'ARRAY_CONTAINS_ANY',
+  IN                      : 'IN',
+  NOT_IN                  : 'NOT_IN',
+})
+
+export const DATE_FORMAT = Object.freeze({
+  ISO_8601: 'yyyy-MM-dd\'T\'HH:mm',
+})

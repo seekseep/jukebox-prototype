@@ -7,5 +7,5 @@ export function FeatureHead ({ children }) {
 }
 
 export function FeatureTitle ({ children }) {
-  return <h1 className="flex-grow text-2xl">{children}</h1>
+  return <h1 className="grow text-2xl">{children}</h1>
 }

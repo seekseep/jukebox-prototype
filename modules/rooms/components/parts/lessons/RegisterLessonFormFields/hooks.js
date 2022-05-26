@@ -4,7 +4,7 @@ import { add, startOfHour } from 'date-fns'
 
 import { FORM_ERROR_REQUIRED } from '@/messages'
 import { optionSchema } from '@/schemas/forms'
-import { createLessons } from '@/services/lessons/create'
+import { createLessons } from '@rooms/services/lessons/create'
 
 import { REPEAT_TYPE_OPTIONS } from '@rooms/components/parts/RepeatTypeSelectField'
 

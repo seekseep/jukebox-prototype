@@ -10,7 +10,7 @@ export function PropertyItem ({ ...props }) {
 }
 
 export function PropertyLabel ({ ...props }) {
-  return <dt className="w-40 p-2 flex-shrink-0 text-gray-700"  {...props} />
+  return <dt className="w-40 p-2 shrink-0 text-gray-700"  {...props} />
 }
 
 export function PropertyContents ({ noPadding = false, ...props }) {
@@ -19,7 +19,7 @@ export function PropertyContents ({ noPadding = false, ...props }) {
       className={
         classNames(
           { 'p-2': !noPadding },
-          'flex-grow flex flex-col justify-start items-stretch'
+          'grow flex flex-col justify-start items-stretch'
         )
       }
       {...props} />

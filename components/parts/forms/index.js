@@ -48,7 +48,10 @@ export function DateField({ label, type, ...props }) {
   const [field, meta, helpers] = useField(props)
 
   const inputValue = useMemo(() => {
-    const date = field.value || new Date()
+
+    if (!field.value) return ''
+
+    const date = field.value || ''
 
     switch(type) {
       case 'time':

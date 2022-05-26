@@ -51,7 +51,7 @@ export function createWeeklyLessons ({ subject, teachers, students, sheets, star
   return lessons
 }
 
-export function creatMonthlyLessons ({ subject, teachers, students, sheets, startedAt, finishedAt, repeatCount }) {
+export function createMonthlyLessons ({ subject, teachers, students, sheets, startedAt, finishedAt, repeatCount }) {
   const lessons = []
   for (let i = 0; i < repeatCount; i++) {
     lessons.push(createLesson({

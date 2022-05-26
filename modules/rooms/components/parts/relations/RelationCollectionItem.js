@@ -6,7 +6,7 @@ export default function RelationCollectionItem ({
 }) {
   return (
     <div className="flex gap-2 items-center">
-      <div className="flex-grow">
+      <div className="grow">
         <WithDocRef docRef={relation.destination}>
           {({ data: account }) => (
             <div>{account.name}</div>
