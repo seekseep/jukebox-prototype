@@ -28,16 +28,16 @@ export default function ViewFeatures () {
               icon={ICON.USER} href={`/users/${currentUser.id}`}
               label="ユーザー"
               description="ログインしているユーザの情報を閲覧できます" />
+            <FeatureCard
+              icon={ICON.SCHOOL} href="/schools"
+              label="学校"
+              description="学校の情報を確認できます" />
             {features.ROOM && (
               <FeatureCard
                 icon={ICON.ROOM} href="/rooms"
                 label="教室"
                 description="教室の情報の閲覧などが" />
             )}
-            <FeatureCard
-              icon={ICON.SCHOOL} href="/schools"
-              label="学校"
-              description="学校の情報を確認できます" />
             {features.ADMIN && (
               <FeatureCard
                 icon={ICON.ADMIN} href="/admin"
