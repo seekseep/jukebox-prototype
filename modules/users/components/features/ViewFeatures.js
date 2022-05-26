@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useMemo } from 'react'
 
 import { ICON } from '@/constants'
 import FeatureCard from '@/components/parts/FeatureCard'
@@ -7,6 +8,16 @@ import Suspension from '@/components/parts/Suspension'
 
 export default function ViewFeatures () {
   const result = useCurrentUser()
+  const features = useMemo(() => {
+    const features = {}
+
+    const user = result.data
+    user?.roles.forEach(role => {
+      features[role.resourceType] = true
+    })
+
+    return features
+  }, [result.data])
 
   return (
     <Suspension {...result}>
@@ -17,18 +28,22 @@ export default function ViewFeatures () {
               icon={ICON.USER} href={`/users/${currentUser.id}`}
               label="ユーザー"
               description="ログインしているユーザの情報を閲覧できます" />
-            <FeatureCard
-              icon={ICON.ROOM} href="/rooms"
-              label="教室"
-              description="教室の情報の閲覧などが" />
+            {features.ROOM && (
+              <FeatureCard
+                icon={ICON.ROOM} href="/rooms"
+                label="教室"
+                description="教室の情報の閲覧などが" />
+            )}
             <FeatureCard
               icon={ICON.SCHOOL} href="/schools"
               label="学校"
               description="学校の情報を確認できます" />
-            <FeatureCard
-              icon={ICON.ADMIN} href="/admin"
-              label="管理者"
-              description="システムの管理"/>
+            {features.ADMIN && (
+              <FeatureCard
+                icon={ICON.ADMIN} href="/admin"
+                label="管理者"
+                description="システムの管理"/>
+            )}
           </div>
           <div className="flex justify-center">
             <Link href="/signout">

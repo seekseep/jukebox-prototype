@@ -1,11 +1,11 @@
 import useSWR from 'swr'
+import { RESOURCE_TYPE } from '@/constants'
 
-import { getRoleByResourceAndAccount, createRole } from '@/services/api/roles'
+import { getRoleByResourceAndAccount, createRole, getRoleByResourceAndUser } from '@/services/api/roles'
 import { expandSWR, useMutation } from '@/hooks/api'
 import { getRoomRef } from '@/services/api/rooms'
 import { getAccountRef } from '@/services/api/rooms/accounts'
 import { getUserRef } from '@/services/api/users'
-import { RESOURCE_TYPE } from '@/constants'
 
 export function useRoleQuery(roomId, accountId) {
   const swr = useSWR(
@@ -14,6 +14,18 @@ export function useRoleQuery(roomId, accountId) {
       return getRoleByResourceAndAccount(
         getRoomRef(roomId),
         getAccountRef(roomId, accountId)
+      )
+    })
+  return expandSWR(swr)
+}
+
+export function useUserRoleQuery(roomId, userId) {
+  const swr = useSWR(
+    roomId && userId && [roomId, userId, 'role'],
+    (roomId, userId) => {
+      return getRoleByResourceAndUser(
+        getRoomRef(roomId),
+        getUserRef(userId)
       )
     })
   return expandSWR(swr)

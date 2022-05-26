@@ -10,7 +10,7 @@ import { auth } from '@/firebase'
 
 import { docSnapshotToObject } from './utils'
 import { getUserRef } from './users'
-import { getRolesByUserRef } from './roles'
+import { getRolesByUser } from './roles'
 
 export function onCurrentUserChange (observer) {
   const unsubscribe = onAuthStateChanged(auth, observer)
@@ -24,7 +24,7 @@ export async function getCurrentUser(uid) {
   const userSnapshot = await getDoc(userRef)
   const user = docSnapshotToObject(userSnapshot)
 
-  const roles = await getRolesByUserRef(userRef)
+  const roles = await getRolesByUser(userRef)
 
   return {
     ...user,

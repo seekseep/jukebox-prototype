@@ -19,7 +19,7 @@ export async function getRoleRefsByUserRef (userRef) {
   return querySnapshotToRefs(querySnapshot)
 }
 
-export async function getRolesByUserRef (userRef) {
+export async function getRolesByUser (userRef) {
   const rolesQuery = query(getRolesRef(), where('user', '==', userRef))
   const querySnapshot = await getDocs(rolesQuery)
   return docsSnapshotToObjects(querySnapshot)
@@ -62,6 +62,20 @@ export async function getRoleByResourceAndAccount(resourceRef, accountRef) {
     rolesRef,
     where('resource', '==', resourceRef),
     where('account', '==', accountRef)
+  )
+  const snapshot = await getDocs(rolesQuery)
+
+  if (snapshot.empty) return null
+
+  return docSnapshotToObject(snapshot.docs[0])
+}
+
+export async function getRoleByResourceAndUser(resourceRef, userRef) {
+  const rolesRef = getRolesRef()
+  const rolesQuery = query(
+    rolesRef,
+    where('resource', '==', resourceRef),
+    where('user', '==', userRef)
   )
   const snapshot = await getDocs(rolesQuery)
 

@@ -1,9 +1,12 @@
-import { collection, doc, where, query, getDocs } from 'firebase/firestore'
+import { collection, doc, where, query, getDocs, getDoc } from 'firebase/firestore'
 
 import { firestore } from '@/firebase'
 import { createResource, deleteResource, updateResource, querySnapshotToRefs, docSnapshotToObject } from '@/services/api/utils'
 
 import { ACCOUNT_TYPE } from '@rooms/constants'
+import { getRolesRef } from '../roles'
+import { getUserRef } from '../users'
+import { getRoomRef } from '.'
 
 export function getAccountsRef (roomId) {
   return collection(firestore, `/rooms/${roomId}/accounts`)
@@ -62,4 +65,21 @@ export async function updateAccount (roomId, accountId, data) {
 export async function deleteAccount (roomId, accountId) {
   const accountRef = getAccountRef(roomId, accountId)
   return await deleteResource(accountRef)
+}
+
+export async function getAccountByUser (roomId, userId) {
+  const rolesRef = getRolesRef()
+  const rolesQuery = query(rolesRef,
+    where('resource', '==', getRoomRef(roomId)),
+    where('user', '==', getUserRef(userId))
+  )
+  const rolesSnapshot = await getDocs(rolesQuery)
+  if (rolesSnapshot.empty) return
+
+  const role = docSnapshotToObject(rolesSnapshot.docs[0])
+  const accountRef = role.account
+  const accountSnapshot = await getDoc(accountRef)
+  const account = docSnapshotToObject(accountSnapshot)
+
+  return account
 }

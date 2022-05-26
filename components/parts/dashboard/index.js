@@ -19,19 +19,41 @@ export function Dashboard ({ title, children }) {
 }
 
 export function DashboardNavigation ({ children }) {
-  return <nav className="bg-gray-800 text-white w-48 border-r border-gray-600 flex-shrink-0">{children}</nav>
+  return (
+    <nav className="bg-gray-800 text-white w-48 border-r border-gray-600 flex-shrink-0 flex flex-col">
+      {children}
+    </nav>
+  )
 }
+
+
+export function DashboardNavigationSection ({ className, children }) {
+  return <div className={classNames(className, 'flex flex-col')}>{children}</div>
+}
+
+export function DashboardNavigationHeader ({ ...props }) {
+  return <DashboardNavigationSection {...props} />
+}
+
+export function DashboardNavigationBody ({ ...props }) {
+  return <DashboardNavigationSection className="flex-grow sticky top-0" {...props} />
+}
+
+export function DashboardNavigationFooter ({ ...props }) {
+  return <DashboardNavigationSection {...props} />
+}
+
 
 export function DashboardMain ({ children }) {
   return <main className="flex-grow bg-gray-50">{children}</main>
 }
 
 export function DashboardContents ({ children }) {
-  return <div className="max-w-4xl flex flex-col items-stretch py-4">{children}</div>
+  return <div className="max-w-4xl flex flex-col items-stretch py-2">{children}</div>
 }
 
 export function DashboardHeader ({ children }) {
-  return <header className="sticky top-0 bg-white border-b h-12 flex items-center px-4">{children}</header>
+  return <header className="sticky top-0 bg-white border-b h-16 flex items-center px-4">{children}</header>
 }
 
 export function DashboardPageTitle ({ children }) {
@@ -39,7 +61,7 @@ export function DashboardPageTitle ({ children }) {
 }
 
 export function DashboardSection ({ children }) {
-  return <section className="flex flex-col gap-4 p-4">{children}</section>
+  return <section className="flex flex-col gap-4 px-4 py-2">{children}</section>
 }
 
 export function DashboardSectionTitle ({ children }) {
