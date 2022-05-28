@@ -9,7 +9,7 @@ import {
   expandSWR,
   useCollectioDocRefsQuery
 } from '@/hooks/api'
-import { searchLessonRefs } from '@/services/api/rooms/lessons'
+import { searchLessonRefs, searchLessons } from '@/services/api/rooms/lessons'
 import { getSubjectRef } from '@/services/api/rooms/subjects'
 import { getStudentRef } from '@/services/api/rooms/students'
 import { getTeacherRef } from '@/services/api/rooms/teachers'
@@ -27,8 +27,13 @@ export function useLessonRefsQuery(roomId) {
   return useCollectioDocRefsQuery(roomId && `/rooms/${roomId}/lessons`)
 }
 
-export function useSearchLessonsQuery(roomId, query) {
+export function useSearchLessonRefsQuery(roomId, query) {
   const swr = useSWR(roomId && [roomId, query, 'lessons', new URLSearchParams(query).toString()], searchLessonRefs)
+  return expandSWR(swr)
+}
+
+export function useSearchLessonsQuery(roomId, query) {
+  const swr = useSWR(roomId && [roomId, query, 'lessons', new URLSearchParams(query).toString(), 'as-object'], searchLessons)
   return expandSWR(swr)
 }
 

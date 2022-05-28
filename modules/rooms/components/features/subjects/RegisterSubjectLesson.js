@@ -8,7 +8,7 @@ import ErrorAlert from '@/components/parts/ErrorAlert'
 import { Form, FormActions } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
-import Suspension from '@/components/parts/Suspension'
+import { MultiSuspension } from '@/components/parts/Suspension'
 
 import { useGetSubjectPath } from '@rooms/hooks/router'
 import { useCreateSubjectLessonsMutation } from '@rooms/hooks/lessons'
@@ -24,24 +24,9 @@ export default function RegisterSubjectLesson () {
 
   const getSubjectPath = useGetSubjectPath(roomId, subjectId)
 
-  const {
-    data: students,
-    isLoading: isGettingStudents,
-    isSuccess: isGotStudents,
-    error: gettingStudentsError
-  } = useStudentsQuery(roomId)
-  const {
-    data: teachers,
-    isLoading: isGettingTeachers,
-    isSuccess: isGotTeachers,
-    error: gettingTeachersError
-  } = useTeachersQuery(roomId)
-  const {
-    data: sheets,
-    isLoading: isGettingSheets,
-    isSuccess: isGotSheets,
-    error: gettingSheetsError
-  } = useSheetsQuery(roomId)
+  const studentsQueryResult = useStudentsQuery(roomId)
+  const teachersQueryResult = useTeachersQuery(roomId)
+  const sheetsQueryResult = useSheetsQuery(roomId)
 
   const [create, {
     isLoading: isCreating,
@@ -65,11 +50,8 @@ export default function RegisterSubjectLesson () {
       <FeatureHead>
         <FeatureTitle>授業の登録</FeatureTitle>
       </FeatureHead>
-      <Suspension
-        isLoading={isGettingStudents || isGettingTeachers || isGettingSheets}
-        isSuccess={isGotStudents && isGotTeachers && isGotSheets}
-        error={gettingStudentsError || gettingTeachersError || gettingSheetsError}>
-        {() => (
+      <MultiSuspension results={[studentsQueryResult, teachersQueryResult, sheetsQueryResult]}>
+        {({ data: [students, teachers, sheets] }) => (
           <Card>
             <CardBody>
               <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleSubmit}>
@@ -89,7 +71,7 @@ export default function RegisterSubjectLesson () {
             </CardBody>
           </Card>
         )}
-      </Suspension>
+      </MultiSuspension>
       <div className="h-72" />
     </Feature>
   )

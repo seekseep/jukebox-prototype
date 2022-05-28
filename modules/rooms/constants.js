@@ -13,3 +13,13 @@ export const LESSON_FIELD_NAME = Object.freeze({
   STARTED_AT : 'startedAt',
   FINISHED_AT: 'finishedAt',
 })
+
+export const CALENDAR_TERM = Object.freeze({
+  DAILY : 'DAILY',
+  WEEKLY: 'WEEKLY',
+})
+
+export const CALENDAR_FORMAT = Object.freeze({
+  TEACHER: 'TEACHER',
+  DAY    : 'DAY',
+})

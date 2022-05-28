@@ -10,7 +10,7 @@ import { Form, FormActions } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
 import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import ErrorAlert from '@/components/parts/ErrorAlert'
-import Suspension from '@/components/parts/Suspension'
+import { MultiSuspension } from '@/components/parts/Suspension'
 
 import { useSubjectsQuery } from '@rooms/hooks/subjects'
 import { useTeachersQuery } from '@rooms/hooks/teachers'
@@ -25,40 +25,17 @@ export default function ManageLesson () {
   const { query:{ roomId, lessonId } } = useRouter()
   const [isEditing, toggleEditing, setIsEditing] = useToggleState()
 
-  const {
-    data: subjects,
-    isLoading: isGettingSubjects,
-    isSuccess: isGotSubjects,
-    error: gettingSubjectsError
-  } = useSubjectsQuery(roomId)
+  const subjectsQueryResult = useSubjectsQuery(roomId)
+  const teachersQueryResult = useTeachersQuery(roomId)
+  const studentsQueryResult = useStudentsQuery(roomId)
+  const sheetsQueryResult = useSheetsQuery(roomId)
+  const lessonQueryResult = useLessonQuery(roomId, lessonId)
 
-  const {
-    data: teachers,
-    isLoading: isGettingTeachers,
-    isSuccess: isGotTeachers,
-    error: gettingTeachersError
-  } = useTeachersQuery(roomId)
-  const {
-    data: students,
-    isLoading: isGettingStudents,
-    isSuccess: isGotStudents,
-    error: gettingStudentsError
-  } = useStudentsQuery(roomId)
-
-  const {
-    data: sheets,
-    isLoading: isGettingSheets,
-    isSuccess: isGotSheets,
-    error: gettingSheetsError
-  } = useSheetsQuery(roomId)
-
-  const {
-    data: lesson,
-    mutate,
-    isLoading: isGettingLesson,
-    isSuccess: isGotLesson,
-    error: gettingLessonError
-  } = useLessonQuery(roomId, lessonId)
+  const { data:subjects } = subjectsQueryResult
+  const { data:teachers } = teachersQueryResult
+  const { data:students } = studentsQueryResult
+  const { data:sheets } = sheetsQueryResult
+  const { data:lesson, mutate } = lessonQueryResult
 
   const [update, {
     data: updatedLesson,
@@ -84,10 +61,7 @@ export default function ManageLesson () {
       <FeatureHead>
         <FeatureTitle>授業</FeatureTitle>
       </FeatureHead>
-      <Suspension
-        isLoading={isGettingSubjects || isGettingTeachers || isGettingStudents || isGettingSheets || isGettingLesson}
-        isSuccess={isGotSubjects && isGotTeachers && isGotStudents && isGotSheets && isGotLesson}
-        error={gettingSubjectsError || gettingTeachersError || gettingStudentsError || gettingSheetsError || gettingLessonError}>
+      <MultiSuspension results={[ subjectsQueryResult, teachersQueryResult, studentsQueryResult, sheetsQueryResult, lessonQueryResult]}>
         {() => (
           <Card>
             {isEditing ? (
@@ -119,7 +93,7 @@ export default function ManageLesson () {
             )}
           </Card>
         )}
-      </Suspension>
+      </MultiSuspension>
     </Feature>
   )
 }

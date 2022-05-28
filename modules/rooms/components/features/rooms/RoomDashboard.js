@@ -81,7 +81,6 @@ export default function RoomDashboard ({ title, children }) {
         </DashboardHeader>
         <DashboardContents>
           {typeof children === 'function' ? children({ getRoomPath }) : children}
-          <div className="h-72" />
         </DashboardContents>
       </DashboardMain>
     </Dashboard>

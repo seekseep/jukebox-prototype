@@ -6,7 +6,7 @@ const Card = forwardRef(function Card ({ type = 'div', elevation = 1, ...props }
     type,
     {
       className: classNames(
-        'block bg-white rounded-lg border text-black',
+        'block bg-white rounded-lg border text-black w-full',
         {
           'shadow-sm' : elevation === 1,
           'shadow'    : elevation === 2,
@@ -28,6 +28,10 @@ export function CardActions ({ ...props }) {
   return <div className="border-b bg-gray-100 p-3 flex justify-end gap-3" {...props} />
 }
 
-export function CardBody ({ ...props }) {
-  return <div className="p-4" {...props} />
+export function CardBody ({ className, ...props }) {
+  return <div className={classNames('m-2 p-2', className)} {...props} />
+}
+
+export function CardSection({ ...props }) {
+  return <CardBody className="bg-gray-50 rounded" {...props} />
 }

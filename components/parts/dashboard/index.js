@@ -13,14 +13,16 @@ export function Dashboard ({ title, children }) {
           <title>{title}</title>
         </Head>
       )}
-      <div className="flex min-h-screen">{children}</div>
+      <div className="min-h-screen flex">
+        {children}
+      </div>
     </>
   )
 }
 
 export function DashboardNavigation ({ children }) {
   return (
-    <nav className="bg-gray-800 text-white w-48 border-r border-gray-600 shrink-0 flex flex-col">
+    <nav className="bg-gray-800 text-white w-[12rem] border-r border-gray-600 shrink-0 flex flex-col">
       {children}
     </nav>
   )
@@ -45,23 +47,53 @@ export function DashboardNavigationFooter ({ ...props }) {
 
 
 export function DashboardMain ({ children }) {
-  return <main className="grow bg-gray-50">{children}</main>
+  return <main className="bg-gray-50 w-[calc(100%-12rem)]">{children}</main>
 }
 
 export function DashboardContents ({ children }) {
-  return <div className="max-w-4xl flex flex-col items-stretch py-2">{children}</div>
+  return <div className="py-2 pb-96">{children}</div>
 }
 
 export function DashboardHeader ({ children }) {
-  return <header className="sticky top-0 bg-white border-b h-16 flex items-center px-4">{children}</header>
+  return <header className="sticky top-0 bg-white border-b h-16 flex items-center px-4 z-[2000]">{children}</header>
 }
 
 export function DashboardPageTitle ({ children }) {
   return <h1 className="text-2xl">{children}</h1>
 }
 
-export function DashboardSection ({ children }) {
-  return <section className="flex flex-col gap-4 px-4 py-2">{children}</section>
+export const DASHBOARD_SECTION_SIZE = Object.freeze({
+  NONE: 'max-w-none',
+  XS  : 'max-w-xs',
+  SM  : 'max-w-sm',
+  MD  : 'max-w-md',
+  LG  : 'max-w-lg',
+  XL  : 'max-w-xl',
+  XL_2: 'max-w-2xl',
+  XL_3: 'max-w-3xl',
+  XL_4: 'max-w-4xl',
+  XL_5: 'max-w-5xl',
+  XL_6: 'max-w-6xl',
+  XL_7: 'max-w-7xl',
+  FULL: 'max-w-full',
+})
+
+export function DashboardSection ({ children, size = DASHBOARD_SECTION_SIZE.XL_4 }) {
+  return <section className={classNames('flex flex-col gap-4 px-4 py-2', {
+    'max-w-none': size === DASHBOARD_SECTION_SIZE.NONE,
+    'max-w-xs'  : size === DASHBOARD_SECTION_SIZE.XS,
+    'max-w-sm'  : size === DASHBOARD_SECTION_SIZE.SM,
+    'max-w-md'  : size === DASHBOARD_SECTION_SIZE.MD,
+    'max-w-lg'  : size === DASHBOARD_SECTION_SIZE.LG,
+    'max-w-xl'  : size === DASHBOARD_SECTION_SIZE.XL,
+    'max-w-2xl' : size === DASHBOARD_SECTION_SIZE.XL_2,
+    'max-w-3xl' : size === DASHBOARD_SECTION_SIZE.XL_3,
+    'max-w-4xl' : size === DASHBOARD_SECTION_SIZE.XL_4,
+    'max-w-5xl' : size === DASHBOARD_SECTION_SIZE.XL_5,
+    'max-w-6xl' : size === DASHBOARD_SECTION_SIZE.XL_6,
+    'max-w-7xl' : size === DASHBOARD_SECTION_SIZE.XL_7,
+    'max-w-full': size === DASHBOARD_SECTION_SIZE.FULL,
+  })}>{children}</section>
 }
 
 export function DashboardSectionTitle ({ children }) {

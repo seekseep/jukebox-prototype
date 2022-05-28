@@ -6,12 +6,12 @@ import { toast } from 'react-toastify'
 
 import { useSelectCollection, useToggleState } from '@/hooks/ui'
 import { WithDocRef, WithDocRefs } from '@/components/utilities/withDocRefs'
-import Card from '@/components/parts/Card'
+import Card, { CardSection } from '@/components/parts/Card'
 import{ Form, FormActions } from '@/components/parts/forms'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 import { Button, LinkButton } from '@/components/parts/buttons'
 import ErrorAlert from '@/components/parts/ErrorAlert'
-import Suspension from '@/components/parts/Suspension'
+import Suspension, { MultiSuspension } from '@/components/parts/Suspension'
 
 import { getLessonDateLabel, getLessonDateTimeLabel } from '@rooms/services/lessons'
 import { useGetRoomPath } from '@rooms/hooks/router'
@@ -19,7 +19,7 @@ import { useSubjectsQuery } from '@rooms/hooks/subjects'
 import { useTeachersQuery } from '@rooms/hooks/teachers'
 import { useStudentsQuery } from '@rooms/hooks/students'
 import { useSheetsQuery } from '@rooms/hooks/sheets'
-import { useDeleteLessonsMutation, useSearchLessonsQuery, useUpdateLessonsMutation } from '@rooms/hooks/lessons'
+import { useDeleteLessonsMutation, useSearchLessonRefsQuery, useUpdateLessonsMutation } from '@rooms/hooks/lessons'
 
 import SearchLessonsFormFields from '@rooms/components/parts/lessons/SearchLessonsFormFields'
 import {
@@ -33,7 +33,6 @@ import {
   useValidationSchema as useUpdateValidationSchema,
   useValuesToResult as useUpdateValuesToResult
 } from '@rooms/components/parts/lessons/UpdateLessonsFormFields/hooks'
-
 
 export default function ManageLessons () {
   const { query:{ roomId, ...query }, push, reload } = useRouter()
@@ -49,42 +48,28 @@ export default function ManageLessons () {
     isAllSelected
   } = useSelectCollection()
 
-  const lessonRefsResult = useSearchLessonsQuery(roomId, query)
+  const lessonRefsResult = useSearchLessonRefsQuery(roomId, query)
   const [deleteLessons, {
     isSuccess: isDeleted,
     isLoading: isDeleting,
     error: deletingError
   }] = useDeleteLessonsMutation(roomId)
+
   const [updateLessons, {
     isSuccess: isUpdated,
     isLoading: isUpdating,
     error: updatingError
   }] = useUpdateLessonsMutation(roomId)
 
-  const {
-    data: subjects,
-    isLoading: isGettingSubjects,
-    isSuccess: isGotSubjects,
-    error: gettingSubjectsError
-  } = useSubjectsQuery(roomId)
-  const {
-    data: students,
-    isLoading: isGettingStudents,
-    isSuccess: isGotStudents,
-    error: gettingStudentsError
-  } = useStudentsQuery(roomId)
-  const {
-    data: teachers,
-    isLoading: isGettingTeachers,
-    isSuccess: isGotTeachers,
-    error: gettingTeachersError
-  } = useTeachersQuery(roomId)
-  const {
-    data: sheets,
-    isLoading: isGettingSheets,
-    isSuccess: isGotSheets,
-    error: gettingSheetsError
-  } = useSheetsQuery(roomId)
+  const subjectsQueryResult = useSubjectsQuery(roomId)
+  const teachersQueryResult = useTeachersQuery(roomId)
+  const studentsQueryResult = useStudentsQuery(roomId)
+  const sheetsQueryResult = useSheetsQuery(roomId)
+
+  const { data:subjects } = subjectsQueryResult
+  const { data:teachers } = teachersQueryResult
+  const { data:students } = studentsQueryResult
+  const { data:sheets } = sheetsQueryResult
 
   const searchValidationSchema = useSearchValidationSchema()
   const searchInitialValues = useSearchInitilValues(query, { subjects, students, teachers, sheets })
@@ -99,11 +84,6 @@ export default function ManageLessons () {
   const updateValuesToResult = useUpdateValuesToResult()
   const handleUpdate = useCallback((values) => {
     const result = updateValuesToResult(values)
-    console.log(selectedItems.map(lessonRef => ({
-      id: lessonRef.id,
-      ...result
-    })))
-
     updateLessons(selectedItems.map(lessonRef => ({
       id: lessonRef.id,
       ...result
@@ -138,35 +118,34 @@ export default function ManageLessons () {
         </div>
       </FeatureHead>
       <Card>
-        <Suspension
-          isLoading={isGettingSubjects || isGettingStudents || isGettingTeachers || isGettingSheets}
-          isSuccess={isGotSubjects && isGotStudents && isGotTeachers && isGotSheets}
-          error={gettingSubjectsError || gettingStudentsError || gettingTeachersError || gettingSheetsError}>
-          <div className="m-2 px-4 py-2 bg-gray-50 rounded flex flex-col gap-2">
-            <div className="py-2 flex justify-between cursor-pointer" onClick={toggleSearch}>
-              <div>絞り込む</div>
-              <div className="w-8 text-center">
-                {isSearchOpend ? '🔼' : '🔽'}
+        <MultiSuspension results={[subjectsQueryResult, teachersQueryResult, studentsQueryResult, sheetsQueryResult]}>
+          <CardSection>
+            <div className="flex flex-col gap-2">
+              <div className="py-2 flex justify-between cursor-pointer" onClick={toggleSearch}>
+                <div>絞り込む</div>
+                <div className="w-8 text-center">
+                  {isSearchOpend ? '🔼' : '🔽'}
+                </div>
               </div>
+              {isSearchOpend && (
+                <Formik validationSchema={searchValidationSchema} initialValues={searchInitialValues} onSubmit={handleSearch}>
+                  {({ isValid }) => (
+                    <Form>
+                      <SearchLessonsFormFields
+                        students={students}
+                        teachers={teachers}
+                        sheets={sheets}
+                        subjects={subjects} />
+                      <FormActions>
+                        <Button type="submit" disabled={!isValid}>絞り込む</Button>
+                      </FormActions>
+                    </Form>
+                  )}
+                </Formik>
+              )}
             </div>
-            {isSearchOpend && (
-              <Formik validationSchema={searchValidationSchema} initialValues={searchInitialValues} onSubmit={handleSearch}>
-                {({ isValid }) => (
-                  <Form>
-                    <SearchLessonsFormFields
-                      students={students}
-                      teachers={teachers}
-                      sheets={sheets}
-                      subjects={subjects} />
-                    <FormActions>
-                      <Button type="submit" disabled={!isValid}>絞り込む</Button>
-                    </FormActions>
-                  </Form>
-                )}
-              </Formik>
-            )}
-          </div>
-        </Suspension>
+          </CardSection>
+        </MultiSuspension>
         <Suspension {...lessonRefsResult}>
           {({ data: lessonRefs }) => (
             <>
@@ -246,57 +225,61 @@ export default function ManageLessons () {
             </>
           )}
         </Suspension>
-        {selectedItems.length > 0 && (
-          <div className="flex flex-col m-2 bg-gray-50 rounded">
-            <div className="flex flex-wrap gap-2 p-2">
-              <WithDocRefs docRefs={selectedItems}>
-                {({ data: lesson }) => (
-                  <div className="bg-white shadow border rounded flex text-sm">
-                    <div className="flex gap-1 leading-8 px-2">
-                      <WithDocRef docRef={lesson.subject}>
-                        {({ data: subject }) => <div>{subject.name}</div>}
-                      </WithDocRef>
-                      <div>{getLessonDateLabel(lesson)}</div>
-                    </div>
-                    <button onClick={() => setItem(lesson.id, null)} className="w-8 h-8 text-center leading-8 text-xs">❌</button>
-                  </div>
-                )}
-              </WithDocRefs>
-            </div>
-            <div className="border-t flex flex-col gap-2">
-              <ErrorAlert error={deletingError} />
-              {isUpdateOpend ? (
-                <>
-                  <div className="p-4 py-3">
-                    <Formik validationSchema={updateValidationSchema} initialValues={updateInitialValues} onSubmit={handleUpdate}>
-                      {({ isValid }) => (
-                        <Form>
-                          <UpdateLessonsFormFields
-                            students={students}
-                            teachers={teachers}
-                            sheets={sheets}
-                            subjects={subjects} />
-                          <ErrorAlert error={updatingError} />
-                          <FormActions>
-                            <Button primary type="submit" disabled={!isValid || isUpdating}>保存する</Button>
-                            <Button secondary type="button" onClick={toggleUpdate}>変更を破棄する</Button>
-                          </FormActions>
-                        </Form>
-                      )}
-                    </Formik>
-                  </div>
-                </>
-              ) : (
-                <div className="p-2">
-                  <FormActions>
-                    <Button secondary type="button" onClick={toggleUpdate}>編集する</Button>
-                    <Button disabled={isDeleting} type="button" danger onClick={handleDelete}>削除する</Button>
-                  </FormActions>
+        <MultiSuspension results={[subjectsQueryResult, teachersQueryResult, studentsQueryResult, sheetsQueryResult]}>
+          {selectedItems.length > 0 && (
+            <CardSection>
+              <div className="flex flex-col">
+                <div className="flex flex-wrap gap-2 p-2">
+                  <WithDocRefs docRefs={selectedItems}>
+                    {({ data: lesson }) => (
+                      <div className="bg-white shadow border rounded flex text-sm">
+                        <div className="flex gap-1 leading-8 px-2">
+                          <WithDocRef docRef={lesson.subject}>
+                            {({ data: subject }) => <div>{subject.name}</div>}
+                          </WithDocRef>
+                          <div>{getLessonDateLabel(lesson)}</div>
+                        </div>
+                        <button onClick={() => setItem(lesson.id, null)} className="w-8 h-8 text-center leading-8 text-xs">❌</button>
+                      </div>
+                    )}
+                  </WithDocRefs>
                 </div>
-              )}
-            </div>
-          </div>
-        )}
+                <div className="border-t flex flex-col gap-2">
+                  <ErrorAlert error={deletingError} />
+                  {isUpdateOpend ? (
+                    <>
+                      <div className="p-4 py-3">
+                        <Formik validationSchema={updateValidationSchema} initialValues={updateInitialValues} onSubmit={handleUpdate}>
+                          {({ isValid }) => (
+                            <Form>
+                              <UpdateLessonsFormFields
+                                students={students}
+                                teachers={teachers}
+                                sheets={sheets}
+                                subjects={subjects} />
+                              <ErrorAlert error={updatingError} />
+                              <FormActions>
+                                <Button primary type="submit" disabled={!isValid || isUpdating}>保存する</Button>
+                                <Button secondary type="button" onClick={toggleUpdate}>変更を破棄する</Button>
+                              </FormActions>
+                            </Form>
+                          )}
+                        </Formik>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="p-2">
+                      <FormActions>
+                        <Button secondary type="button" onClick={toggleUpdate}>編集する</Button>
+                        <Button disabled={isDeleting} type="button" danger onClick={handleDelete}>削除する</Button>
+                      </FormActions>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardSection>
+          )}
+        </MultiSuspension>
       </Card>
     </Feature>
   )

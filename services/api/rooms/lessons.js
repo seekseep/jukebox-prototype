@@ -1,11 +1,12 @@
 import { collection, doc, query, where, getDocs, orderBy, refEqual } from 'firebase/firestore'
 import { firestore } from '@/firebase'
 import { getSubjectRef } from '@/services/api/rooms/subjects'
-import { createResource, deleteResource, updateResource, querySnapshotToRefs, docSnapshotToObject } from '@/services/api/utils'
+import { createResource, deleteResource, updateResource, querySnapshotToRefs, docSnapshotToObject, docsSnapshotToObjects } from '@/services/api/utils'
 import { isValid } from 'date-fns'
 import { getTeacherRef } from './teachers'
 import { getStudentRef } from './students'
 import { getSheetRef } from './sheets'
+import { useSubjectLessonRefsQuery } from '@rooms/hooks/lessons'
 
 export function getLessonsRef (roomId) {
   return collection(firestore, `/rooms/${roomId}/lessons`)
@@ -36,12 +37,7 @@ export async function deleteLesson (roomId, lessonId) {
   return await deleteResource(lessonRef)
 }
 
-export async function searchLessonRefs(roomId, options) {
-  const lessonsRef = getLessonsRef(roomId)
-  const lessonsQueryConstraint = [
-    orderBy('startedAt', 'asc')
-  ]
-
+function createCheckLesson (roomId, options) {
   const subjectRefs = options?.subjects?.split(',').map(subjectId => getSubjectRef(roomId, subjectId)) || null
   const teacherRefs = options?.teachers?.split(',').map(teacherId => getTeacherRef(roomId, teacherId)) || null
   const studentRefs = options?.students?.split(',').map(studentId => getStudentRef(roomId, studentId)) || null
@@ -50,7 +46,7 @@ export async function searchLessonRefs(roomId, options) {
   const finishedAt = options?.finishedAt ? new Date(options.finishedAt) : null
   const isAll = !(!subjectRefs || !teacherRefs || !studentRefs || !sheetRefs || !startedAt || !finishedAt)
 
-  function checkLesson (lesson) {
+  return function checkLesson(lesson) {
     if (isAll) return true
 
     if (subjectRefs && !subjectRefs.some(subjectRef => refEqual(lesson.subject, subjectRef))) return false
@@ -58,20 +54,42 @@ export async function searchLessonRefs(roomId, options) {
     if (studentRefs && !lesson.students.some(lessonStudentRef => studentRefs.some(studentRef => refEqual(lessonStudentRef, studentRef)))) return false
     if (sheetRefs && !lesson.sheets.some(lessonSheetRef => sheetRefs.some(sheetRef => refEqual(lessonSheetRef, sheetRef)))) return false
     if (startedAt && (lesson.startedAt < startedAt)) return false
-    if (finishedAt && (lesson.finishedAt < finishedAt)) return false
+    if (finishedAt && (lesson.finishedAt > finishedAt)) return false
 
     return true
   }
+}
 
+export async function searchLessonRefs(roomId, options) {
+  const lessonsRef = getLessonsRef(roomId)
+  const lessonsQueryConstraint = [
+    orderBy('startedAt', 'asc')
+  ]
+  const checkLesson = createCheckLesson(roomId, options)
   const lessonsQuery = query(lessonsRef, ...lessonsQueryConstraint)
   const lessonsQuerySnapshot = await getDocs(lessonsQuery)
   const lessonRefs = []
-
   for (let lessonSnapshot of lessonsQuerySnapshot.docs) {
     const lesson = docSnapshotToObject(lessonSnapshot)
     if (!checkLesson(lesson)) continue
     lessonRefs.push(lessonSnapshot.ref)
   }
-
   return lessonRefs
+}
+
+export async function searchLessons(roomId, options) {
+  const lessonsRef = getLessonsRef(roomId)
+  const lessonsQueryConstraint = [
+    orderBy('startedAt', 'asc')
+  ]
+  const checkLesson = createCheckLesson(roomId, options)
+  const lessonsQuery = query(lessonsRef, ...lessonsQueryConstraint)
+  const lessonsQuerySnapshot = await getDocs(lessonsQuery)
+  const lessons = []
+  for (let lessonSnapshot of lessonsQuerySnapshot.docs) {
+    const lesson = docSnapshotToObject(lessonSnapshot)
+    if (!checkLesson(lesson)) continue
+    lessons.push(lesson)
+  }
+  return lessons
 }

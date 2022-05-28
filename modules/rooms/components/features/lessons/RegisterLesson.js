@@ -17,37 +17,17 @@ import { useSheetsQuery } from '@rooms/hooks/sheets'
 import { useCreateLessonsMutation } from '@rooms/hooks/lessons'
 import { useInitialValues, useValidationSchema, useValuesToResult } from '@rooms/components/parts/lessons/RegisterLessonFormFields/hooks'
 import RegisterLessonFormFields from '@rooms/components/parts/lessons/RegisterLessonFormFields'
-import Suspension from '@/components/parts/Suspension'
+import { MultiSuspension } from '@/components/parts/Suspension'
 
 export default function RegisterLesson () {
   const router = useRouter()
   const { query: { roomId } } = router
   const getRoomPath = useGetRoomPath(roomId)
 
-  const {
-    data: subjects,
-    isLoading: isGettingSubjects,
-    isSuccess: isGotSubjects,
-    error: gettingSubjectsError
-  } = useSubjectsQuery(roomId)
-  const {
-    data: students,
-    isLoading: isGettingStudents,
-    isSuccess: isGotStudents,
-    error: gettingStudentsError
-  } = useStudentsQuery(roomId)
-  const {
-    data: teachers,
-    isLoading: isGettingTeachers,
-    isSuccess: isGotTeachers,
-    error: gettingTeachersError
-  } = useTeachersQuery(roomId)
-  const {
-    data: sheets,
-    isLoading: isGettingSheets,
-    isSuccess: isGotSheets,
-    error: gettingSheetsError
-  } = useSheetsQuery(roomId)
+  const subjectsQueryResult = useSubjectsQuery(roomId)
+  const studentsQueryResult = useStudentsQuery(roomId)
+  const teachersQueryResult = useTeachersQuery(roomId)
+  const sheetsQueryResult = useSheetsQuery(roomId)
 
   const [create, {
     isLoading: isCreating,
@@ -72,11 +52,8 @@ export default function RegisterLesson () {
       <FeatureHead>
         <FeatureTitle>授業の一括登録</FeatureTitle>
       </FeatureHead>
-      <Suspension
-        isLoading={isGettingSubjects || isGettingStudents || isGettingTeachers || isGettingSheets}
-        isSuccess={isGotSubjects && isGotStudents && isGotTeachers && isGotSheets}
-        error={gettingSubjectsError || gettingStudentsError || gettingTeachersError || gettingSheetsError}>
-        {() => (
+      <MultiSuspension results={[subjectsQueryResult, studentsQueryResult, teachersQueryResult, sheetsQueryResult]}>
+        {({ data: [subjects, students, teachers, sheets] }) => (
             <Card>
               <CardBody>
                 <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleSubmit}>
@@ -97,8 +74,7 @@ export default function RegisterLesson () {
               </CardBody>
             </Card>
         )}
-      </Suspension>
-      <div className="h-72" />
+      </MultiSuspension>
     </Feature>
   )
 }
