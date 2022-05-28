@@ -10,7 +10,7 @@ export default function TeacherPropertySet ({ teacher }) {
   return (
     <PropertySet>
       <PropertyItem>
-        <PropertyLabel>氏名</PropertyLabel>
+        <PropertyLabel>名前</PropertyLabel>
         <PropertyContents>{teacher.name}</PropertyContents>
       </PropertyItem>
       <PropertyItem>

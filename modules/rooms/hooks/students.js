@@ -47,5 +47,10 @@ export function useDeleteStudentMutation (roomId, studentId) {
 }
 
 export function useStudentOptions (students) {
-  return useMemo(() => students?.map(({ id: value, name:label }) => ({ label, value })) || [], [students])
+  return useMemo(() => students?.map(({ id: value, name, nameKana }) => {
+
+    const label = `${name}${nameKana ? `(${nameKana})` : ''}`
+
+    return ({ label, value })
+  }) || [], [students])
 }

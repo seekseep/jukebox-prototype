@@ -10,8 +10,12 @@ export default function StudentPropertySet ({ student }) {
   return (
     <PropertySet>
       <PropertyItem>
-        <PropertyLabel>氏名</PropertyLabel>
+        <PropertyLabel>名前</PropertyLabel>
         <PropertyContents>{student.name}</PropertyContents>
+      </PropertyItem>
+      <PropertyItem>
+        <PropertyLabel>名前のフリガナ</PropertyLabel>
+        <PropertyContents>{student.nameKana ?? ''}</PropertyContents>
       </PropertyItem>
       <PropertyItem>
         <PropertyLabel>生年月日</PropertyLabel>

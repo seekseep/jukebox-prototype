@@ -8,6 +8,7 @@ export function useValidationSchema() {
   return useMemo(() => {
     const validationSchema = Yup.object().shape({
       name       : Yup.string().default('').required(FORM_ERROR_REQUIRED),
+      nameKana   : Yup.string().default(''),
       gender     : Yup.string().default(''),
       bornedAt   : dateSchema.transform(v => v ?? null),
       schoolName : Yup.string().default(''),
