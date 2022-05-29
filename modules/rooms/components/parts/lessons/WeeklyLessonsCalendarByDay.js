@@ -2,9 +2,7 @@ import { add, format, getDay } from 'date-fns'
 import { useMemo } from 'react'
 import locale from 'date-fns/locale/ja'
 
-import DayLabel from '@/components/parts/DayLabel'
-
-import { CalendarProvider, useGridStyle, usePlacedLesssons, useCalendarContext, useHours, useDays } from '@rooms/components/parts/calendar/hooks'
+import { CalendarProvider, useGridStyle, usePlacedLesssons, useCalendarContext, useHours } from '@rooms/components/parts/calendar/hooks'
 import { CalendarContainer, HoursHeadRow, Row, HeadCol, HoursBodyRow, LessonsContainer, Lesson } from '@rooms/components/parts/calendar'
 
 const DAY_NAME_COL_WIDTH = 8
@@ -116,7 +114,7 @@ export function Calendar ({ lessons, teachers, startedAt }) {
   )
 }
 
-export default function WeeklyLessonsCalendarByTeacher({ startedAt, lessons, teachers, startHours, endHours, days }) {
+export default function WeeklyLessonsCalendarByDay({ startedAt, lessons, teachers, startHours, endHours, days }) {
   return (
     <CalendarProvider startHours={startHours} endHours={endHours} days={days} headColWidth={HEAD_COL_WIDTH}>
       <Calendar startedAt={startedAt} lessons={lessons} teachers={teachers} />
