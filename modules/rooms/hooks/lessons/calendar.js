@@ -17,11 +17,6 @@ function dateToDateString (date) {
   return format(date, DATE_FORMAT.ISO_8601)
 }
 
-function parseDateStrig(dateString) {
-  const date = new Date(dateString)
-  return dateToDateString(isValid(date) ? date : new Date())
-}
-
 function parseStartedAt(startedAtString, term) {
   const date = isValid(new Date(startedAtString)) ? new Date(startedAtString) : new Date()
   switch(term) {

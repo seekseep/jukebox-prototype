@@ -50,9 +50,9 @@ export function Lesson ({ lesson, placement }) {
             )}
           </WithDocRef>
           <div className="flex gap-1">
-            <WithDocRefs docRefs={lesson.teachers}>
-              {({ data: teacher }) => (
-                <div>{teacher.name}</div>
+            <WithDocRefs docRefs={lesson.students}>
+              {({ data: student }) => (
+                <div>{student.name}</div>
               )}
             </WithDocRefs>
           </div>
