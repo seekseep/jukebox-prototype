@@ -17,6 +17,9 @@ import { useTeachersQuery } from '@rooms/hooks/teachers'
 import { useStudentsQuery } from '@rooms/hooks/students'
 import { useSheetsQuery } from '@rooms/hooks/sheets'
 
+const START_HOURS = Array.from({ length: 23 }).fill(null).map((_, i) => i)
+const END_HORUS = Array.from({ length: 23 }).fill(null).map((_, i) => 1 + i)
+
 export default function ViewLessonsCalendar () {
   const { query, push, pathname } = useRouter()
 
@@ -28,7 +31,7 @@ export default function ViewLessonsCalendar () {
     getPreviousQuery,
     getChangedQuery
   } = useCalendar(query)
-  const { term, format } = parsedQuery
+  const { term, format, startHour, endHour } = parsedQuery
 
   const refresh = useCallback(query => push({ pathname, query }), [pathname, push])
   const handleGoToday = useCallback(() => refresh(getTodayQuery()), [getTodayQuery, refresh])
@@ -37,7 +40,7 @@ export default function ViewLessonsCalendar () {
 
   // HACK: クエリの扱い方が綺麗じゃない
   const handleGoPrintPage = useCallback(() => {
-    const { roomId, params } = parsedQuery
+    const { roomId, ...params } = parsedQuery
     const searchParams = new URLSearchParams(params)
     window.open(`/rooms/${roomId}/lessons/print?${searchParams.toString()}`, '_blank')
   }, [parsedQuery])
@@ -61,17 +64,32 @@ export default function ViewLessonsCalendar () {
             <button onClick={handleGoNext} className="bg-gray-50 border border-gray-100 text-center leading-10 w-10 h-10 rounded cursor-pointer hover:bg-gray-100 active:bg-gray-200">▶</button>
           </div>
           <div className="flex gap-2 items-center">
-            <div>表示する期間</div>
+            <div>期間種別</div>
             <Select defaultValue={term} onChange={({ target: { value: term } }) => refresh(getChangedQuery({ term }))}>
               <option value={CALENDAR_TERM.WEEKLY}>週</option>
               <option value={CALENDAR_TERM.DAILY}>日</option>
             </Select>
           </div>
           <div className="flex gap-2 items-center">
-            <div>形式</div>
+            <div>表示形式</div>
             <Select defaultValue={format} onChange={({ target: { value: format } }) => refresh(getChangedQuery({ format }))}>
               <option value={CALENDAR_FORMAT.TEACHER}>講師別</option>
               {term === CALENDAR_TERM.WEEKLY && <option value={CALENDAR_FORMAT.DAY}>曜日別</option>}
+            </Select>
+          </div>
+          <div className="flex gap-2 items-center">
+            <div>表示時間</div>
+            <Select defaultValue={startHour} onChange={({ target: { value: startHour } }) => refresh(getChangedQuery({ startHour }))}>
+              {START_HOURS.map(hour => (
+                <option key={hour} value={hour}>{hour}:00</option>
+              ))}
+            </Select>
+            <div>から</div>
+            <Select defaultValue={endHour} onChange={({ target: { value: endHour } }) => refresh(getChangedQuery({ endHour }))}>
+              {END_HORUS.map(hour => {
+                if (hour <= startHour) return null
+                return <option key={hour} value={hour}>{hour}:00</option>
+              })}
             </Select>
           </div>
           <div className="flex flex-grow justify-end">
@@ -89,13 +107,13 @@ export default function ViewLessonsCalendar () {
         {({ data: [lessons, subjects, teachers, students, sheets] }) => (
           <>
             {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.TEACHER && (
-              <WeeklyLessonsCalendarByTeacher {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets }} />
+              <WeeklyLessonsCalendarByTeacher {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
             )}
             {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.DAY && (
-              <WeeklyLessonsCalendarByDay {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets }} />
+              <WeeklyLessonsCalendarByDay {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
             )}
             {term === CALENDAR_TERM.DAILY && (
-              <DailyLessonsCalendar {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets }} />
+              <DailyLessonsCalendar {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
             )}
           </>
         )}

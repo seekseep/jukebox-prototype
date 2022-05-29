@@ -49,6 +49,16 @@ function parseIdArrayString (idArrayString) {
   return idArrayString.split(',')
 }
 
+function parseStartHour (startHour) {
+  if (0 <= startHour && startHour <= 22) return parseInt(startHour)
+  return 0
+}
+
+function parseEndHour (endHour, startHour = 0) {
+  if (0 <= endHour && endHour <= 23 && endHour > startHour) return parseInt(endHour)
+  return 23
+}
+
 export function useParsedQuery(query) {
   return useMemo(() => {
     const parsedQuery = {}
@@ -58,6 +68,8 @@ export function useParsedQuery(query) {
     parsedQuery.format = parseFormat(query.format)
     parsedQuery.startedAt = parseStartedAt(query.startedAt, parsedQuery.term)
     parsedQuery.finishedAt = getFinishedAtString(parsedQuery.startedAt, parsedQuery.term)
+    parsedQuery.startHour = parseStartHour(query.startHour)
+    parsedQuery.endHour = parseEndHour(query.endHour, parsedQuery.startHour)
 
     if (query.subjects) parsedQuery.subjects = parseIdArrayString(query.subjects)
     if (query.teachers) parsedQuery.teachers = parseIdArrayString(query.teachers)
@@ -65,7 +77,7 @@ export function useParsedQuery(query) {
     if (query.sheets) parsedQuery.sheets = parseIdArrayString(query.sheets)
 
     return parsedQuery
-  }, [query.format, query.roomId, query.sheets, query.startedAt, query.students, query.subjects, query.teachers, query.term])
+  }, [query.endHour, query.format, query.roomId, query.sheets, query.startHour, query.startedAt, query.students, query.subjects, query.teachers, query.term])
 }
 
 function getNextStartedAt (date, term) {

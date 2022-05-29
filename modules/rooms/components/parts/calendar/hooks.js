@@ -2,9 +2,8 @@ import { createContext, useContext, useMemo } from 'react'
 import { getHours, getMinutes } from 'date-fns'
 import { WEEK_DAY } from '@/constants'
 
-export const HOUR_COL_WIDTH = 10
+export const HOUR_COL_WIDTH = 8
 export const LESSON_ROW_HEIGHT = 2
-
 export const LESSON_ROWS_COUNT = 3
 export const DEFAULT_DAYS = Object.values(WEEK_DAY)
 
@@ -18,7 +17,7 @@ export const Z_INDEX = Object.freeze({
 const Context = createContext({})
 
 export function CalendarProvider ({
-  startHours = 0, endHours = 23, days = DEFAULT_DAYS,
+  startHour = 0, endHour = 23, days = DEFAULT_DAYS,
   startedAt = null,
   hourColWidth = HOUR_COL_WIDTH,
   lessonRowHeight = LESSON_ROW_HEIGHT,
@@ -30,8 +29,8 @@ export function CalendarProvider ({
     <Context.Provider
       value={{
         startedAt,
-        startHours,
-        endHours,
+        startHour,
+        endHour,
         days,
         headColWidth,
         hourColWidth,
@@ -53,17 +52,13 @@ export function useDays () {
 
 export function useHours () {
   const context = useContext(Context)
-  const { startHours, endHours } = context
+  const { startHour, endHour } = context
 
   return useMemo(() => {
     const hours = []
-
-    for (let hour = startHours; hour <= endHours; hour++) {
-      hours.push(hour)
-    }
-
+    for (let hour = startHour; hour < endHour; hour++) hours.push(hour)
     return hours
-  }, [startHours, endHours])
+  }, [startHour, endHour])
 }
 
 export function useGridStyle ({ width, height, top, left } = {}) {
@@ -99,13 +94,22 @@ export function useLessonContainerStyle(style) {
 }
 
 export function usePlacedLesssons (lessons) {
+  const {
+    startHour: displayStartHour,
+    endHour: displayEndHour
+  } = useCalendarContext()
+
   return useMemo(() => {
     const placedLessons = []
-
     const rows = []
 
     lessons.forEach(lesson => {
       const { startedAt, finishedAt } = lesson
+      const lessonStartHour = getHours(startedAt) + getMinutes(startedAt) / 60
+      const lessonEndHour = getHours(finishedAt) + getMinutes(finishedAt) / 60
+
+      const isOutOfRange = lessonEndHour < displayStartHour || displayEndHour < lessonStartHour
+      if (isOutOfRange) return
 
       let row = null
       for (let i = 0; i <= rows.length; i++) {
@@ -120,28 +124,39 @@ export function usePlacedLesssons (lessons) {
         break
       }
 
-      const start = getHours(startedAt) + getMinutes(startedAt) / 60
-      const end = getHours(finishedAt) + getMinutes(finishedAt) / 60
+      const start = Math.max(0, lessonStartHour - displayStartHour)
+
+      const duration = Math.min(lessonEndHour, displayEndHour) - Math.max(lessonStartHour, displayStartHour)
+
+      console.log({
+        lessonEndHour, displayEndHour,
+        lessonStartHour, displayStartHour,
+        duration
+      })
 
       placedLessons.push({
         lesson,
         placement: {
           start,
-          duration: end - start,
-          row
+          duration,
+          row,
+          isOverflowToBefore: lessonStartHour < displayStartHour,
+          isOverflowToAfter : lessonEndHour > displayEndHour
         }
       })
     })
 
     return placedLessons
-  }, [lessons])
+  }, [displayEndHour, displayStartHour, lessons])
 }
 
 export function useLessonStyle ({ start, duration, row }) {
+  const { lessonRowHeight, hourColWidth } = useCalendarContext()
+
   return useMemo(() => ({
-    top   : `${row  * LESSON_ROW_HEIGHT}rem`,
-    width : `${duration * HOUR_COL_WIDTH}rem`,
-    left  : `${start * HOUR_COL_WIDTH}rem`,
+    top   : `${row  * lessonRowHeight}rem`,
+    width : `${duration * hourColWidth}rem`,
+    left  : `${start * hourColWidth}rem`,
     zIndex: row + Z_INDEX.LESSON
-  }), [duration, row, start])
+  }), [duration, hourColWidth, lessonRowHeight, row, start])
 }

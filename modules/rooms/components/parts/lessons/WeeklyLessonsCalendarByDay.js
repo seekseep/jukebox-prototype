@@ -85,9 +85,9 @@ export function Calendar ({ lessons, teachers, startedAt }) {
   )
 }
 
-export default function WeeklyLessonsCalendarByDay({ startedAt, lessons, teachers, startHours, endHours, days }) {
+export default function WeeklyLessonsCalendarByDay({ startedAt, lessons, teachers, startHour, endHour, days }) {
   return (
-    <CalendarProvider startHours={startHours} endHours={endHours} days={days} headColWidth={HEAD_COL_WIDTH}>
+    <CalendarProvider startHour={startHour} endHour={endHour} days={days} headColWidth={HEAD_COL_WIDTH}>
       <Calendar startedAt={startedAt} lessons={lessons} teachers={teachers} />
     </CalendarProvider>
   )

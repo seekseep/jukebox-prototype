@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import Link from 'next/link'
 import { WithDocRef, WithDocRefs } from '@/components/utilities/withDocRefs'
 
 import {
@@ -10,6 +11,8 @@ import {
   useHeadColStyle,
   useLessonContainerStyle
 } from './hooks'
+import { useGetRoomPath } from '@rooms/hooks/router'
+import { useRouter } from 'next/router'
 
 export function Row ({ className, ...props }) {
   return <div className={classNames(className, 'flex relative')} {...props} />
@@ -40,25 +43,39 @@ export function LessonsContainer ({ style, children }) {
 
 export function Lesson ({ lesson, placement }) {
   const style = useLessonStyle(placement)
+  const { isOverflowToBefore, isOverflowToAfter } = placement
+
+  // TODO: ここで useRouter つかわない
+  const { query: { roomId } } = useRouter()
+  const getRoomPath = useGetRoomPath(roomId)
+
   return (
-    <div className="absolute left-0 top-0 p-1" style={style}>
-      <div className="w-full h-full border bg-white rounded shadow-sm">
-        <div className="flex flex-wrap gap-2 text-xs p-1">
-          <WithDocRef docRef={lesson.subject}>
-            {({ data: subject }) => (
-              <div>{subject.name}</div>
-            )}
-          </WithDocRef>
-          <div className="flex gap-1">
-            <WithDocRefs docRefs={lesson.students}>
-              {({ data: student }) => (
-                <div>{student.name}</div>
+    <Link href={getRoomPath(`/lessons/${lesson.id}`)}>
+      <a className={classNames('block absolute left-0 top-0 py-1', {
+        'pl-1': !isOverflowToBefore,
+        'pr-1': !isOverflowToAfter,
+      })} style={style}>
+        <div className={classNames('w-full h-full border bg-white shadow-sm', {
+        'rounded-l-lg': !isOverflowToBefore,
+        'rounded-r-lg': !isOverflowToAfter,
+        })}>
+          <div className="flex flex-wrap gap-2 text-sm p-1">
+            <WithDocRef docRef={lesson.subject}>
+              {({ data: subject }) => (
+                <div>{subject.name}</div>
               )}
-            </WithDocRefs>
+            </WithDocRef>
+            <div className="flex gap-1">
+              <WithDocRefs docRefs={lesson.students}>
+                {({ data: student }) => (
+                  <div>{student.name}</div>
+                )}
+              </WithDocRefs>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </a>
+    </Link>
   )
 }
 
