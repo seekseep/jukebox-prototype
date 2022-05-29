@@ -43,29 +43,26 @@ export function Textarea ({ className, ...props }) {
   return <textarea className={classNames(className, inputClassName)} {...props}/>
 }
 
+function useDateFieldInputValue(value, type) {
+    return useMemo(() => {
+      if (!value) return ''
+      const date = value || ''
+      switch(type) {
+        case 'time':
+          return getTimeValue(date)
+        case 'date':
+          return getDateValue(date)
+        case 'datetime-local':
+        default:
+          return getDatetimeLocalValue(date)
+      }
+    },[value, type])
+}
 
 export function DateField({ label, type, ...props }) {
   const [field, meta, helpers] = useField(props)
-
-  const inputValue = useMemo(() => {
-
-    if (!field.value) return ''
-
-    const date = field.value || ''
-
-    switch(type) {
-      case 'time':
-        return getTimeValue(date)
-      case 'date':
-        return getDateValue(date)
-      case 'datetime-local':
-      default:
-        return getDatetimeLocalValue(date)
-    }
-  },[field.value, type])
-
+  const inputValue = useDateFieldInputValue(field.value, type)
   const handleChange = useCallback(({ target: { value } }) => helpers.setValue(value ? new Date(value) : null), [helpers])
-
   return (
     <FieldContainer>
       {label && <Label>{label}</Label>}

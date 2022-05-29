@@ -78,13 +78,13 @@ export default function ViewLessonsCalendar () {
         {({ data: [lessons, subjects, teachers, students, sheets] }) => (
           <>
             {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.TEACHER && (
-              <WeeklyLessonsCalendarByTeacher {...{ lessons, subjects, teachers, students, sheets }} />
+              <WeeklyLessonsCalendarByTeacher {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets }} />
             )}
             {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.DAY && (
-              <WeeklyLessonsCalendarByDay {...{ lessons, subjects, teachers, students, sheets }} />
+              <WeeklyLessonsCalendarByDay {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets }} />
             )}
             {term === CALENDAR_TERM.DAILY && (
-              <DailyLessonsCalendar {...{ lessons, subjects, teachers, students, sheets }} />
+              <DailyLessonsCalendar {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets }} />
             )}
           </>
         )}
