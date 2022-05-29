@@ -2,16 +2,16 @@ import { format } from 'date-fns'
 import { useMemo } from 'react'
 import locale from 'date-fns/locale/ja'
 
-import { getDayTeacherLessonsSets } from '@rooms/services/lessons'
+import { getTeacherDayLessonsSets } from '@rooms/services/lessons'
 
 import { CalendarProvider, useGridStyle, usePlacedLesssons, useCalendarContext, useHours } from '@rooms/components/parts/calendar/hooks'
 import { CalendarContainer, HoursHeadRow, Row, HeadCol, HoursBodyRow, LessonsContainer, Lesson } from '@rooms/components/parts/calendar'
 
-const DAY_NAME_COL_WIDTH = 8
 const TEACHER_NAME_COL_WIDTH = 10
+const DAY_NAME_COL_WIDTH = 2
 const HEAD_COL_WIDTH = TEACHER_NAME_COL_WIDTH + DAY_NAME_COL_WIDTH
 
-function TeacherLessons({ teacherLessonsSet: { teacher, lessons } }) {
+function DayLessons({ dayLessons: { date, lessons } }) {
   const {
     lessonRowHeight,
     lessonRowsCount,
@@ -34,7 +34,9 @@ function TeacherLessons({ teacherLessonsSet: { teacher, lessons } }) {
   return (
     <Row>
       <HeadCol style={dayColStyle} className="text-center sticky flex items-center justify-center">
-        <div>{teacher.name}</div>
+        <div className="text-sm">
+          {format(date, 'EEE', { locale })}
+        </div>
       </HeadCol>
       <Row style={lessonRowStyle}>
         <HoursBodyRow />
@@ -48,44 +50,39 @@ function TeacherLessons({ teacherLessonsSet: { teacher, lessons } }) {
   )
 }
 
-function DayTeacherLessons ({ dayTeacherLessonsSet: { date, teachers } }) {
+function TeacherDayLessons ({ teacherDayLessonsSet: { teacher, days: dayLessonsSets } }) {
   const headColStyle = useGridStyle({
     width: TEACHER_NAME_COL_WIDTH
   })
-
   return (
     <Row>
       <HeadCol style={headColStyle} className="sticky top-0 left-0 flex items-center justify-center">
-        <div className="p-2 sticky top-0">
-          {format(date, 'MM月dd日 EE', { locale })}
-        </div>
+        <div className="p-2 sticky top-0">{teacher.name}</div>
       </HeadCol>
       <div>
-        {teachers.map((teacherLessonsSet) => (
-          <TeacherLessons key={teacherLessonsSet.teacher.id} teacherLessonsSet={teacherLessonsSet} />
+        {dayLessonsSets.map((dayLessonsSet) => (
+          <DayLessons key={dayLessonsSet.date} dayLessons={dayLessonsSet} />
         ))}
       </div>
     </Row>
   )
 }
 
-export function Calendar ({ lessons, teachers, startedAt }) {
+export function Calendar ({ startedAt, lessons, teachers, }) {
   const { days } = useCalendarContext()
-  const dayTeacherLessonsSets = useMemo(() => getDayTeacherLessonsSets(lessons, { startedAt, teachers, days }), [days, lessons, startedAt, teachers])
+  const teacherDayLessonsSets = useMemo(() => getTeacherDayLessonsSets (lessons, { days, startedAt, teachers }), [days, lessons, startedAt, teachers])
 
   return (
     <CalendarContainer>
       <HoursHeadRow/>
-      {dayTeacherLessonsSets.map(dayTeacherLessonsSet => (
-        <DayTeacherLessons
-          key={dayTeacherLessonsSet.date}
-          dayTeacherLessonsSet={dayTeacherLessonsSet} />
+      {teacherDayLessonsSets.map(teacherDayLessonsSet => (
+        <TeacherDayLessons key={teacherDayLessonsSet.teacher.id} teacherDayLessonsSet={teacherDayLessonsSet} />
       ))}
     </CalendarContainer>
   )
 }
 
-export default function WeeklyLessonsCalendarByDay({ startedAt, lessons, teachers, startHours, endHours, days }) {
+export default function WeeklyLessonsCalendarByTeacher({ startedAt, lessons, teachers, startHours, endHours, days }) {
   return (
     <CalendarProvider startHours={startHours} endHours={endHours} days={days} headColWidth={HEAD_COL_WIDTH}>
       <Calendar startedAt={startedAt} lessons={lessons} teachers={teachers} />

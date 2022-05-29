@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import Card, { CardBody } from '@/components/parts/Card'
 import { Select } from '@/components/parts/forms'
 import { MultiSuspension } from '@/components/parts/Suspension'
+import { Button } from '@/components/parts/buttons'
 
 import { CALENDAR_FORMAT, CALENDAR_TERM } from '@rooms/constants'
 import { useCalendar } from '@rooms/hooks/lessons/calendar'
@@ -33,6 +34,13 @@ export default function ViewLessonsCalendar () {
   const handleGoToday = useCallback(() => refresh(getTodayQuery()), [getTodayQuery, refresh])
   const handleGoPrevious = useCallback(() => refresh(getPreviousQuery()), [getPreviousQuery, refresh])
   const handleGoNext = useCallback(() => refresh(getNextQuery()), [getNextQuery, refresh])
+
+  // HACK: クエリの扱い方が綺麗じゃない
+  const handleGoPrintPage = useCallback(() => {
+    const { roomId, params } = parsedQuery
+    const searchParams = new URLSearchParams(params)
+    window.open(`/rooms/${roomId}/lessons/print?${searchParams.toString()}`, '_blank')
+  }, [parsedQuery])
 
   const lessonsQueryResult = useSearchLessonsQuery(query.roomId, parsedQuery)
   const subjectsQueryResult = useSubjectsQuery(query.roomId)
@@ -65,6 +73,9 @@ export default function ViewLessonsCalendar () {
               <option value={CALENDAR_FORMAT.TEACHER}>講師別</option>
               {term === CALENDAR_TERM.WEEKLY && <option value={CALENDAR_FORMAT.DAY}>曜日別</option>}
             </Select>
+          </div>
+          <div className="flex flex-grow justify-end">
+            <Button onClick={handleGoPrintPage}>表示している内容を印刷する</Button>
           </div>
         </div>
       </CardBody>

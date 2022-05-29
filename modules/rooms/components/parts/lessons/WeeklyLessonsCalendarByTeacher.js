@@ -1,6 +1,8 @@
-import { add, format, getDay } from 'date-fns'
+import { format } from 'date-fns'
 import { useMemo } from 'react'
 import locale from 'date-fns/locale/ja'
+
+import { getTeacherDayLessonsSets } from '@rooms/services/lessons'
 
 import { CalendarProvider, useGridStyle, usePlacedLesssons, useCalendarContext, useHours, useDays } from '@rooms/components/parts/calendar/hooks'
 import { CalendarContainer, HoursHeadRow, Row, HeadCol, HoursBodyRow, LessonsContainer, Lesson } from '@rooms/components/parts/calendar'
@@ -68,36 +70,7 @@ function TeacherDayLessons ({ teacherDayLessonsSet: { teacher, days: dayLessonsS
 
 export function Calendar ({ startedAt, lessons, teachers, }) {
   const { days } = useCalendarContext()
-  const teacherDayLessonsSets = useMemo(() => {
-    const teacherDayLessonsSets = {}
-
-    teachers.forEach(teacher => {
-      const dayLessonsSets = days.reduce((dayLessonsSets, day) => ({
-        ...dayLessonsSets,
-        [day]: {
-          date   : add(startedAt, { days: day }),
-          lessons: []
-        }
-      }), {})
-
-      teacherDayLessonsSets[teacher.id] = {
-        teacher,
-        days: dayLessonsSets
-      }
-    })
-
-    lessons.forEach((lesson) => {
-      const day = getDay(lesson.startedAt)
-      lesson.teachers.forEach(teacher => {
-        teacherDayLessonsSets[teacher.id].days[day].lessons.push(lesson)
-      })
-    })
-
-    return Object.values(teacherDayLessonsSets).map(({ teacher, days: dayLessonsSets }) => ({
-      teacher,
-      days: Object.values(dayLessonsSets)
-    }))
-  }, [days, lessons, startedAt, teachers])
+  const teacherDayLessonsSets = useMemo(() => getTeacherDayLessonsSets (lessons, { days, startedAt, teachers }), [days, lessons, startedAt, teachers])
 
   return (
     <CalendarContainer>
