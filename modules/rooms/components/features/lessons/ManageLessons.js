@@ -76,7 +76,7 @@ export default function ManageLessons () {
   const searchValuesToResult = useSearchValuesToResult()
   const handleSearch = useCallback((values) => {
     const result = searchValuesToResult(values)
-    push(getRoomPath(`/lessons?${result}`))
+    push(getRoomPath(`/lessons/list?${result}`))
   }, [getRoomPath, push, searchValuesToResult])
 
   const updateValidationSchema = useUpdateValidationSchema()
