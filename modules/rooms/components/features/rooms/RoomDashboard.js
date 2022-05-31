@@ -8,7 +8,6 @@ import {
   DashboardNavigation,
   DashboardNavigationHeader,
   DashboardNavigationBody,
-  DashboardNavigationFooter,
   DashboardMain,
   DashboardHeader,
   DashboardNavigationLink as DNavLink
@@ -52,9 +51,6 @@ export default function RoomDashboard ({ title, children }) {
           <DNavLink href={getRoomPath('/parents')}>保護者</DNavLink>
           <DNavLink href={getRoomPath('/settings')}>教室</DNavLink>
         </DashboardNavigationBody>
-        <DashboardNavigationFooter>
-          {account?.name}
-        </DashboardNavigationFooter>
       </DashboardNavigation>
       <DashboardMain>
         <DashboardHeader>

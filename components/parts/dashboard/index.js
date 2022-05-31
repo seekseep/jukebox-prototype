@@ -38,7 +38,7 @@ export function DashboardNavigationHeader ({ ...props }) {
 }
 
 export function DashboardNavigationBody ({ ...props }) {
-  return <DashboardNavigationSection className="grow sticky top-0" {...props} />
+  return <DashboardNavigationSection className="sticky top-0" {...props} />
 }
 
 export function DashboardNavigationFooter ({ ...props }) {
