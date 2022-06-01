@@ -1,13 +1,16 @@
 import { useFormikContext } from 'formik'
 
+import { REPEAT_TYPE } from '@/constants'
+
+import { SelectField, Field } from '@/components/parts/forms'
+import EventDatesFields from '@/components/parts/forms/EventDatesField'
+
 import { useSubjectOptions } from '@rooms/hooks/subjects'
 import { useStudentOptions } from '@rooms/hooks/students'
 import { useTeacherOptions } from '@rooms/hooks/teachers'
 import { useSheetOptions } from '@rooms/hooks/sheets'
 
-import { SelectField, Field, DateField } from '@/components/parts/forms'
 import RepeatTypeSelectField from '@/modules/rooms/components/parts/RepeatTypeSelectField'
-import { REPEAT_TYPE } from '@/constants'
 
 export default function RegisterLessonFormFields ({ subjects, students, teachers, sheets }) {
   const { values } = useFormikContext()
@@ -23,10 +26,10 @@ export default function RegisterLessonFormFields ({ subjects, students, teachers
       <SelectField name="students" label="生徒" options={studentOptions} isMulti />
       <SelectField name="teachers" label="講師" options={teacherOptions} isMulti />
       <SelectField name="sheets" label="席" options={sheetOptions} isMulti />
-      <div className="grid grid-cols-2 gap-3">
-        <DateField type="datetime-local" name="startedAt" label="開始日時" placeholder="開始日時" />
-        <DateField type="datetime-local" name="finishedAt" label="終了日時" placeholder="終了日時" />
-      </div>
+      <EventDatesFields
+        label="日時"
+        startedAtName="startedAt"
+        finishedAtName="finishedAt" />
       <div className="grid grid-cols-2 gap-3">
         <RepeatTypeSelectField name="repeat" label="繰り返し" />
         {values.repeat.value !== REPEAT_TYPE.NONE ? (
