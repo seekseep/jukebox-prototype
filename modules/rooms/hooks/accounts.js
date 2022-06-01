@@ -23,7 +23,7 @@ export function useAccountsQuery (roomId) {
 }
 
 export function useAccountQuery(roomId, accountId) {
-  return useDocAsObjectQuery(roomId && accountId && `/rooms/${roomId}/accounts/${accountId}`)
+  return useDocAsObjectQuery((roomId && accountId) && `/rooms/${roomId}/accounts/${accountId}`)
 }
 
 export function useCreateAccountMutation (roomId) {

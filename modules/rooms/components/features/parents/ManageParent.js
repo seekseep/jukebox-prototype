@@ -5,28 +5,30 @@ import { toast } from 'react-toastify'
 
 import { useToggleState } from '@/hooks/ui'
 
-import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
+import { MultiSuspension } from '@/components/parts/Suspension'
 import { Form, FormActions } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
-import Suspension from '@/components/parts/Suspension'
 import Card, { CardActions, CardBody } from '@/components/parts/Card'
 import ErrorAlert from '@/components/parts/ErrorAlert'
+import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 
 import { useParentQuery, useUpdateParentMutation } from '@rooms/hooks/parents'
 import { useInitialValues, useValidationSchema, useValuesToResult } from '@rooms/components/parts/parents/ParentFormFields/hooks'
 
 import ParentFormFields from '@rooms/components/parts/parents/ParentFormFields'
 import ParentPropertySet from '@rooms/components/parts/parents/ParentPropertySet'
+import { useStudentsQuery } from '@rooms/hooks/students'
 
 export default function ManageParent () {
   const { query:{ roomId, parentId } } = useRouter()
   const [isEditing, toggleEditing, setIsEditing] = useToggleState()
 
-  const {
-    data: parent,
-    mutate,
-    ...result
-  } = useParentQuery(roomId, parentId)
+  const studentsResult = useStudentsQuery(roomId)
+  const parentResult = useParentQuery(roomId, parentId)
+
+  const { data: students } = studentsResult
+  const { data: parent, mutate } = parentResult
+
   const [update, {
     data: updatedParent,
     isLoading: isUpdating,
@@ -35,9 +37,9 @@ export default function ManageParent () {
   }] = useUpdateParentMutation(roomId, parentId)
 
   const validationSchema = useValidationSchema()
-  const initialValues = useInitialValues(parent)
+  const initialValues = useInitialValues(parent, { students })
   const valuesToResult = useValuesToResult()
-  const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update])
+  const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update, valuesToResult])
 
   useEffect(() => {
     if (!isUpdated) return
@@ -51,15 +53,15 @@ export default function ManageParent () {
       <FeatureHead>
         <FeatureTitle>保護者</FeatureTitle>
       </FeatureHead>
-      <Suspension {...result}>
-        {() => (
+      <MultiSuspension results={[ parentResult, studentsResult ]}>
+        {({ data: [ parent, students ] }) => (
           <Card>
             {isEditing ? (
               <CardBody>
                 <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
                   {({ isValid }) => (
                     <Form>
-                      <ParentFormFields />
+                      <ParentFormFields students={students} />
                       <ErrorAlert error={updatingError} />
                       <FormActions>
                         <Button primary type="submit" disabled={!isValid || isUpdating}>保存する</Button>
@@ -74,12 +76,14 @@ export default function ManageParent () {
                 <CardActions>
                   <Button secondary sm onClick={toggleEditing}>編集する</Button>
                 </CardActions>
-                <ParentPropertySet parent={parent}/>
+                <ParentPropertySet
+                  roomId={roomId}
+                  parent={parent}/>
               </>
             )}
           </Card>
         )}
-      </Suspension>
+      </MultiSuspension>
     </Feature>
   )
 }
