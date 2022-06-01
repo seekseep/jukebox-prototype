@@ -26,8 +26,8 @@ export function useInitialValues (query, { subjects, teachers, students, sheets 
 
     if (query?.subjects && subjects) {
       const subjectMap = subjects.reduce((m,d) => ({ ...m, [d.id]: d }), {})
-      values.subjects = query.subjects.split(',').reduce((subjects, subejctId) => {
-        const subject = subjectMap[subejctId]
+      values.subjects = query.subjects.split(',').reduce((subjects, subjectId) => {
+        const subject = subjectMap[subjectId]
         if (!subject) return subjects
         const { id: value, name: label } = subject
         return [...subjects, { value, label }]
@@ -36,8 +36,8 @@ export function useInitialValues (query, { subjects, teachers, students, sheets 
 
     if (query?.teachers && teachers) {
       const teacherMap = teachers.reduce((m,d) => ({ ...m, [d.id]: d }), {})
-      values.teachers = query.teachers.split(',').reduce((teachers, subejctId) => {
-        const teacher = teacherMap[subejctId]
+      values.teachers = query.teachers.split(',').reduce((teachers, subjectId) => {
+        const teacher = teacherMap[subjectId]
         if (!teacher) return teachers
         const { id: value, name: label } = teacher
         return [...teachers, { value, label }]
@@ -46,8 +46,8 @@ export function useInitialValues (query, { subjects, teachers, students, sheets 
 
     if (query?.students && students) {
       const studentMap = students.reduce((m,d) => ({ ...m, [d.id]: d }), {})
-      values.students = query.students.split(',').reduce((students, subejctId) => {
-        const student = studentMap[subejctId]
+      values.students = query.students.split(',').reduce((students, subjectId) => {
+        const student = studentMap[subjectId]
         if (!student) return students
         const { id: value, name: label } = student
         return [...students, { value, label }]
@@ -56,8 +56,8 @@ export function useInitialValues (query, { subjects, teachers, students, sheets 
 
     if (query?.sheets && sheets) {
       const sheetMap = sheets.reduce((m,d) => ({ ...m, [d.id]: d }), {})
-      values.sheets = query.sheets.split(',').reduce((sheets, subejctId) => {
-        const sheet = sheetMap[subejctId]
+      values.sheets = query.sheets.split(',').reduce((sheets, subjectId) => {
+        const sheet = sheetMap[subjectId]
         if (!sheet) return sheets
         const { id: value, name: label } = sheet
         return [...sheets, { value, label }]

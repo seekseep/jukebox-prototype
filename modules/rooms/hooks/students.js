@@ -13,17 +13,19 @@ import {
 import {
   useAccountQuery,
   useUpdateAccountMutation,
-  useDeleteAccountMutation
+  useDeleteAccountMutation,
+  useAccountsQuery
 } from '@rooms/hooks/accounts'
 
-export function useStudentRefsQuery(roomId) {
-  const swr = useSWR(roomId && [roomId, 'students'], getStudentAccountRefs)
-  return expandSWR(swr)
-}
-
 export function useStudentsQuery(roomId) {
-  const swr = useSWR(roomId && [roomId, 'students', 'as-objects'], getStudentAccounts)
-  return expandSWR(swr)
+  const { data: accounts , ...result } = useAccountsQuery(roomId)
+
+  const students = useMemo(() => {
+    if (!accounts) return accounts
+    return accounts.filter(account => account.type === ACCOUNT_TYPE.STUDENT)
+  }, [accounts])
+
+  return { data: students, ...result }
 }
 
 export function useStudentQuery(roomId, studentId) {

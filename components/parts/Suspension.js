@@ -2,10 +2,11 @@ import { useMemo } from 'react'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 import Loading from '@/components/parts/Loading'
 
-export default function Suspension ({ data, isLoading, error, isSuccess, children }) {
+export default function Suspension ({ data, isLoading, error, errors = [], isSuccess, children }) {
   return (
     <>
       <ErrorAlert error={error} />
+      {errors.map((error, i) => <ErrorAlert key={i} error={error} />)}
       {isLoading && <Loading />}
       {isSuccess && (
         typeof children === 'function' ? children({ data }) : children

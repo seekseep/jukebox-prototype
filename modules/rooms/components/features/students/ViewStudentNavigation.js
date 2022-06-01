@@ -27,8 +27,9 @@ export default function ViewStudentNavigation () {
       </Breadcrumbs>
       <TabNavigation>
         <Tab href={getStudentPath('/')} exact>基本情報</Tab>
-        <Tab href={getStudentPath('/schedules')}>予定</Tab>
         <Tab href={getStudentPath('/subjects')}>科目</Tab>
+        <Tab href={getStudentPath('/lessons')}>授業</Tab>
+        <Tab href={getStudentPath('/schedules')}>予定</Tab>
         <Tab href={getStudentPath('/relations')}>関係性</Tab>
       </TabNavigation>
     </>

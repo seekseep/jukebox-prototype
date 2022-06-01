@@ -1,7 +1,5 @@
 import { useRouter } from 'next/router'
 
-import { WithDocRefs } from '@/components/utilities/withDocRefs'
-
 import Card from '@/components/parts/Card'
 import Suspension from '@/components/parts/Suspension'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
@@ -9,12 +7,12 @@ import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
 import { LinkButton } from '@/components/parts/buttons'
 
 import { useGetRoomPath } from '@rooms/hooks/router'
-import { useStudentRefsQuery } from '@rooms/hooks/students'
+import { useStudentsQuery } from '@rooms/hooks/students'
 
 export default function ManageStudents () {
   const { query:{ roomId } } = useRouter()
   const getRoomPath = useGetRoomPath(roomId)
-  const result = useStudentRefsQuery(roomId)
+  const result = useStudentsQuery(roomId)
 
   return (
     <Feature>
@@ -25,18 +23,14 @@ export default function ManageStudents () {
         </div>
       </FeatureHead>
       <Suspension {...result}>
-        {({ data: studentRefs }) => (
+        {({ data: students }) => (
           <Card>
             <Collection>
-              {studentRefs.length > 0 && (
-                <WithDocRefs docRefs={studentRefs}>
-                  {({ data: student }) => (
-                    <CollectionLinkItem href={getRoomPath(`/students/${student.id}`)}>
-                      {student.name}
-                    </CollectionLinkItem>
-                  )}
-                </WithDocRefs>
-              )}
+              {students.map((student) => (
+                <CollectionLinkItem key={student.id} href={getRoomPath(`/students/${student.id}`)}>
+                  {student.name}
+                </CollectionLinkItem>
+              ))}
             </Collection>
           </Card>
         )}
