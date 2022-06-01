@@ -1,7 +1,13 @@
 import useSWR from 'swr'
 import { useMemo } from 'react'
 
-import { createLesson, updateLesson, deleteLesson, getSubjectLessonRefs } from '@/services/api/rooms/lessons'
+import {
+  createLesson,
+  updateLesson,
+  updateLessons,
+  deleteLesson,
+  getSubjectLessonRefs
+} from '@/services/api/rooms/lessons'
 
 import {
   useDeleteDocMutation,
@@ -91,7 +97,7 @@ export function useCreateSubjectLessonsMutation(roomId, subjectId) {
 export function useUpdateLessonsMutation(roomId) {
   return useMutation(
     async (lessons) => {
-      for (let { id:lessonId, ...lesson } of lessons) await updateLesson(roomId, lessonId, appendReferncesToLesson(lesson, roomId))
+      await updateLessons(roomId, lessons.map(lesson => appendReferncesToLesson(lesson, roomId)))
     }
   )
 }

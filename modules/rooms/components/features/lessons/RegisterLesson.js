@@ -44,7 +44,7 @@ export default function RegisterLesson () {
   useEffect(() => {
     if (!isCreated) return
     toast.success('授業を登録しました')
-    router.push(getRoomPath('/lessons'))
+    router.push(getRoomPath('/lessons/list'))
   }, [getRoomPath, isCreated, router])
 
   return (

@@ -1,12 +1,11 @@
-import { collection, doc, query, where, getDocs, orderBy, refEqual } from 'firebase/firestore'
+import { collection, doc, query, where, getDocs, orderBy, refEqual, runTransaction, writeBatch } from 'firebase/firestore'
 import { firestore } from '@/firebase'
 import { getSubjectRef } from '@/services/api/rooms/subjects'
-import { createResource, deleteResource, updateResource, querySnapshotToRefs, docSnapshotToObject, docsSnapshotToObjects } from '@/services/api/utils'
-import { isValid } from 'date-fns'
+import { createResource, deleteResource, updateResource, querySnapshotToRefs, docSnapshotToObject } from '@/services/api/utils'
+
 import { getTeacherRef } from './teachers'
 import { getStudentRef } from './students'
 import { getSheetRef } from './sheets'
-import { useSubjectLessonRefsQuery } from '@rooms/hooks/lessons'
 
 export function getLessonsRef (roomId) {
   return collection(firestore, `/rooms/${roomId}/lessons`)
@@ -30,6 +29,17 @@ export async function createLesson(roomId, data) {
 export async function updateLesson (roomId, lessonId, data) {
   const lessonRef = getLessonRef(roomId, lessonId)
   return await updateResource(lessonRef, data)
+}
+
+export async function updateLessons (roomId, lessons) {
+  const batch = writeBatch(firestore)
+
+  for (let { id: lessonId, ...lesson } of lessons) {
+    const lessonRef = getLessonRef(roomId, lessonId)
+    batch.update(lessonRef, lesson)
+  }
+
+  return await batch.commit()
 }
 
 export async function deleteLesson (roomId, lessonId) {
