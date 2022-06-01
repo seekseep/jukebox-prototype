@@ -31,7 +31,10 @@ export default function RoomDashboard ({ title, children }) {
   const { data: room } = useRoomQuery(roomId)
   const { data: account } = useCurrentAccount(roomId)
 
-  const pageTitle = useMemo(() => title ? `${title} | ${room?.name}` : room?.name, [room?.name, title])
+  const pageTitle = useMemo(() => {
+    const roomName = room?.name || '教室'
+    return title ? `${title} | ${roomName}` : roomName
+  }, [room?.name, title])
 
   return (
     <Dashboard title={pageTitle}>

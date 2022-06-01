@@ -1,16 +1,44 @@
 import useSWR from 'swr'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { getCollectioDocRefs, getDocAsObject, getCollectionAsObjectArray, updateDoc, createDoc, deleteDoc } from '@/services/api'
 
-export function expandSWR ({ data, error, ...remain }) {
+export function expandSWR ({ data, error, mutate, isValidating, ...swrResponse }) {
   return {
     data,
     error,
+    mutate,
+    isValidating,
     isLoading: data === undefined && !error,
     isSuccess: data !== undefined && !error,
-    ...remain,
+    ...swrResponse,
   }
+}
+
+export function useUnionExpandedSWR (...results) {
+  return useMemo(() => {
+    return results.reduce(({
+      data,
+      errors,
+      isValidating,
+      isLoading,
+      isSuccess,
+    }, result) => {
+      return {
+        data        : [...data, ...(result.data ? [result.data] : [])],
+        errors      : [...errors, ...(result.error ? [result.error] : [])],
+        isValidating: isValidating === null ? result.isValidating : isValidating || result.isValidating,
+        isLoading   : isLoading === null ? result.isLoading : isLoading || result.isLoading,
+        isSuccess   : isSuccess === null ? result.isSuccess : isSuccess && result.isSuccess,
+      }
+    }, {
+      data        : [],
+      errors      : [],
+      isValidating: null,
+      isLoading   : null,
+      isSuccess   : null
+    })
+  }, [results])
 }
 
 export function useCollectionAsObjectArrayQuery(path) {

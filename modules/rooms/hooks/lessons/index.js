@@ -1,4 +1,5 @@
 import useSWR from 'swr'
+import { useMemo } from 'react'
 
 import { createLesson, updateLesson, deleteLesson, getSubjectLessonRefs } from '@/services/api/rooms/lessons'
 
@@ -7,7 +8,8 @@ import {
   useMutation,
   useDocAsObjectQuery,
   expandSWR,
-  useCollectioDocRefsQuery
+  useCollectioDocRefsQuery,
+  useCollectionAsObjectArrayQuery
 } from '@/hooks/api'
 import { searchLessonRefs, searchLessons } from '@/services/api/rooms/lessons'
 import { getSubjectRef } from '@/services/api/rooms/subjects'
@@ -25,6 +27,10 @@ function appendReferncesToLesson ({ subject, students, teachers, sheets, ...less
 
 export function useLessonRefsQuery(roomId) {
   return useCollectioDocRefsQuery(roomId && `/rooms/${roomId}/lessons`)
+}
+
+export function useLessonsQuery(roomId) {
+  return useCollectionAsObjectArrayQuery(roomId && `/rooms/${roomId}/lessons`)
 }
 
 export function useSearchLessonRefsQuery(roomId, query) {
@@ -90,11 +96,22 @@ export function useUpdateLessonsMutation(roomId) {
   )
 }
 
-
 export function useDeleteLessonsMutation(roomId) {
   return useMutation(
     async (lessonIds) => {
       for (let lessonId of lessonIds) await deleteLesson(roomId, lessonId)
     }
   )
+}
+
+export function useStudentLessonsQuery(roomId, studentId) {
+  const result = useLessonsQuery(roomId)
+
+  const studentLessons = useMemo(() => {
+    const lessons = result?.data
+    if (!lessons) return lessons
+    return lessons.filter(lesson => !!lesson.students?.some(student => student.id === studentId))
+  }, [result?.data, studentId])
+
+  return { data: studentLessons, ...result }
 }
