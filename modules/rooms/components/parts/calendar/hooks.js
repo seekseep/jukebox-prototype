@@ -108,7 +108,7 @@ export function usePlacedLesssons (lessons) {
       const lessonStartHour = getHours(startedAt) + getMinutes(startedAt) / 60
       const lessonEndHour = getHours(finishedAt) + getMinutes(finishedAt) / 60
 
-      const isOutOfRange = lessonEndHour < displayStartHour || displayEndHour < lessonStartHour
+      const isOutOfRange = lessonEndHour <= displayStartHour || displayEndHour <= lessonStartHour
       if (isOutOfRange) return
 
       let row = null
