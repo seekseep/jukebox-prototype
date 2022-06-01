@@ -104,14 +104,34 @@ export function useDeleteLessonsMutation(roomId) {
   )
 }
 
+function isStudentLesson (lesson, studentId)  {
+  return lesson.students.some(student => student.id === studentId)
+}
+
+function isTeacherLesson (lesson, teacherId)  {
+  return lesson.teachers.some(teacher => teacher.id === teacherId)
+}
+
 export function useStudentLessonsQuery(roomId, studentId) {
   const result = useLessonsQuery(roomId)
 
   const studentLessons = useMemo(() => {
     const lessons = result?.data
     if (!lessons) return lessons
-    return lessons.filter(lesson => !!lesson.students?.some(student => student.id === studentId))
+    return lessons.filter(lesson => isStudentLesson(lesson, studentId))
   }, [result?.data, studentId])
 
-  return { data: studentLessons, ...result }
+  return { ...result, data: studentLessons }
+}
+
+export function useTeacherLessonsQuery(roomId, teacherId) {
+  const result = useLessonsQuery(roomId)
+
+  const teacherLessons = useMemo(() => {
+    const lessons = result?.data
+    if (!lessons) return lessons
+    return lessons.filter(lesson => isTeacherLesson(lesson, teacherId))
+  }, [result?.data, teacherId])
+
+  return { ...result, data: teacherLessons }
 }

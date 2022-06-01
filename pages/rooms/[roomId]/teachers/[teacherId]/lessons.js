@@ -1,17 +1,17 @@
 import { DashboardSection } from '@/components/parts/dashboard'
 
 import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
-import ViewTeacherSubjects from '@rooms/components/features/teachers/ViewTeacherSubjects'
+import ViewTeacherLessons from '@rooms/components/features/teachers/ViewTeacherLessons'
 import ViewTeacherNavigation from '@rooms/components/features/teachers/ViewTeacherNavigation'
 
-export default function TeacherSubjects () {
+export default function TeacherLessons () {
   return (
-    <RoomDashboard title="講師の科目">
+    <RoomDashboard title="授業">
       <DashboardSection>
         <ViewTeacherNavigation />
       </DashboardSection>
       <DashboardSection>
-        <ViewTeacherSubjects />
+        <ViewTeacherLessons />
       </DashboardSection>
     </RoomDashboard>
   )

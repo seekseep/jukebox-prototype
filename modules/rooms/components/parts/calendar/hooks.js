@@ -128,12 +128,6 @@ export function usePlacedLesssons (lessons) {
 
       const duration = Math.min(lessonEndHour, displayEndHour) - Math.max(lessonStartHour, displayStartHour)
 
-      console.log({
-        lessonEndHour, displayEndHour,
-        lessonStartHour, displayStartHour,
-        duration
-      })
-
       placedLessons.push({
         lesson,
         placement: {
