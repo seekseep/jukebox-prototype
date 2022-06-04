@@ -13,9 +13,14 @@ import PropertySet, {
 import Collection, {
   CollectionLinkItem
 } from '@/components/parts/Collection'
+import { useLessonValidity } from '@rooms/hooks/lessons/validity'
+import LessonValidityBadge from './LessonValidityBadge'
 
 export default function LessonPropertySet ({ roomId, lesson }) {
   const getRoomPath = useGetRoomPath(roomId)
+
+  const { validity, messages } = useLessonValidity(roomId, lesson.id)
+
   return (
     <PropertySet>
       <PropertyItem>
@@ -81,6 +86,23 @@ export default function LessonPropertySet ({ roomId, lesson }) {
             </WithDocRefs>
           </Collection>
         </PropertyCollectionContents>
+      </PropertyItem>
+      <PropertyItem>
+        <PropertyLabel>妥当性</PropertyLabel>
+        <PropertyContents>
+          <div className="flex flex-col gap-2">
+            <LessonValidityBadge validity={validity} />
+            {messages.length && (
+              <div className="py-2 bg-gray-50 rounded-sm">
+                {messages.map((message, index) => (
+                  <div key={index} className="border-b p-2">
+                    {message}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </PropertyContents>
       </PropertyItem>
     </PropertySet>
   )

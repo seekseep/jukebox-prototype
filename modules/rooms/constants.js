@@ -56,3 +56,9 @@ export const SCHEDULE_TYPE = Object.freeze({
   AVAILABLE   : 'AVAILABLE',
   DISAVAILABLE: 'DISAVAILABLE'
 })
+
+export const LESSON_VALIDITY = Object.freeze({
+  VALID    : 'VALID',
+  UNCERTAIN: 'UNCERTAIN',
+  INVALID  : 'INVALID',
+})

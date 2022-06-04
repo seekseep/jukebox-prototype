@@ -1,5 +1,5 @@
 import { SCHEDULE_TYPE } from '@rooms/constants'
-import { SelectField } from '../forms'
+import { SelectField } from '@/components/parts/forms'
 
 const SELECT_OPTIONS = [{
   value: SCHEDULE_TYPE.AVAILABLE,
