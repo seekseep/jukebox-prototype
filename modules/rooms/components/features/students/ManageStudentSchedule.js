@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react'
 import { Formik } from 'formik'
 import { toast } from 'react-toastify'
 
-import { STUDENT_SCHEDULE_TYPE_LABEL } from '@/constants'
+import { STUDENT_SCHEDULE_TYPE_LABEL } from '@rooms/constants'
 import { useToggleState } from '@/hooks/ui'
 
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
@@ -76,7 +76,10 @@ export default function ManageStudentSchedule () {
                 <CardActions>
                   <Button secondary sm onClick={toggleEditing}>編集する</Button>
                 </CardActions>
-                <SchedulePropertySet schedule={schedule} />
+                <SchedulePropertySet
+                  schedule={schedule}
+                  availableLabel={STUDENT_SCHEDULE_TYPE_LABEL.AVAILABLE}
+                  disavailableLabel={STUDENT_SCHEDULE_TYPE_LABEL.DISAVAILABLE} />
               </>
             )}
           </Card>

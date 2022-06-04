@@ -1,7 +1,7 @@
-import { collection, doc, query, where, getDocs } from 'firebase/firestore'
+import { collection, doc, query, where, getDocs, getDoc } from 'firebase/firestore'
 
 import { firestore } from '@/firebase'
-import { createResource, deleteResource, updateResource, querySnapshotToRefs, docsSnapshotToObjects, docSnapshotToObject } from '@/services/api/utils'
+import { createResource, deleteResource, updateResource, querySnapshotToRefs, querySnapshotToObjects, docSnapshotToObject } from '@/services/api/utils'
 import { RESOURCE_TYPE } from '@/constants'
 import { getUserRef } from './users'
 
@@ -22,7 +22,7 @@ export async function getRoleRefsByUserRef (userRef) {
 export async function getRolesByUser (userRef) {
   const rolesQuery = query(getRolesRef(), where('user', '==', userRef))
   const querySnapshot = await getDocs(rolesQuery)
-  return docsSnapshotToObjects(querySnapshot)
+  return querySnapshotToObjects(querySnapshot)
 }
 
 export async function getRolesByUserRefAndResourceType (userRef, resourceType) {
@@ -43,6 +43,18 @@ export async function getUserRoomRoleRefs (userId) {
 
 export async function createRole(data) {
   const rolesRef = getRolesRef()
+
+  const {
+    account: accountRef,
+    user: userRef
+  } = data
+
+  const accountSnapshot = await getDoc(accountRef)
+  if(!accountSnapshot.exists) throw Error('account does not exist')
+
+  const userSnapshot = await getDoc(userRef)
+  if(!userSnapshot.exists) throw Error('user does not exist')
+
   return await createResource(rolesRef, data)
 }
 

@@ -1,4 +1,4 @@
-import { REPEAT_TYPE } from '@/constants'
+import { REPEAT_TYPE } from '@rooms/constants'
 import { add } from 'date-fns'
 
 export function createLessons({ subject, students, teachers, sheets, startedAt, finishedAt, repeat, repeatCount }) {

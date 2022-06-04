@@ -42,17 +42,12 @@ export function useUnionExpandedSWR (...results) {
 }
 
 export function useCollectionAsObjectArrayQuery(path) {
-  const swr = useSWR([path, 'as-object'], getCollectionAsObjectArray)
+  const swr = useSWR(path && [path, 'as-object'], getCollectionAsObjectArray)
   return expandSWR(swr)
 }
 
 export function useDocAsObjectQuery (path = null) {
-  const swr = useSWR([path, 'as-object'], getDocAsObject)
-  return expandSWR(swr)
-}
-
-export function useCollectioDocRefsQuery (path) {
-  const swr = useSWR([path, 'as-ref'], getCollectioDocRefs)
+  const swr = useSWR(path && [path, 'as-object'], getDocAsObject)
   return expandSWR(swr)
 }
 

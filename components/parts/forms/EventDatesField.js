@@ -7,7 +7,7 @@ export default function EventDatesFields ({
   label,
   startedAtName = 'startedAt',
   finishedAtName = 'finishedAt',
-  isAllDayName = 'isALlDay',
+  isAllDayName = 'isAllDay',
   isEnabnledIsAllDay = false
 }) {
   const [startedAtField, startedAtMeta, startedAtHelper ] = useField(startedAtName)
@@ -95,7 +95,6 @@ export default function EventDatesFields ({
 
   const startTimeValue = useMemo(() => {
     const startedAt = startedAtField.value
-    console.log(startedAt)
     if (!startedAt) return ''
     return format(startedAt, 'HH:mm')
   }, [startedAtField.value])
@@ -112,6 +111,7 @@ export default function EventDatesFields ({
     return format(finishedAt, 'HH:mm')
   }, [finishedAtField.value])
 
+  const isShownStartTime = !isEnabnledIsAllDay || !isAllDayField.value
   const isShownFinishedAtFields = !isEnabnledIsAllDay || !isAllDayField.value
 
   return (
@@ -122,7 +122,7 @@ export default function EventDatesFields ({
           <div className="flex flex-col">
             <div className="flex gap-2">
               <Input type="date" value={startDateValue} onChange={handleChangeStartDate} />
-              <Input type="time" value={startTimeValue} onChange={handleChangeStartTime} />
+              {isShownStartTime && <Input type="time" value={startTimeValue} onChange={handleChangeStartTime} />}
             </div>
             <FieldAlert meta={startedAtMeta} />
           </div>

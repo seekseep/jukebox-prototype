@@ -1,27 +1,23 @@
-import { useCallback } from 'react'
-import useSWR from 'swr'
+import { useCallback, useMemo } from 'react'
 import { format } from 'date-fns'
+import { refEqual } from 'firebase/firestore'
 
-import {
-  createSchedule,
-  getSheetScheduleRefs,
-  getStudentScheduleRefs,
-  getTeacherScheduleRefs
-} from '@/services/api/rooms/schedules'
+import { createSchedule } from '@/services/api/rooms/schedules'
 import {
   useMutation,
   useDocAsObjectQuery,
-  useCollectioDocRefsQuery,
-  expandSWR,
   useCreateDocMutation,
   useDeleteDocMutation,
-  useUpdateDocMutation
+  useUpdateDocMutation,
+  useCollectionAsObjectArrayQuery
 } from '@/hooks/api'
 import { getAccountRef } from '@/services/api/rooms/accounts'
 import { getSheetRef } from '@/services/api/rooms/sheets'
+import { getStudentRef } from '@/services/api/rooms/students'
+import { getTeacherRef } from '@/services/api/rooms/teachers'
 
-export function useScheduleRefsQuery(roomId) {
-  return useCollectioDocRefsQuery(roomId && `/rooms/${roomId}/schedules`)
+export function useSchedulesQuery(roomId) {
+  return useCollectionAsObjectArrayQuery(roomId && `/rooms/${roomId}/schedules`)
 }
 
 export function useScheduleQuery(roomId, scheduleId) {
@@ -40,27 +36,36 @@ export function useDeleteSchedule (roomId, scheduleId) {
   return useDeleteDocMutation(roomId && scheduleId && `/rooms/${roomId}/schedules/${scheduleId}`)
 }
 
-export function useStudentScheduleRefsQuery(roomId, studentId) {
-  const swr = useSWR(roomId && studentId && [roomId, studentId, 'schedules'], getStudentScheduleRefs)
-  return expandSWR(swr)
+export function useResourceScheduleQuery(roomId, resourceRef) {
+  const { data: schedules, ...result } = useSchedulesQuery(roomId)
+
+  const studentSchedules = useMemo(() => {
+    if (!schedules || !resourceRef) return schedules
+    return schedules.filter(schedule => refEqual(schedule.resource, resourceRef))
+  }, [resourceRef, schedules])
+
+  return { data: studentSchedules, ...result }
 }
 
-export function useTeacherScheduleRefsQuery(roomId, teacherId) {
-  const swr = useSWR(roomId && teacherId && [roomId, teacherId, 'schedules'], getTeacherScheduleRefs)
-  return expandSWR(swr)
+export function useStudentSchedulesQuery(roomId, studentId) {
+  return useResourceScheduleQuery(roomId, roomId && studentId ? getStudentRef(roomId, studentId) : null)
 }
 
-export function useSheetScheduleRefsQuery(roomId, sheetId) {
-  const swr = useSWR([roomId, sheetId], getSheetScheduleRefs)
-  return expandSWR(swr)
+export function useTeacherSchedulesQuery(roomId, teacherId) {
+  return useResourceScheduleQuery(roomId, roomId && teacherId ? getTeacherRef(roomId, teacherId) : null)
+}
+
+export function useSheetSchedulesQuery(roomId, sheetId) {
+  return useResourceScheduleQuery(roomId, roomId && sheetId ? getSheetRef(roomId, sheetId) : null)
 }
 
 export function useCreateStudentScheduleMutation (roomId, studentId) {
   return useMutation(
-    async (schedule) => await createSchedule(roomId, {
-      ...schedule,
-      resource: getAccountRef(roomId, studentId)
-    })
+    async (schedule) =>
+      await createSchedule(roomId, {
+        ...schedule,
+        resource: getAccountRef(roomId, studentId)
+      })
   )
 }
 
@@ -81,7 +86,6 @@ export function useCreateSheetScheduleMutation (roomId, sheetId) {
     })
   )
 }
-
 
 export function useGetScheduleLabel () {
   return useCallback((schedule) => {

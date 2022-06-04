@@ -3,7 +3,7 @@ import { Formik } from 'formik'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 
-import { TEACHER_SCHEDULE_TYPE_LABEL } from '@/constants'
+import { TEACHER_SCHEDULE_TYPE_LABEL } from '@rooms/constants'
 
 import Card, { CardBody } from '@/components/parts/Card'
 import ErrorAlert from '@/components/parts/ErrorAlert'
@@ -35,7 +35,7 @@ export default function RegisterTeacherSchedule () {
 
   useEffect(() => {
     if (!isCreated) return
-    toast.success('講師の予定を登録しました')
+    toast.success('予定を登録しました')
     router.push(getTeacherPath('/schedules'))
   }, [getTeacherPath, isCreated, router])
 
@@ -44,7 +44,7 @@ export default function RegisterTeacherSchedule () {
   return (
     <Feature>
       <FeatureHead>
-        <FeatureTitle>講師の予定の登録</FeatureTitle>
+        <FeatureTitle>予定の登録</FeatureTitle>
       </FeatureHead>
       {isReady && (
         <Card>
@@ -57,7 +57,7 @@ export default function RegisterTeacherSchedule () {
                       disableableLabel={TEACHER_SCHEDULE_TYPE_LABEL.DISAVAILABLE} />
                   <ErrorAlert error={creatingError} />
                   <FormActions>
-                    <Button disabled={!isValid || isCreating} type="submit">講師の予定を登録する</Button>
+                    <Button disabled={!isValid || isCreating} type="submit">予定を登録する</Button>
                   </FormActions>
                 </Form>
               )}

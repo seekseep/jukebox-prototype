@@ -4,7 +4,7 @@ const nextConfig = {
   swcMinify      : false,
   async redirects() {
     return []
-  },
+  }
 }
 
 module.exports = nextConfig

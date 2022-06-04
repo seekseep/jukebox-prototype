@@ -1,14 +1,9 @@
 import {
-  useCollectionAsObjectArrayQuery,
   useDocAsObjectQuery,
   useCreateDocMutation,
   useUpdateDocMutation,
   useDeleteDocMutation
 } from '@/hooks/api'
-
-export function useRoleRefsQuery() {
-  return useCollectionAsObjectArrayQuery('/roles')
-}
 
 export function useRoleQuery(roleId) {
   return useDocAsObjectQuery(`/roles/${roleId}`)

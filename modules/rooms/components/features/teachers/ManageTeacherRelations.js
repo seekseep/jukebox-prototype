@@ -10,7 +10,7 @@ import Suspension from '@/components/parts/Suspension'
 
 
 import { useGetTeacherPath } from '@rooms/hooks/router'
-import { useTeacherRelationRefsQuery } from '@rooms/hooks/relations'
+import { useTeacherRelationsQuery } from '@rooms/hooks/relations'
 import RelationCollectionItem from '@rooms/components/parts/relations/RelationCollectionItem'
 
 export default function ManageTeacherRelations () {
@@ -18,7 +18,7 @@ export default function ManageTeacherRelations () {
 
   const getTeacherPath = useGetTeacherPath(roomId, teacherId)
 
-  const result = useTeacherRelationRefsQuery(roomId, teacherId)
+  const result = useTeacherRelationsQuery(roomId, teacherId)
 
   return (
     <Feature>
@@ -29,18 +29,14 @@ export default function ManageTeacherRelations () {
         </div>
       </FeatureHead>
       <Suspension {...result}>
-        {({ data: relationRefs }) => (
+        {({ data: relations }) => (
           <Card>
             <Collection>
-              {relationRefs.length > 0 && (
-                <WithDocRefs docRefs={relationRefs}>
-                  {({ data: relation }) => (
-                    <CollectionLinkItem href={getTeacherPath(`/relations/${relation.id}`)}>
-                      <RelationCollectionItem relation={relation} />
-                    </CollectionLinkItem>
-                  )}
-                </WithDocRefs>
-              )}
+              {relations.map(relation => (
+                <CollectionLinkItem key={relation.id} href={getTeacherPath(`/relations/${relation.id}`)}>
+                  <RelationCollectionItem relation={relation} />
+                </CollectionLinkItem>
+              ))}
             </Collection>
           </Card>
         )}

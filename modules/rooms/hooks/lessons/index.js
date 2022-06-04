@@ -6,7 +6,7 @@ import {
   updateLesson,
   updateLessons,
   deleteLesson,
-  getSubjectLessonRefs
+  getSubjectLessons
 } from '@/services/api/rooms/lessons'
 
 import {
@@ -14,7 +14,6 @@ import {
   useMutation,
   useDocAsObjectQuery,
   expandSWR,
-  useCollectioDocRefsQuery,
   useCollectionAsObjectArrayQuery
 } from '@/hooks/api'
 import { searchLessonRefs, searchLessons } from '@/services/api/rooms/lessons'
@@ -22,6 +21,8 @@ import { getSubjectRef } from '@/services/api/rooms/subjects'
 import { getStudentRef } from '@/services/api/rooms/students'
 import { getTeacherRef } from '@/services/api/rooms/teachers'
 import { getSheetRef } from '@/services/api/rooms/sheets'
+import SubjectLessons from '@/pages/rooms/[roomId]/subjects/[subjectId]/lessons'
+import { refEqual } from 'firebase/firestore'
 
 function appendReferncesToLesson ({ subject, students, teachers, sheets, ...lesson }, roomId) {
   if (subject) lesson.subject = getSubjectRef(roomId, subject)
@@ -31,17 +32,8 @@ function appendReferncesToLesson ({ subject, students, teachers, sheets, ...less
   return lesson
 }
 
-export function useLessonRefsQuery(roomId) {
-  return useCollectioDocRefsQuery(roomId && `/rooms/${roomId}/lessons`)
-}
-
 export function useLessonsQuery(roomId) {
   return useCollectionAsObjectArrayQuery(roomId && `/rooms/${roomId}/lessons`)
-}
-
-export function useSearchLessonRefsQuery(roomId, query) {
-  const swr = useSWR(roomId && [roomId, query, 'lessons', new URLSearchParams(query).toString()], searchLessonRefs)
-  return expandSWR(swr)
 }
 
 export function useSearchLessonsQuery(roomId, query) {
@@ -53,9 +45,16 @@ export function useLessonQuery(roomId, lessonId) {
   return useDocAsObjectQuery(`/rooms/${roomId}/lessons/${lessonId}`)
 }
 
-export function useSubjectLessonRefsQuery(roomId, subjectId) {
-  const swr = useSWR([roomId, subjectId, 'lessons'], getSubjectLessonRefs)
-  return expandSWR(swr)
+export function useSubjectLessonsQuery(roomId, subjectId) {
+  const { data: lessons, ...result } = useLessonsQuery(roomId)
+
+  const subjectLessons = useMemo(() => {
+    if (!lessons || !subjectId) return lessons
+    const subjectRef = getSubjectRef(roomId, subjectId)
+    return lessons.filter(lesson => refEqual(lesson.subject, subjectRef))
+  }, [lessons, roomId, subjectId])
+
+  return { data: subjectLessons, ...result }
 }
 
 export function useCreateLessonMutation (roomId) {

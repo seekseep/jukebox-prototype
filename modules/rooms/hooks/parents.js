@@ -2,15 +2,14 @@ import useSWR from 'swr'
 
 import { ACCOUNT_TYPE } from '@rooms/constants'
 
-import { createAccount, getParentAccountRefs, updateAccount } from '@/services/api/rooms/accounts'
+import { createAccount, updateAccount } from '@/services/api/rooms/accounts'
 
-import { useMutation, expandSWR } from '@/hooks/api'
-import { useAccountQuery, useDeleteAccountMutation } from '@rooms/hooks/accounts'
+import { useMutation } from '@/hooks/api'
+import { useAccountQuery, useDeleteAccountMutation, useAccountsByAccountTypeQuery } from '@rooms/hooks/accounts'
 import { getStudentRef } from '@/services/api/rooms/students'
 
-export function useParentRefsQuery(roomId) {
-  const swr = useSWR(roomId && [roomId, 'parents'], getParentAccountRefs)
-  return expandSWR(swr)
+export function useParentsQuery(roomId) {
+  return useAccountsByAccountTypeQuery(roomId, ACCOUNT_TYPE.PARENT)
 }
 
 export function useParentQuery(roomId, parentId) {

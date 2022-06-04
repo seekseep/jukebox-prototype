@@ -1,4 +1,4 @@
-import { SCHEDULE_TYPE } from '@/constants'
+import { SCHEDULE_TYPE } from '@rooms/constants'
 import { SelectField } from '../forms'
 
 const SELECT_OPTIONS = [{

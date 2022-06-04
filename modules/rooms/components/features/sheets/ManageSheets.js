@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { WithDocRefs } from '@/components/utilities/withDocRefs'
 
 import Card from '@/components/parts/Card'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
@@ -8,12 +7,12 @@ import { LinkButton } from '@/components/parts/buttons'
 import Suspension from '@/components/parts/Suspension'
 
 import { useGetRoomPath } from '@rooms/hooks/router'
-import { useSheetRefsQuery } from '@rooms/hooks/sheets'
+import { useSheetQuery } from '@rooms/hooks/sheets'
 
 export default function ManageSheets () {
   const { query:{ roomId } } = useRouter()
   const getRoomPath = useGetRoomPath(roomId)
-  const result = useSheetRefsQuery(roomId)
+  const result = useSheetQuery(roomId)
 
   return (
     <Feature>
@@ -24,18 +23,14 @@ export default function ManageSheets () {
         </div>
       </FeatureHead>
       <Suspension {...result}>
-        {({ data: sheetRefs })=>(
+        {({ data: sheets }) => (
           <Card>
             <Collection>
-              {sheetRefs.length > 0 && (
-                <WithDocRefs docRefs={sheetRefs}>
-                  {({ data: sheet }) => (
-                    <CollectionLinkItem href={getRoomPath(`/sheets/${sheet.id}`)}>
-                      {sheet.name}
-                    </CollectionLinkItem>
-                  )}
-                </WithDocRefs>
-              )}
+              {sheets.map(sheet => (
+                <CollectionLinkItem key={sheet.id} href={getRoomPath(`/sheets/${sheet.id}`)}>
+                  {sheet.name}
+                </CollectionLinkItem>
+              ))}
             </Collection>
           </Card>
         )}

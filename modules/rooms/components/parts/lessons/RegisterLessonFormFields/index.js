@@ -1,6 +1,6 @@
 import { useFormikContext } from 'formik'
 
-import { REPEAT_TYPE } from '@/constants'
+import { REPEAT_TYPE } from '@rooms/constants'
 
 import { SelectField, Field } from '@/components/parts/forms'
 import EventDatesFields from '@/components/parts/forms/EventDatesField'

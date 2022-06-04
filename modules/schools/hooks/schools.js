@@ -2,17 +2,12 @@ import { createSchool, deleteSchool, setUpSchool, updateSchool } from '@/service
 import { getUserRef } from '@/services/api/users'
 import {
   useCollectionAsObjectArrayQuery,
-  useCollectioDocRefsQuery,
   useDocAsObjectQuery,
   useMutation
 } from '../../../hooks/api'
 
 export function useSchools() {
   return useCollectionAsObjectArrayQuery('/schools')
-}
-
-export function useSchoolRefs () {
-  return useCollectioDocRefsQuery('/schools')
 }
 
 export function useSchool(schoolId) {

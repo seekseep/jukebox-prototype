@@ -1,20 +1,22 @@
-import { SCHEDULE_TYPE_LABEL } from '@/constants'
 import PropertySet, {
   PropertyItem,
   PropertyLabel,
-  PropertyDateContents,
-  PropertyDateTimeContents,
   PropertyContents
 } from '@/components/parts/PropertySet'
 
+import { REPEAT_TYPE, SCHEDULE_TYPE_LABEL } from '@rooms/constants'
 import ScheduleTypeBadge from '@rooms/components/parts/schedules/ScheduleTypeBadge'
-import RepeatLabel from '@rooms/components/parts/RepeatLabel'
+import RepeatTypeLabel from '../RepeatTypeLabel'
+import { getDayLabel, getEventDateDurationLabel, getEventDurationLabel } from '@rooms/services/lessons'
 
 export default function SchedulePropertySet ({
   schedule,
   availableLabel = SCHEDULE_TYPE_LABEL.AVAILABLE,
   disavailableLabel = SCHEDULE_TYPE_LABEL.DISAVAILABLE
 }) {
+  const { repeat } = schedule
+
+
   return (
     <PropertySet>
       <PropertyItem>
@@ -26,28 +28,59 @@ export default function SchedulePropertySet ({
             disavailableLabel={disavailableLabel} />
         </PropertyContents>
       </PropertyItem>
-      {schedule.isAllDay ? (
-        <PropertyItem>
-          <PropertyLabel>日付</PropertyLabel>
-          <PropertyDateContents value={schedule.startedAt} />
-        </PropertyItem>
-      ) : (
-        <>
-          <PropertyItem>
-            <PropertyLabel>開始日時</PropertyLabel>
-            <PropertyDateTimeContents value={schedule.startedAt} />
-          </PropertyItem>
-          <PropertyItem>
-            <PropertyLabel>終了日時</PropertyLabel>
-            <PropertyDateTimeContents value={schedule.finishedAt} />
-          </PropertyItem>
-        </>
-      )}
       <PropertyItem>
         <PropertyLabel>繰り返し</PropertyLabel>
         <PropertyContents>
-          <RepeatLabel schedule={schedule} />
+          <RepeatTypeLabel repeat={schedule.repeat}/>
         </PropertyContents>
+      </PropertyItem>
+      {repeat === REPEAT_TYPE.WEEKLY && (
+        <PropertyItem>
+          <PropertyLabel>曜日</PropertyLabel>
+          <PropertyContents>
+            <div className="flex gap-1">
+              {schedule.repeatIndexes.map(day => (
+                <div key={day}>{getDayLabel(day)}</div>
+              ))}
+            </div>
+          </PropertyContents>
+        </PropertyItem>
+      )}
+      {repeat === REPEAT_TYPE.MONTHLY && (
+        <PropertyItem>
+          <PropertyLabel>日付</PropertyLabel>
+          <PropertyContents>
+            {`毎月 ${schedule.repeatIndexes[0] + 1} 日`}
+          </PropertyContents>
+        </PropertyItem>
+      )}
+      {repeat !== REPEAT_TYPE.NONE && (
+        <>
+          <PropertyItem>
+            <PropertyLabel>時間</PropertyLabel>
+            <PropertyContents>
+              {schedule.repeatStartTime} ~ {schedule.repeatFinishTime}
+            </PropertyContents>
+          </PropertyItem>
+          <PropertyItem>
+            <PropertyLabel>繰り返し期間</PropertyLabel>
+            <PropertyContents>
+              {getEventDateDurationLabel(schedule.repeatStartDate, schedule.repeatFinishDate)}
+            </PropertyContents>
+          </PropertyItem>
+        </>
+      )}
+      {repeat === REPEAT_TYPE.NONE && (
+        <PropertyItem>
+          <PropertyLabel>日時</PropertyLabel>
+          <PropertyContents>
+            {getEventDurationLabel(schedule.startedAt, schedule.finishedAt, schedule.isAllDay)}
+          </PropertyContents>
+        </PropertyItem>
+      )}
+      <PropertyItem>
+        <PropertyLabel>備考</PropertyLabel>
+        <PropertyContents>{schedule.comment}</PropertyContents>
       </PropertyItem>
     </PropertySet>
   )

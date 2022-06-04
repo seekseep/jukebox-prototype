@@ -10,7 +10,7 @@ import {
 import { ACCOUNT_TYPE } from '@rooms/constants'
 import { useCurrentAccount } from '@rooms/hooks/accounts'
 
-export function useRoomRefsQuery() {
+export function useRoomsQuery() {
   return useCollectionAsObjectArrayQuery('/rooms')
 }
 

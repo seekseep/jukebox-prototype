@@ -1,7 +1,7 @@
 import { collection, doc, where, query, getDocs, getDoc } from 'firebase/firestore'
 
 import { firestore } from '@/firebase'
-import { createResource, deleteResource, updateResource, querySnapshotToRefs, docSnapshotToObject, docsSnapshotToObjects } from '@/services/api/utils'
+import { createResource, deleteResource, updateResource, querySnapshotToRefs, docSnapshotToObject, querySnapshotToObjects } from '@/services/api/utils'
 
 import { ACCOUNT_TYPE } from '@rooms/constants'
 import { getRolesRef } from '../roles'
@@ -19,7 +19,7 @@ export function getAccountRef (roomId, accountId) {
 export async function getAccountsByAccountType(roomId, accountType) {
   const accountsQuery = query(getAccountsRef(roomId), where('type', '==', accountType))
   const querySnapshot = await getDocs(accountsQuery)
-  return docsSnapshotToObjects(querySnapshot)
+  return querySnapshotToObjects(querySnapshot)
 }
 
 export async function getStudentAccounts (roomId) {

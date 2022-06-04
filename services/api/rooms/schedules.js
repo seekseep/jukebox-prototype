@@ -5,7 +5,7 @@ import { getStudentRef } from '@/services/api/rooms/students'
 import { getTeacherRef } from '@/services/api/rooms/teachers'
 import { getSheetRef } from '@/services/api/rooms/sheets'
 
-import { createResource, deleteResource, querySnapshotToRefs, updateResource } from '../utils'
+import { createResource, deleteResource, querySnapshotToRefs, updateResource, querySnapshotToObjects } from '../utils'
 import { getRoomRef } from '.'
 
 export function getSchedulesRef (roomId) {
@@ -20,6 +20,12 @@ export async function getScheduleRefsByResourceRef(roomId, resourceRef) {
   const schedulesQuery = query(getSchedulesRef(roomId), where('resource', '==', resourceRef))
   const querySnapshot = await getDocs(schedulesQuery)
   return querySnapshotToRefs(querySnapshot)
+}
+
+export async function getSchedulesByResourceRef(roomId, resourceRef) {
+  const schedulesQuery = query(getSchedulesRef(roomId), where('resource', '==', resourceRef))
+  const querySnapshot = await getDocs(schedulesQuery)
+  return querySnapshotToObjects(querySnapshot)
 }
 
 export async function getRoomScheduleRefs(roomId) {

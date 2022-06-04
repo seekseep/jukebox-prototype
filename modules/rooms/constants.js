@@ -23,3 +23,36 @@ export const CALENDAR_FORMAT = Object.freeze({
   TEACHER: 'TEACHER',
   DAY    : 'DAY',
 })
+
+export const REPEAT_TYPE = Object.freeze({
+  NONE   : 'NONE',
+  DAILY  : 'DAILY',
+  WEEKLY : 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+  YEARLY : 'YEARLY',
+})
+
+export const SCHEDULE_TYPE_LABEL = Object.freeze({
+  AVAILABLE   : '利用可能',
+  DISAVAILABLE: '利用不可能'
+})
+
+export const STUDENT_SCHEDULE_TYPE_LABEL = Object.freeze({
+  AVAILABLE   : '登校可能',
+  DISAVAILABLE: '休み'
+})
+
+export const TEACHER_SCHEDULE_TYPE_LABEL = Object.freeze({
+  AVAILABLE   : '出勤可能',
+  DISAVAILABLE: '休み'
+})
+
+export const SHEET_SCHEDULE_TYPE_LABEL = Object.freeze({
+  AVAILABLE   : '利用可能',
+  DISAVAILABLE: '利用不可能'
+})
+
+export const SCHEDULE_TYPE = Object.freeze({
+  AVAILABLE   : 'AVAILABLE',
+  DISAVAILABLE: 'DISAVAILABLE'
+})

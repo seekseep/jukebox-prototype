@@ -1,48 +1,49 @@
-import { useCallback } from 'react'
-import useSWR from 'swr'
-import { format } from 'date-fns'
+import { useMemo } from 'react'
+import { refEqual } from 'firebase/firestore'
 
 import { getAccountRef } from '@/services/api/rooms/accounts'
 import { getStudentRef } from '@/services/api/rooms/students'
 import { getTeacherRef } from '@/services/api/rooms/teachers'
-import {
-  createRelation,
-  getStudentRelationRefs,
-  getTeacherRelationRefs,
-  getParentRelationRefs
-} from '@/services/api/rooms/relations'
+import { createRelation } from '@/services/api/rooms/relations'
 
 import {
   useMutation,
   useDocAsObjectQuery,
-  useCollectioDocRefsQuery,
-  expandSWR,
   useCreateDocMutation,
   useUpdateDocMutation,
-  useDeleteDocMutation
+  useDeleteDocMutation,
+  useCollectionAsObjectArrayQuery
 } from '@/hooks/api'
 
-export function useRelationRefsQuery(roomId) {
-  return useCollectioDocRefsQuery(`/rooms/${roomId}/relations`)
+export function useRelationsQuery(roomId) {
+  return useCollectionAsObjectArrayQuery(roomId && `/rooms/${roomId}/relations`)
 }
 
 export function useRelationQuery(roomId, relationId) {
-  return useDocAsObjectQuery(`/rooms/${roomId}/relations/${relationId}`)
+  return useDocAsObjectQuery(roomId && relationId && `/rooms/${roomId}/relations/${relationId}`)
 }
 
-export function useStudentRelationRefsQuery(roomId, studentId) {
-  const swr = useSWR([roomId, studentId, 'relations'], getStudentRelationRefs)
-  return expandSWR(swr)
+export function useResourceRelationsQuery(roomId, resourceRef) {
+  const { data: relations, ...result } = useRelationsQuery(roomId)
+
+  const resourceRelation = useMemo(() => {
+    if (!relations || !resourceRef) return relations
+    return relations.filter(relation => refEqual(relation.departure, resourceRef))
+  }, [relations, resourceRef])
+
+  return { data: resourceRelation, ...result }
 }
 
-export function useTeacherRelationRefsQuery(roomId, teacherId) {
-  const swr = useSWR([roomId, teacherId], getTeacherRelationRefs)
-  return expandSWR(swr)
+export function useStudentRelationsQuery(roomId, studentId) {
+  return useResourceRelationsQuery(roomId, roomId && studentId && getStudentRef(roomId, studentId))
 }
 
-export function useParentsRelationRefsQuery(roomId, parentId) {
-  const swr = useSWR([roomId, parentId], getParentRelationRefs)
-  return expandSWR(swr)
+export function useTeacherRelationsQuery(roomId, teacherId) {
+  return useResourceRelationsQuery(roomId, roomId && teacherId && getTeacherRef(roomId, teacherId))
+}
+
+export function useSheetRelationsQuery(roomId, sheetId) {
+  return useResourceRelationsQuery(roomId, roomId && sheetId && getSheetRef(roomId, sheetId))
 }
 
 export function useCreateRelationMutation (roomId) {
@@ -75,13 +76,4 @@ export function useCreateTeacherRelationMutation (roomId, teacherId) {
       destination: getAccountRef(roomId, destination),
     })
   )
-}
-
-export function useGetRelationLabel () {
-  return useCallback((relation) => {
-    const startedAt = relation.startedAt.toDate()
-    const finishedAt = relation.finishedAt.toDate()
-
-    return `${format(startedAt, 'yyyy/MM/dd HH:mm')} ~ ${format(finishedAt, 'yyyy/MM/dd HH:mm')}`
-  }, [])
 }

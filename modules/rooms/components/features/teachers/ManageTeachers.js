@@ -9,12 +9,12 @@ import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
 import { LinkButton } from '@/components/parts/buttons'
 
 import { useGetRoomPath } from '@rooms/hooks/router'
-import { useTeacherRefsQuery } from '@rooms/hooks/teachers'
+import { useTeachersQuery } from '@rooms/hooks/teachers'
 
 export default function ManageTeachers () {
   const { query:{ roomId } } = useRouter()
   const getRoomPath = useGetRoomPath(roomId)
-  const result = useTeacherRefsQuery(roomId)
+  const result = useTeachersQuery(roomId)
 
   return (
     <Feature>
@@ -25,18 +25,14 @@ export default function ManageTeachers () {
         </div>
       </FeatureHead>
       <Suspension {...result}>
-        {({ data: teacherRefs }) => (
+        {({ data: teachers }) => (
           <Card>
             <Collection>
-              {teacherRefs.length > 0 && (
-                <WithDocRefs docRefs={teacherRefs}>
-                  {({ data: teacher }) => (
-                    <CollectionLinkItem href={getRoomPath(`/teachers/${teacher.id}`)}>
-                      {teacher.name}
-                    </CollectionLinkItem>
-                  )}
-                </WithDocRefs>
-              )}
+              {teachers.map(teacher => (
+                <CollectionLinkItem key={teacher.id} href={getRoomPath(`/teachers/${teacher.id}`)}>
+                  {teacher.name}
+                </CollectionLinkItem>
+              ))}
             </Collection>
           </Card>
         )}
