@@ -1,10 +1,15 @@
 import { useFormikContext } from 'formik'
 
+import { REPEAT_TYPE } from '@rooms/constants'
 import { useTagOptions } from '@rooms/hooks/lessonFrames'
 
-import { CreatableSelectField, Field } from '@/components/parts/forms'
-import LessonFrameRepeatSelectField from '@rooms/components/parts/lessonFrames/LessonFrameRepeatTypeSelectField'
-import LessonFrameDayCountField from '@rooms/components/parts/lessonFrames/LessonFrameDayCountField'
+import {
+  CreatableSelectField,
+  Field, FieldGroup, DateField,
+} from '@/components/parts/forms'
+import RepeatTypeSelectField from '../../RepeatTypeSelectField'
+import WeeklyRepeatIndexesField from '../../WeeklyRepeatIndexesField'
+import MonthlyRepeatIndexesField from '../../MonthlyRepeatIndexesField'
 
 export default function LessonFrameFormFields ({ tags }) {
   const { values: { repeat } } = useFormikContext()
@@ -14,16 +19,29 @@ export default function LessonFrameFormFields ({ tags }) {
     <>
       <CreatableSelectField
         label="タグ" name="tags" options={tagOptions} isMulti />
-      <div className="flex gap-3">
-        <Field name="startTime" label="開始時刻" type="time" />
-        <Field name="finishTime" label="終了時刻" type="time" />
-      </div>
-      <div className="flex gap-3">
-        <LessonFrameRepeatSelectField
-          name="repeat" label="繰り返し期間" />
-        <LessonFrameDayCountField
-          name="dayCount" label="日" repeat={repeat.value} />
-      </div>
+      <RepeatTypeSelectField
+        label="繰り返し" name="repeat" noYearly  noNone />
+      {repeat === REPEAT_TYPE.WEEKLY && (
+        <WeeklyRepeatIndexesField
+          label="曜日"
+          name="repeatIndexes" />
+      )}
+      {repeat === REPEAT_TYPE.MONTHLY && (
+        <MonthlyRepeatIndexesField
+          label="日付"
+          name="repeatIndexes" />
+      )}
+      <FieldGroup>
+        <Field
+          type="time"
+          name="repeatStartTime"
+          label="開始時刻" />
+        <Field
+          type="time"
+          name="repeatFinishTime"
+          label="終了時刻" />
+      </FieldGroup>
+      <Field label="備考" name="comment" type="textarea" rows={5} />
     </>
   )
 }

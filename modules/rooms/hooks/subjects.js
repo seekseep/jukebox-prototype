@@ -2,12 +2,11 @@ import useSWR from 'swr'
 import { useMemo } from 'react'
 
 import {
-  getTeacherSubjectRefs,
-  getStudentSubjectRefs
+  getTeacherSubjects,
+  getStudentSubjects
 } from '@/services/api/rooms/subjects'
 
 import {
-  useCollectioDocRefsQuery,
   useDocAsObjectQuery,
   useCollectionAsObjectArrayQuery,
   useCreateDocMutation,
@@ -18,11 +17,6 @@ import {
 } from '@/hooks/api'
 
 import { useLessonsQuery } from '@rooms/hooks/lessons'
-
-
-export function useSubjectRefsQuery(roomId) {
-  return useCollectioDocRefsQuery(roomId && `/rooms/${roomId}/subjects`)
-}
 
 export function useSubjectsQuery(roomId) {
   return useCollectionAsObjectArrayQuery(roomId && `/rooms/${roomId}/subjects`)
@@ -42,16 +36,6 @@ export function useUpdateSubjectMutation (roomId, subjectId) {
 
 export function useDeleteSubjectMutation (roomId, subjectId) {
   return useDeleteDocMutation(roomId && subjectId && `/rooms/${roomId}/subjects/${subjectId}`)
-}
-
-export function useStudentSubjectRefsQuery(roomId, studentId) {
-  const swr = useSWR(roomId && studentId && [roomId, studentId, 'subjects'], getStudentSubjectRefs)
-  return expandSWR(swr)
-}
-
-export function useTeacherSubjectRefsQuery(roomId, teacherId) {
-  const swr = useSWR(roomId && teacherId && [roomId, teacherId, 'subjects'], getTeacherSubjectRefs)
-  return expandSWR(swr)
 }
 
 export function useSubjectOptions (subjects) {

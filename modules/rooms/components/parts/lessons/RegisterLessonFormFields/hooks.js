@@ -6,7 +6,7 @@ import { FORM_ERROR_REQUIRED } from '@/messages'
 import { optionSchema } from '@/schemas/forms'
 import { createLessons } from '@rooms/services/lessons/create'
 
-import { REPEAT_TYPE_OPTIONS } from '@rooms/components/parts/RepeatTypeSelectField'
+import { REPEAT_TYPE } from '@rooms/constants'
 
 export function useValidationSchema () {
   return useMemo(() => {
@@ -17,7 +17,7 @@ export function useValidationSchema () {
       sheets     : Yup.array(optionSchema).default([]),
       startedAt  : Yup.date().nullable().required(FORM_ERROR_REQUIRED).default(startOfHour(new Date())),
       finishedAt : Yup.date().nullable().required(FORM_ERROR_REQUIRED).default(add(startOfHour(new Date()), { hours: 1 })),
-      repeat     : optionSchema.required(FORM_ERROR_REQUIRED).default(REPEAT_TYPE_OPTIONS.NONE),
+      repeat     : Yup.string().oneOf(Object.values(REPEAT_TYPE)).default(REPEAT_TYPE.NONE),
       repeatCount: Yup.number().default(0)
     })
   }, [])
@@ -44,7 +44,7 @@ export function useValuesToResult() {
   }) => {
     return createLessons({
       subject : subject.value,
-      repeat  : repeat.value,
+      repeat  : repeat,
       students: students.map(({ value: studentId }) => studentId),
       teachers: teachers.map(({ value: teacherId }) => teacherId),
       sheets  : sheets.map(({ value: sheetId }) => sheetId),

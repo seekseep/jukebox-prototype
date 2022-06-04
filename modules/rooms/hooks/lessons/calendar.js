@@ -51,12 +51,12 @@ function parseIdArrayString (idArrayString) {
 
 function parseStartHour (startHour) {
   if (0 <= startHour && startHour <= 22) return parseInt(startHour)
-  return 0
+  return 9
 }
 
 function parseEndHour (endHour, startHour = 0) {
   if (0 <= endHour && endHour <= 23 && endHour > startHour) return parseInt(endHour)
-  return 23
+  return 21
 }
 
 export function useParsedQuery(query) {

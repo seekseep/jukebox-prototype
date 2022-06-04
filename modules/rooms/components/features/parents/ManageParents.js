@@ -1,7 +1,5 @@
 import { useRouter } from 'next/router'
 
-import { WithDocRefs } from '@/components/utilities/withDocRefs'
-
 import Card from '@/components/parts/Card'
 import Suspension from '@/components/parts/Suspension'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
@@ -9,12 +7,12 @@ import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
 import { LinkButton } from '@/components/parts/buttons'
 
 import { useGetRoomPath } from '@rooms/hooks/router'
-import { useParentRefsQuery } from '@rooms/hooks/parents'
+import { useParentsQuery } from '@rooms/hooks/parents'
 
 export default function ManageParents () {
   const { query:{ roomId } } = useRouter()
   const getRoomPath = useGetRoomPath(roomId)
-  const result = useParentRefsQuery(roomId)
+  const result = useParentsQuery(roomId)
 
   return (
     <Feature>
@@ -25,18 +23,14 @@ export default function ManageParents () {
         </div>
       </FeatureHead>
       <Suspension {...result}>
-        {({ data: parentRefs }) => (
+        {({ data: parents }) => (
           <Card>
             <Collection>
-              {parentRefs.length > 0 && (
-                <WithDocRefs docRefs={parentRefs}>
-                  {({ data: parent }) => (
-                    <CollectionLinkItem href={getRoomPath(`/parents/${parent.id}`)}>
-                      {parent.name}
-                    </CollectionLinkItem>
-                  )}
-                </WithDocRefs>
-              )}
+              {parents.map(parent => (
+                <CollectionLinkItem key={parent.id} href={getRoomPath(`/parents/${parent.id}`)}>
+                  {parent.name}
+                </CollectionLinkItem>
+              ))}
             </Collection>
           </Card>
         )}

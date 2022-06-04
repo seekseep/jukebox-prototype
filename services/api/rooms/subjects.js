@@ -1,7 +1,7 @@
 import { collection, doc, getDocs, query, where } from 'firebase/firestore'
 import { firestore } from '@/firebase'
 
-import { createResource, updateResource, deleteResource } from '../utils'
+import { createResource, updateResource, deleteResource, docSnapshotToObject } from '../utils'
 
 import { getStudentRef } from './students'
 import { getTeacherRef } from './teachers'
@@ -32,32 +32,32 @@ export async function deleteSubject (roomId, subjectId) {
   return await deleteResource(subjectRef)
 }
 
-function lessonDocsToSubjectRefs (lessonDocs) {
-  const subjectRefs = {}
+function lessonDocsToSubjects (lessonDocs) {
+  const subjects = {}
 
   lessonDocs.forEach(doc => {
-    subjectRefs[doc.id] = doc.ref
+    subjects[doc.id] = docSnapshotToObject(doc)
   })
 
-  return Object.values(subjectRefs)
+  return Object.values(subjects)
 }
 
-export async function getStudentSubjectRefs(roomId, studentId) {
+export async function getStudentSubjects(roomId, studentId) {
   const lessonsRef = getLessonsRef(roomId)
   const studentRef = getStudentRef(roomId, studentId)
 
   const lessonsQuery = query(lessonsRef, where('students', 'array-contains', studentRef))
   const lessonsSnapshot = await getDocs(lessonsQuery)
 
-  return lessonDocsToSubjectRefs(lessonsSnapshot.docs)
+  return lessonDocsToSubjects(lessonsSnapshot.docs)
 }
 
-export async function getTeacherSubjectRefs(roomId, teacherId) {
+export async function getTeacherSubjects(roomId, teacherId) {
   const lessonsRef = getLessonsRef(roomId)
   const teacherRef = getTeacherRef(roomId, teacherId)
 
   const lessonsQuery = query(lessonsRef, where('teachers', 'array-contains', teacherRef))
   const lessonsSnapshot = await getDocs(lessonsQuery)
 
-  return lessonDocsToSubjectRefs(lessonsSnapshot.docs)
+  return lessonDocsToSubjects(lessonsSnapshot.docs)
 }

@@ -10,6 +10,14 @@ export function Select ({ className, ...props }) {
   return <select className={classNames(className, 'bg-white rounded border p-2')} {...props} />
 }
 
+export function FieldGroup ({ children })  {
+  return (
+    <div className="flex gap-3 md:flex-nowrap">
+      {children}
+    </div>
+  )
+}
+
 export function Form ({ ...props }) {
   const { handleSubmit, errors } = useFormikContext()
 

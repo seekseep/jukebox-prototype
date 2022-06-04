@@ -1,47 +1,72 @@
 import { useFormikContext } from 'formik'
 
-import { SCHEDULE_TYPE } from '@/constants'
+import {
+  FieldGroup,
+  Field,
+  DateField
+} from '@/components/parts/forms'
+import EventDatesFields from '@/components/parts/forms/EventDatesField'
 
-import { getRepeatLabel } from '@/services/schedule'
-
-import { CheckBoxField, DateField, Field } from '@/components/parts/forms'
-import RepeatTypeSelectField from '@/modules/rooms/components/parts/RepeatTypeSelectField'
+import { SCHEDULE_TYPE, REPEAT_TYPE } from '@rooms/constants'
+import RepeatTypeSelectField from '@rooms/components/parts/RepeatTypeSelectField'
+import WeeklyRepeatIndexesField from '@rooms/components/parts/WeeklyRepeatIndexesField'
+import MonthlyRepeatIndexesField from '@rooms/components/parts/MonthlyRepeatIndexesField'
 
 export default function ScheduleFormFields ({
   ableableLabel = '利用可能',
   disableableLabel = '利用不可能',
 }) {
-  const { values: { startedAt, finishedAt, repeat, isAllDay,  } } = useFormikContext()
+  const { values } = useFormikContext()
+  const { repeat } = values
+
   return (
     <>
-      <Field type="select" name="isAvalibale" label="予定の種類">
-        <option value={SCHEDULE_TYPE.AVAILABLE}>{ableableLabel}</option>
-        <option value={SCHEDULE_TYPE.DISAVAILABLE}>{disableableLabel}</option>
-      </Field>
-      <div className="flex gap-2">
-        {isAllDay ? (
-          <>
-            <DateField type="date" name="startedAt" label="開始日" placeholder="開始日" />
-            <div className="w-full"></div>
-          </>
-        ) : (
-          <>
-            <DateField type="datetime-local" name="startedAt" label="開始日時" placeholder="開始日時" />
-            <DateField type="datetime-local" name="finishedAt" label="終了日時" placeholder="終了日時" />
-          </>
-        )}
-      </div>
-      <div className="flex gap-2">
-        <CheckBoxField name="isAllDay" label="終日" />
-      </div>
-      <div className="flex gap-2">
-        <RepeatTypeSelectField
-          name="repeat" placeholder="繰り返し"
-          label="繰り返し"
-          helper={getRepeatLabel({
-            startedAt, finishedAt, repeat: repeat?.value
-          })} />
-      </div>
+      <FieldGroup>
+        <Field type="select" name="type" label="予定の種類">
+          <option value={SCHEDULE_TYPE.AVAILABLE}>{ableableLabel}</option>
+          <option value={SCHEDULE_TYPE.DISAVAILABLE}>{disableableLabel}</option>
+        </Field>
+        <RepeatTypeSelectField name="repeat" label="繰り返し" noYearly />
+      </FieldGroup>
+      {/* NOTE: 繰り返しなし */}
+      {repeat === REPEAT_TYPE.NONE && (
+        <EventDatesFields label="日時" isEnabnledIsAllDay />
+      )}
+      {repeat === REPEAT_TYPE.WEEKLY && (
+        <WeeklyRepeatIndexesField
+          label="曜日"
+          name="repeatIndexes" />
+      )}
+      {repeat === REPEAT_TYPE.MONTHLY && (
+        <MonthlyRepeatIndexesField
+          label="日付"
+          name="repeatIndexes" />
+      )}
+      {repeat !== REPEAT_TYPE.NONE && (
+        <>
+          <FieldGroup>
+            <DateField
+              label="繰り返し開始日"
+              type="date"
+              name="repeatStartDate" />
+            <DateField
+              label="繰り返し終了日"
+              type="date"
+              name="repeatFinishDate" />
+          </FieldGroup>
+          <FieldGroup>
+            <Field
+              type="time"
+              name="repeatStartTime"
+              label="開始時刻" />
+            <Field
+              type="time"
+              name="repeatFinishTime"
+              label="終了時刻" />
+          </FieldGroup>
+        </>
+      )}
+      <Field label="備考" name="comment" type="textarea" rows={5} />
     </>
   )
 }

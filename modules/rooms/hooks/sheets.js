@@ -2,16 +2,11 @@ import { useMemo } from 'react'
 
 import {
   useDocAsObjectQuery,
-  useCollectioDocRefsQuery,
   useCollectionAsObjectArrayQuery,
   useDeleteDocMutation,
   useUpdateDocMutation,
   useCreateDocMutation
 } from '@/hooks/api'
-
-export function useSheetRefsQuery(roomId) {
-  return useCollectioDocRefsQuery(`/rooms/${roomId}/sheets`)
-}
 
 export function useSheetQuery(roomId, sheetId) {
   return useDocAsObjectQuery(`/rooms/${roomId}/sheets/${sheetId}`)

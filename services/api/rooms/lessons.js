@@ -1,7 +1,7 @@
 import { collection, doc, query, where, getDocs, orderBy, refEqual, runTransaction, writeBatch } from 'firebase/firestore'
 import { firestore } from '@/firebase'
 import { getSubjectRef } from '@/services/api/rooms/subjects'
-import { createResource, deleteResource, updateResource, querySnapshotToRefs, docSnapshotToObject } from '@/services/api/utils'
+import { createResource, deleteResource, updateResource, querySnapshotToRefs, docSnapshotToObject, querySnapshotToObjects } from '@/services/api/utils'
 
 import { getTeacherRef } from './teachers'
 import { getStudentRef } from './students'
@@ -18,7 +18,7 @@ export function getLessonRef (roomId, lessonId) {
 export async function getSubjectLessonRefs (roomId, subjectId) {
   const lessonsQuery = query(getLessonsRef(roomId), orderBy('startedAt'), where('subject', '==', getSubjectRef(roomId, subjectId)))
   const querySnapshot = await getDocs(lessonsQuery)
-  return querySnapshotToRefs(querySnapshot)
+  return querySnapshotToObjects(querySnapshot)
 }
 
 export async function createLesson(roomId, data) {

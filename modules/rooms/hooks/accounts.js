@@ -5,7 +5,6 @@ import { getAccountByUser } from '@/services/api/rooms/accounts'
 
 import {
   useDocAsObjectQuery,
-  useCollectioDocRefsQuery,
   useCollectionAsObjectArrayQuery,
   useCreateDocMutation,
   useUpdateDocMutation,
@@ -14,12 +13,19 @@ import {
 } from '@/hooks/api'
 import { useCurrentUserId } from '@/hooks/auth'
 
-export function useAccountRefsQuery(roomId) {
-  return useCollectioDocRefsQuery(roomId && `/rooms/${roomId}/accounts`)
-}
-
 export function useAccountsQuery (roomId) {
   return useCollectionAsObjectArrayQuery(roomId && `/rooms/${roomId}/accounts`)
+}
+
+export function useAccountsByAccountTypeQuery(roomId, accountType) {
+  const { data: accounts, ...result } = useAccountsQuery(roomId)
+
+  const specified = useMemo(() => {
+    if (!accounts || !accountType) return accounts
+    return accounts.filter(account => account.type === accountType)
+  }, [accountType, accounts])
+
+  return { data: specified, ...result }
 }
 
 export function useAccountQuery(roomId, accountId) {

@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react'
 import { Formik } from 'formik'
 import { toast } from 'react-toastify'
 
-import { SHEET_SCHEDULE_TYPE_LABEL } from '@/constants'
+import { SHEET_SCHEDULE_TYPE_LABEL } from '@rooms/constants'
 import { useToggleState } from '@/hooks/ui'
 
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
@@ -41,7 +41,7 @@ export default function ManageSheetSchedule () {
 
   useEffect(() => {
     if (!isUpdated) return
-    toast.success('席の予定を保存しました')
+    toast.success('生徒の予定を保存しました')
     mutate(updatedSchedule)
     setIsEditing(false)
   }, [isUpdated, mutate, setIsEditing, updatedSchedule])
@@ -76,7 +76,10 @@ export default function ManageSheetSchedule () {
                 <CardActions>
                   <Button secondary sm onClick={toggleEditing}>編集する</Button>
                 </CardActions>
-                <SchedulePropertySet schedule={schedule} />
+                <SchedulePropertySet
+                  schedule={schedule}
+                  availableLabel={SHEET_SCHEDULE_TYPE_LABEL.AVAILABLE}
+                  disavailableLabel={SHEET_SCHEDULE_TYPE_LABEL.DISAVAILABLE} />
               </>
             )}
           </Card>

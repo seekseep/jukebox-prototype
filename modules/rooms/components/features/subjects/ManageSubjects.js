@@ -1,9 +1,7 @@
 import { useRouter } from 'next/router'
 
 import { useGetRoomPath } from '@rooms/hooks/router'
-import { useSubjectRefsQuery } from '@rooms/hooks/subjects'
-
-import { WithDocRefs } from '@/components/utilities/withDocRefs'
+import { useSubjectsQuery } from '@rooms/hooks/subjects'
 
 import Card from '@/components/parts/Card'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
@@ -14,7 +12,7 @@ import Suspension from '@/components/parts/Suspension'
 export default function ManageSubjects () {
   const { query:{ roomId } } = useRouter()
   const getRoomPath = useGetRoomPath(roomId)
-  const result = useSubjectRefsQuery(roomId)
+  const result = useSubjectsQuery(roomId)
 
   return (
     <Feature>
@@ -25,18 +23,14 @@ export default function ManageSubjects () {
         </div>
       </FeatureHead>
       <Suspension {...result}>
-        {({ data: subjectRefs }) => (
+        {({ data: subjects }) => (
           <Card>
             <Collection>
-              {subjectRefs.length > 0 && (
-                <WithDocRefs docRefs={subjectRefs}>
-                  {({ data: subject }) => (
-                    <CollectionLinkItem href={getRoomPath(`/subjects/${subject.id}`)}>
-                      {subject.name}
-                    </CollectionLinkItem>
-                  )}
-                </WithDocRefs>
-              )}
+              {subjects.map(subject => (
+                <CollectionLinkItem key={subject.id} href={getRoomPath(`/subjects/${subject.id}`)}>
+                  {subject.name}
+                </CollectionLinkItem>
+              ))}
             </Collection>
           </Card>
         )}

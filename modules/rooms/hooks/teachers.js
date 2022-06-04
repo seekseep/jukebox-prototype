@@ -12,11 +12,6 @@ export function useTeachersQuery(roomId) {
   return expandSWR(swr)
 }
 
-export function useTeacherRefsQuery(roomId) {
-  const swr = useSWR([roomId, 'teachers'], getTeacherAccountRefs)
-  return expandSWR(swr)
-}
-
 export function useTeacherQuery(roomId, teacherId) {
   return useAccountQuery(roomId, teacherId)
 }

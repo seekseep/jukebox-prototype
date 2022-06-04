@@ -19,7 +19,7 @@ import { useSubjectsQuery } from '@rooms/hooks/subjects'
 import { useTeachersQuery } from '@rooms/hooks/teachers'
 import { useStudentsQuery } from '@rooms/hooks/students'
 import { useSheetsQuery } from '@rooms/hooks/sheets'
-import { useDeleteLessonsMutation, useSearchLessonRefsQuery, useUpdateLessonsMutation } from '@rooms/hooks/lessons'
+import { useDeleteLessonsMutation, useSearchLessonsQuery, useUpdateLessonsMutation } from '@rooms/hooks/lessons'
 
 import SearchLessonsFormFields from '@rooms/components/parts/lessons/SearchLessonsFormFields'
 import {
@@ -48,7 +48,7 @@ export default function ManageLessons () {
     isAllSelected
   } = useSelectCollection()
 
-  const lessonRefsResult = useSearchLessonRefsQuery(roomId, query)
+  const searchLessonsResult = useSearchLessonsQuery(roomId, query)
   const [deleteLessons, {
     isSuccess: isDeleted,
     isLoading: isDeleting,
@@ -146,8 +146,8 @@ export default function ManageLessons () {
             </div>
           </CardSection>
         </MultiSuspension>
-        <Suspension {...lessonRefsResult}>
-          {({ data: lessonRefs }) => (
+        <Suspension {...searchLessonsResult}>
+          {({ data: lessons }) => (
             <>
               <div className="flex w-full border-b-2">
                 <label className="py-2 px-1 w-10 cursor-pointer border-b border-b-transparent text-center hover:bg-gray-50 active:bg-gray-50">
@@ -166,11 +166,10 @@ export default function ManageLessons () {
                   <div className="text-center py-2 px-1 shrink-0 grow-0 w-32">席</div>
                 </div>
               </div>
-              <WithDocRefs docRefs={lessonRefs}>
-                {({ data: lesson, ref: lessonRef }) => (
-                <div className="flex w-full">
+              {lessons.map(lesson => (
+                <div className="flex w-full" key={lesson.id}>
                   <label className="py-2 px-1 w-10 cursor-pointer border-b border-b-transparent text-center hover:bg-gray-50 active:bg-gray-50">
-                    <input className="cursor-pointer" type="checkbox" checked={getIsSelected(lesson.id)} onChange={({ target: { checked } }) => setItem(lesson.id, checked ? lessonRef : null )} />
+                    <input className="cursor-pointer" type="checkbox" checked={getIsSelected(lesson.id)} onChange={({ target: { checked } }) => setItem(lesson.id, checked ? lesson : null )} />
                   </label>
                   <Link href={getRoomPath(`/lessons/${lesson.id}`)}>
                     <a className="flex gap-2 flex-grow border-b">
@@ -220,8 +219,7 @@ export default function ManageLessons () {
                     </a>
                   </Link>
                 </div>
-              )}
-              </WithDocRefs>
+              ))}
             </>
           )}
         </Suspension>
@@ -230,19 +228,17 @@ export default function ManageLessons () {
             <CardSection>
               <div className="flex flex-col">
                 <div className="flex flex-wrap gap-2 p-2">
-                  <WithDocRefs docRefs={selectedItems}>
-                    {({ data: lesson }) => (
-                      <div className="bg-white shadow border rounded flex text-sm">
-                        <div className="flex gap-1 leading-8 px-2">
-                          <WithDocRef docRef={lesson.subject}>
-                            {({ data: subject }) => <div>{subject.name}</div>}
-                          </WithDocRef>
-                          <div>{getLessonDateLabel(lesson)}</div>
-                        </div>
-                        <button onClick={() => setItem(lesson.id, null)} className="w-8 h-8 text-center leading-8 text-xs">❌</button>
+                  {selectedItems.map(lesson => (
+                    <div key={lesson.id} className="bg-white shadow border rounded flex text-sm">
+                      <div className="flex gap-1 leading-8 px-2">
+                        <WithDocRef docRef={lesson.subject}>
+                          {({ data: subject }) => <div>{subject.name}</div>}
+                        </WithDocRef>
+                        <div>{getLessonDateLabel(lesson)}</div>
                       </div>
-                    )}
-                  </WithDocRefs>
+                      <button onClick={() => setItem(lesson.id, null)} className="w-8 h-8 text-center leading-8 text-xs">❌</button>
+                    </div>
+                  ))}
                 </div>
                 <div className="border-t flex flex-col gap-2">
                   <ErrorAlert error={deletingError} />

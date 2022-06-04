@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import {
   SCHEDULE_TYPE,
   SCHEDULE_TYPE_LABEL
-} from '@/constants'
+} from '@rooms/constants'
 
 export default function ScheduleTypeBadge ({
   type,

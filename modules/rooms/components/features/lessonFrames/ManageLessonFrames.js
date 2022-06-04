@@ -1,9 +1,5 @@
 import { useRouter } from 'next/router'
 
-import { getDayCountLabel } from '@/services/lessonFrames'
-
-import { WithDocRefs } from '@/components/utilities/withDocRefs'
-
 import Card from '@/components/parts/Card'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 import Suspension from '@/components/parts/Suspension'
@@ -11,14 +7,15 @@ import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
 import { LinkButton } from '@/components/parts/buttons'
 
 import { useGetRoomPath } from '@rooms/hooks/router'
-import { useLessonFrameRefsQuery } from '@rooms/hooks/lessonFrames'
+import { useLessonFramesQuery } from '@rooms/hooks/lessonFrames'
+import LessonFrameCollectionItem from '@rooms/components/parts/lessonFrames/LessonFrameCollectionItem'
 
 export default function ManageLessonFrames () {
   const { query:{ roomId } } = useRouter()
 
   const getRoomPath = useGetRoomPath(roomId)
 
-  const result = useLessonFrameRefsQuery(roomId)
+  const result = useLessonFramesQuery(roomId)
 
   return (
     <Feature>
@@ -29,26 +26,14 @@ export default function ManageLessonFrames () {
         </div>
       </FeatureHead>
       <Suspension {...result}>
-      {({ data: lessonframeRefs }) => (
+      {({ data: lessonFrames }) => (
         <Card>
           <Collection>
-            {lessonframeRefs.length > 0 && (
-              <WithDocRefs docRefs={lessonframeRefs}>
-                {({ data: lessonFrame }) => (
-                  <CollectionLinkItem href={getRoomPath(`/settings/lessonFrames/${lessonFrame.id}`)}>
-                    <div className="flex gap-2">
-                      <div>{lessonFrame.tags.join(',')}</div>
-                      <div>
-                        {getDayCountLabel(lessonFrame.dayCount, lessonFrame.repeat)}
-                      </div>
-                      <div>
-                        {lessonFrame.startTime} ~ {lessonFrame.finishTime}
-                      </div>
-                    </div>
-                  </CollectionLinkItem>
-                )}
-              </WithDocRefs>
-            )}
+            {lessonFrames.map(lessonFrame => (
+              <CollectionLinkItem key={lessonFrame.id} href={getRoomPath(`/settings/lessonFrames/${lessonFrame.id}`)}>
+                <LessonFrameCollectionItem lessonFrame={lessonFrame} />
+              </CollectionLinkItem>
+            ))}
           </Collection>
         </Card>
         )}
