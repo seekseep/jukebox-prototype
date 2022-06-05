@@ -33,6 +33,69 @@ import {
   useValidationSchema as useUpdateValidationSchema,
   useValuesToResult as useUpdateValuesToResult
 } from '@rooms/components/parts/lessons/UpdateLessonsFormFields/hooks'
+import { useLessonValidity } from '@rooms/hooks/lessons/validity'
+import LessonValidityBadge from '@rooms/components/parts/lessons/LessonValidityBadge'
+
+function LessonCollectionItem ({ lesson, roomId, isSelected, onChangeSelect, getRoomPath }) {
+  const { validity } = useLessonValidity(roomId, lesson.id)
+  return (
+    <div className="flex w-full" key={lesson.id}>
+      <label className="py-2 px-1 w-10 cursor-pointer border-b border-b-transparent text-center hover:bg-gray-50 active:bg-gray-50">
+        <input className="cursor-pointer" type="checkbox" checked={isSelected} onChange={({ target: { checked } }) => onChangeSelect(checked)} />
+      </label>
+      <Link href={getRoomPath(`/lessons/${lesson.id}`)}>
+        <a className="flex gap-2 flex-grow border-b">
+          <div className="py-2 px-1 w-32 text-center">
+            {lesson.subject ? (
+              <WithDocRef docRef={lesson.subject}>
+                {({ data: subject }) => subject.name}
+              </WithDocRef>
+            ) : ''}
+          </div>
+          <div className="py-2 px-1 w-32">
+            {lesson.students ? (
+              <div className="flex gap-1 flex-wrap">
+                <WithDocRefs docRefs={lesson.students}>
+                  {({ data: student }) => (
+                    <div>{student.name}</div>
+                  )}
+                </WithDocRefs>
+              </div>
+            ) : ''}
+          </div>
+          <div className="py-2 px-1 w-32">
+            {lesson.teachers ? (
+              <div className="flex gap-1 flex-wrap">
+                <WithDocRefs docRefs={lesson.teachers}>
+                  {({ data: teacher }) => (
+                    <div>{teacher.name}</div>
+                  )}
+                </WithDocRefs>
+              </div>
+            ) : ''}
+          </div>
+          <div className="py-2 px-1 flex-grow text-sm">
+            {getLessonDateTimeLabel(lesson)}
+          </div>
+          <div className="py-2 px-1 w-32">
+            {lesson.sheets ? (
+              <div className="flex gap-1 flex-wrap">
+                <WithDocRefs docRefs={lesson.sheets}>
+                  {({ data: sheet }) => (
+                    <div>{sheet.name}</div>
+                  )}
+                </WithDocRefs>
+              </div>
+            ) : ''}
+          </div>
+          <div className="px-1 w-20 flex items-center">
+            <LessonValidityBadge size="sm" validity={validity} />
+          </div>
+        </a>
+      </Link>
+    </div>
+  )
+}
 
 export default function ManageLessons () {
   const { query:{ roomId, ...query }, push, reload } = useRouter()
@@ -164,61 +227,14 @@ export default function ManageLessons () {
                   <div className="text-center py-2 px-1 shrink-0 grow-0 w-32">講師</div>
                   <div className="text-center py-2 px-1 shrink-0 flex-grow">授業時間</div>
                   <div className="text-center py-2 px-1 shrink-0 grow-0 w-32">席</div>
+                  <div className="text-center py-2 px-1 shrink-0 grow-0 w-20">妥当性</div>
                 </div>
               </div>
               {lessons.map(lesson => (
-                <div className="flex w-full" key={lesson.id}>
-                  <label className="py-2 px-1 w-10 cursor-pointer border-b border-b-transparent text-center hover:bg-gray-50 active:bg-gray-50">
-                    <input className="cursor-pointer" type="checkbox" checked={getIsSelected(lesson.id)} onChange={({ target: { checked } }) => setItem(lesson.id, checked ? lesson : null )} />
-                  </label>
-                  <Link href={getRoomPath(`/lessons/${lesson.id}`)}>
-                    <a className="flex gap-2 flex-grow border-b">
-                      <div className="py-2 px-1 w-32 text-center">
-                        {lesson.subject ? (
-                          <WithDocRef docRef={lesson.subject}>
-                            {({ data: subject }) => subject.name}
-                          </WithDocRef>
-                        ) : ''}
-                      </div>
-                      <div className="py-2 px-1 w-32">
-                        {lesson.students ? (
-                          <div className="flex gap-1 flex-wrap">
-                            <WithDocRefs docRefs={lesson.students}>
-                              {({ data: student }) => (
-                                <div>{student.name}</div>
-                              )}
-                            </WithDocRefs>
-                          </div>
-                        ) : ''}
-                      </div>
-                      <div className="py-2 px-1 w-32">
-                        {lesson.teachers ? (
-                          <div className="flex gap-1 flex-wrap">
-                            <WithDocRefs docRefs={lesson.teachers}>
-                              {({ data: teacher }) => (
-                                <div>{teacher.name}</div>
-                              )}
-                            </WithDocRefs>
-                          </div>
-                        ) : ''}
-                      </div>
-                      <div className="py-2 px-1 flex-grow">
-                        {getLessonDateTimeLabel(lesson)}
-                      </div>
-                      <div className="py-2 px-1 w-32">
-                        {lesson.sheets ? (
-                          <div className="flex gap-1 flex-wrap">
-                            <WithDocRefs docRefs={lesson.sheets}>
-                              {({ data: sheet }) => (
-                                <div>{sheet.name}</div>
-                              )}
-                            </WithDocRefs>
-                          </div>
-                        ) : ''}
-                      </div>
-                    </a>
-                  </Link>
-                </div>
+                <LessonCollectionItem
+                  key={lesson.id} roomId={roomId} lesson={lesson}
+                  isSelected={getIsSelected(lesson.id)} getRoomPath={getRoomPath}
+                  onChangeSelect={(isSelected) => setItem(lesson.id, isSelected ? lesson : null)} />
               ))}
             </>
           )}

@@ -83,7 +83,7 @@ export default function ManageSubjectLessons () {
                     </label>
                     <Link href={getSubjectPath(`/lessons/${lesson.id}`)} passHref>
                       <a className="flex grow">
-                        <LessonCollectionItem lesson={lesson} />
+                        <LessonCollectionItem lesson={lesson} roomId={roomId} />
                       </a>
                     </Link>
                   </div>

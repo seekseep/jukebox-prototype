@@ -1,17 +1,22 @@
-import { format } from 'date-fns'
+import { useMemo } from 'react'
 
 import { WithDocRefs, WithDocRef  } from '@/components/utilities/withDocRefs'
+import { useLessonValidity } from '@rooms/hooks/lessons/validity'
+import LessonValidityBadge from './LessonValidityBadge'
+import { getEventDurationLabel } from '@rooms/services/lessons'
+
 
 export default function LessonCollectionItem ({
-  lesson,
+  lesson, roomId
 }) {
+  const { validity } = useLessonValidity(roomId, lesson.id)
+  const label = useMemo(() => {
+    return getEventDurationLabel(lesson.startedAt, lesson.finishedAt)
+  }, [lesson.finishedAt, lesson.startedAt])
+
   return (
     <div className="flex flex-col gap-1">
-    <div className="flex grow items-center gap-2">
-      <div>{format(lesson.startedAt, 'yyyy/MM/dd HH:mm')}</div>
-      <div>~</div>
-      <div>{format(lesson.finishedAt, 'yyyy/MM/dd HH:mm')}</div>
-    </div>
+    <div className="flex grow items-center gap-2">{label}</div>
     <div className="flex gap-3 text-sm">
       {lesson.subject && (
         <div className="flex">
@@ -55,6 +60,11 @@ export default function LessonCollectionItem ({
               )}
             </WithDocRefs>
           </div>
+        </div>
+      )}
+      {roomId && (
+        <div className="flex">
+          <LessonValidityBadge validity={validity} />
         </div>
       )}
     </div>
