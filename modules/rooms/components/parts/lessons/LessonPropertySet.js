@@ -92,7 +92,7 @@ export default function LessonPropertySet ({ roomId, lesson }) {
         <PropertyContents>
           <div className="flex flex-col gap-2">
             <LessonValidityBadge validity={validity} />
-            {messages.length && (
+            {messages.length > 0 && (
               <div className="py-2 bg-gray-50 rounded-sm">
                 {messages.map((message, index) => (
                   <div key={index} className="border-b p-2">

@@ -25,8 +25,8 @@ export default function ViewSheetNavigation () {
         <BCurrent>{sheet ? sheet.name : '席'}</BCurrent>
       </Breadcrumbs>
       <TabNavigation>
-        <Tab href={getSheetPath('/schedules')}>予定</Tab>
         <Tab href={getSheetPath('/')} exact>基本情報</Tab>
+        <Tab href={getSheetPath('/schedules')}>予定</Tab>
       </TabNavigation>
     </>
   )
