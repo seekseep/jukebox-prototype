@@ -37,7 +37,7 @@ export default function ManageSubject () {
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues(subject)
   const valuesToResult = useValuesToResult()
-  const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update])
+  const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update, valuesToResult])
 
   useEffect(() => {
     if (!isUpdated) return

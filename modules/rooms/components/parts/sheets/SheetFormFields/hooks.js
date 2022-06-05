@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react'
 import * as Yup from 'yup'
 
 import { FORM_ERROR_REQUIRED } from '@/messages'
-import { dateSchema } from '@/schemas/forms'
 
 export function useValidationSchema() {
   return useMemo(() => {

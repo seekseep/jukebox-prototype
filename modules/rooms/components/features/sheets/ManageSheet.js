@@ -37,7 +37,7 @@ export default function ManageSheet () {
   const validationSchema = useValidationSchema()
   const initialValues = useInitialValues(sheet)
   const valuesToResult = useValuesToResult()
-  const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update])
+  const handleSubmit = useCallback((values) => update(valuesToResult(values)), [update, valuesToResult])
 
   useEffect(() => {
     if (!isUpdated) return

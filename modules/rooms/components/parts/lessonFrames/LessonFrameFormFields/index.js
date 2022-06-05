@@ -5,7 +5,7 @@ import { useTagOptions } from '@rooms/hooks/lessonFrames'
 
 import {
   CreatableSelectField,
-  Field, FieldGroup, DateField,
+  Field, FieldGroup
 } from '@/components/parts/forms'
 import RepeatTypeSelectField from '../../RepeatTypeSelectField'
 import WeeklyRepeatIndexesField from '../../WeeklyRepeatIndexesField'

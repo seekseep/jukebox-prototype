@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { toast } from 'react-toastify'
 
 import { useSelectCollection } from '@/hooks/ui'
-import { WithDocRefs } from '@/components/utilities/withDocRefs'
 
 import Card from '@/components/parts/Card'
 import { Button } from '@/components/parts/buttons'

@@ -1,7 +1,7 @@
-import { collection, doc, query, where, getDocs, orderBy, refEqual, runTransaction, writeBatch } from 'firebase/firestore'
+import { collection, doc, query, where, getDocs, orderBy, refEqual, writeBatch } from 'firebase/firestore'
 import { firestore } from '@/firebase'
 import { getSubjectRef } from '@/services/api/rooms/subjects'
-import { createResource, deleteResource, updateResource, querySnapshotToRefs, docSnapshotToObject, querySnapshotToObjects } from '@/services/api/utils'
+import { createResource, deleteResource, updateResource, docSnapshotToObject, querySnapshotToObjects } from '@/services/api/utils'
 
 import { getTeacherRef } from './teachers'
 import { getStudentRef } from './students'

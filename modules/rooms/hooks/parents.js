@@ -1,5 +1,3 @@
-import useSWR from 'swr'
-
 import { ACCOUNT_TYPE } from '@rooms/constants'
 
 import { createAccount, updateAccount } from '@/services/api/rooms/accounts'
