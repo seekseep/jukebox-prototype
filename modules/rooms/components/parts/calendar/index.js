@@ -12,7 +12,8 @@ import {
   useLessonContainerStyle
 } from './hooks'
 import { useGetRoomPath } from '@rooms/hooks/router'
-import { useRouter } from 'next/router'
+import { useLessonValidity } from '@rooms/hooks/lessons/validity'
+import { LESSON_VALIDITY } from '@rooms/constants'
 
 export function Row ({ className, ...props }) {
   return <div className={classNames(className, 'flex relative')} {...props} />
@@ -44,10 +45,11 @@ export function LessonsContainer ({ style, children }) {
 export function Lesson ({ lesson, placement }) {
   const style = useLessonStyle(placement)
   const { isOverflowToBefore, isOverflowToAfter } = placement
+  const { roomId } = useCalendarContext()
 
-  // TODO: ここで useRouter つかわない
-  const { query: { roomId } } = useRouter()
   const getRoomPath = useGetRoomPath(roomId)
+  const { validity } = useLessonValidity(roomId, lesson.id)
+
 
   return (
     <Link href={getRoomPath(`/lessons/${lesson.id}`)}>
@@ -55,9 +57,11 @@ export function Lesson ({ lesson, placement }) {
         'pl-1': !isOverflowToBefore,
         'pr-1': !isOverflowToAfter,
       })} style={style}>
-        <div className={classNames('w-full h-full border bg-white shadow-sm', {
-        'rounded-l-lg': !isOverflowToBefore,
-        'rounded-r-lg': !isOverflowToAfter,
+        <div className={classNames('w-full h-full border shadow-sm', {
+        'rounded-l'               : !isOverflowToBefore,
+        'rounded-r'               : !isOverflowToAfter,
+        'bg-white border-gray-300': validity !== LESSON_VALIDITY.INVALID,
+        'bg-red-50 border-red-500': validity === LESSON_VALIDITY.INVALID
         })}>
           <div className="flex flex-wrap gap-2 text-sm p-1">
             <WithDocRef docRef={lesson.subject}>

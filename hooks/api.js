@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import { useCallback, useMemo, useState } from 'react'
 
-import { getCollectioDocRefs, getDocAsObject, getCollectionAsObjectArray, updateDoc, createDoc, deleteDoc } from '@/services/api'
+import { getDocAsObject, getCollectionAsObjectArray, updateDoc, createDoc, deleteDoc } from '@/services/api'
 
 export function expandSWR ({ data, error, mutate, isValidating, ...swrResponse }) {
   return {

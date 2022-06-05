@@ -1,9 +1,9 @@
 import { REPEAT_TYPE } from '@rooms/constants'
-import { format } from 'date-fns'
-import { getDayLabel, getEventDateDurationLabel } from './lessons'
+
+import { getDayLabel } from './lessons'
 
 export function getLessonFrameDateLabel (lessonframe) {
-  const { repeat, startedAt, finishedAt, repeatIndexes } = lessonframe
+  const { repeat, repeatIndexes } = lessonframe
 
   if (repeat === REPEAT_TYPE.WEEKLY) {
     return `毎週 ${repeatIndexes?.map(day => getDayLabel(day)).join('・')}`

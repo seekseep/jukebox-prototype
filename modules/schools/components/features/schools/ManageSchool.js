@@ -1,24 +1,16 @@
 import { useRouter } from 'next/router'
-import { useMemo, useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
 import { toast } from 'react-toastify'
-
-import { FORM_ERROR_REQUIRED } from '@/messages'
 
 import { useSchool, useUpdateSchool } from '@schools/hooks/schools'
 import { useToggleState } from '@/hooks/ui'
 
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
-import { Form, Field, FormActions } from '@/components/parts/forms'
+import { Form, FormActions } from '@/components/parts/forms'
 import { Button } from '@/components/parts/buttons'
 import Suspension from '@/components/parts/Suspension'
 import Card, { CardActions, CardBody } from '@/components/parts/Card'
-import PropertySet, {
-  PropertyItem,
-  PropertyLabel,
-  PropertyContents
-} from '@/components/parts/PropertySet'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 import { SchoolIcon } from '@/components/parts/icons'
 import { useInitialValues, useValidationSchema, useValuesToResult } from '@schools/components/parts/schools/SchoolFormFields/hooks'

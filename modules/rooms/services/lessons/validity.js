@@ -35,21 +35,52 @@ class LessonValidity {
   }
 }
 
+function isContainDruation (parent, child) {
+  const [parentStartedAt, parentFinishedAt] = parent
+  const [childStartedAt, childFinishedAt] = child
+
+  if (!parentFinishedAt) {
+    return parentStartedAt <= childStartedAt
+  }
+
+  return (
+    parentStartedAt <= childStartedAt
+    && childFinishedAt <= parentFinishedAt
+  )
+}
+
+function isOverlapsDuration (parent, child) {
+  const [parentStartedAt, parentFinishedAt] = parent
+  const [childStartedAt, childFinishedAt] = child
+
+  if (!parentFinishedAt) {
+    const isNotOverlaps = (
+      childFinishedAt < parentStartedAt
+    )
+    return isNotOverlaps === false
+  }
+
+  const isNotOverlaps = (
+    childFinishedAt < parentStartedAt
+    || parentFinishedAt <= childStartedAt
+  )
+  return isNotOverlaps === false
+}
+
 function isAffectiveNoneRepeatSchedule(lesson, schedule) {
   switch (schedule.type) {
     // NOTE: 完全に含まれていたら
     case SCHEDULE_TYPE.AVAILABLE:
-      return (
-        schedule.startedAt <= lesson.startedAt
-        && lesson.finishedAt <= schedule.finishedAt
+      return isContainDruation(
+        [schedule.startedAt, schedule.finishedAt],
+        [lesson.startedAt, lesson.finishedAt]
       )
     // NOTE: 少しでも重なっていたら
     case SCHEDULE_TYPE.DISAVAILABLE:
-      const isNotAffective = (
-        lesson.finishedAt < schedule.startedAt
-        || schedule.finishedAt < lesson.startedAt
+      return isOverlapsDuration(
+        [schedule.startedAt, schedule.finishedAt],
+        [lesson.startedAt, lesson.finishedAt]
       )
-      return isNotAffective === false
     default:
       return false
   }
@@ -70,33 +101,29 @@ function isAffectiveRepeatSchedule (lesson, schedule) {
     // NOTE: 完全に含まれていたら
     case SCHEDULE_TYPE.AVAILABLE: {
       // NOTE: 繰り返し期間の有効性
-      const isRepeatAvailable = (
-        schedule.repeatStartDate <= lesson.startedAt
-        && (
-          schedule.repeatFinishDate === null
-          || lesson.finishedAt <= schedule.repeatFinishDate
-        )
+      const isRepeatAvailable = isContainDruation(
+        [schedule.repeatStartDate, schedule.repeatFinishDate],
+        [lesson.startedAt, lesson.finishedAt]
       )
       // NOTE: 繰り返し時間の有効性
-      const isTimeAvailable = scheduleStartTime <= lessonStartTime && lessonFinishTime < scheduleFinishTime
+      const isTimeAvailable = isContainDruation(
+        [scheduleStartTime, scheduleFinishTime],
+        [lessonStartTime, lessonFinishTime]
+      )
       return isRepeatAvailable && isTimeAvailable
     }
     // NOTE: 少しでも重なっていたら
     case SCHEDULE_TYPE.DISAVAILABLE: {
       // NOTE: 繰り返し期間の有効性
-      const isNotRepeatAvailable = (
-        schedule.repeatFinishDate !== null && schedule.repeatFinishDate < lesson.startedAt
-        || lesson.finishedAt < schedule.repeatStartDate
+      const isRepeatAvailable = isOverlapsDuration(
+        [schedule.repeatStartDate, schedule.repeatFinishDate],
+        [lesson.startedAt, lesson.finishedAt]
       )
-      const isRepeatAvailable = isNotRepeatAvailable === false
-
       // NOTE: 繰り返し時間の有効性
-      const isNotTimeAvailable = (
-        scheduleFinishTime < lessonStartTime
-        || lesson.finishTime < scheduleStartTime
+      const isTimeAvailable = isOverlapsDuration(
+        [scheduleStartTime, scheduleFinishTime],
+        [lessonStartTime, lessonFinishTime]
       )
-      const isTimeAvailable = isNotTimeAvailable === false
-
       return isRepeatAvailable && isTimeAvailable
     }
     default:
@@ -185,11 +212,11 @@ function getResourceSchedulesMap (schedules) {
   return resourceSchedulesMap
 }
 
-function getParallelLessons (lesson, lessons) {
-  const parallelLessons = lessons.filter((l) => {
-    return (
-      (lesson.startedAt <= l.startedAt && l.startedAt <= lesson.finishedAt)
-      || (lesson.startedAt <= l.finished && l.finished <= lesson.finishedAt)
+function getParallelLessons (baseLesson, lessons) {
+  const parallelLessons = lessons.filter((lesson) => {
+    return isOverlapsDuration(
+      [baseLesson.startedAt, baseLesson.finishedAt],
+      [lesson.startedAt, lesson.finishedAt]
     )
   })
   return parallelLessons

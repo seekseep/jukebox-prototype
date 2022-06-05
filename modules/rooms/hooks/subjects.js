@@ -1,10 +1,4 @@
-import useSWR from 'swr'
 import { useMemo } from 'react'
-
-import {
-  getTeacherSubjects,
-  getStudentSubjects
-} from '@/services/api/rooms/subjects'
 
 import {
   useDocAsObjectQuery,
@@ -12,7 +6,6 @@ import {
   useCreateDocMutation,
   useUpdateDocMutation,
   useDeleteDocMutation,
-  expandSWR,
   useUnionExpandedSWR,
 } from '@/hooks/api'
 

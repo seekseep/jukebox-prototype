@@ -4,7 +4,7 @@ import locale from 'date-fns/locale/ja'
 
 import { getTeacherDayLessonsSets } from '@rooms/services/lessons'
 
-import { CalendarProvider, useGridStyle, usePlacedLesssons, useCalendarContext, useHours, useDays } from '@rooms/components/parts/calendar/hooks'
+import { CalendarProvider, useGridStyle, usePlacedLesssons, useCalendarContext, useHours } from '@rooms/components/parts/calendar/hooks'
 import { CalendarContainer, HoursHeadRow, Row, HeadCol, HoursBodyRow, LessonsContainer, Lesson } from '@rooms/components/parts/calendar'
 
 const TEACHER_NAME_COL_WIDTH = 10
@@ -82,9 +82,9 @@ export function Calendar ({ startedAt, lessons, teachers, }) {
   )
 }
 
-export default function WeeklyLessonsCalendarByTeacher({ startedAt, lessons, teachers, startHour, endHour, days, startH }) {
+export default function WeeklyLessonsCalendarByTeacher({ roomId, startedAt, lessons, teachers, startHour, endHour, days }) {
   return (
-    <CalendarProvider startHour={startHour} endHour={endHour} days={days} headColWidth={HEAD_COL_WIDTH}>
+    <CalendarProvider roomId={roomId} startHour={startHour} endHour={endHour} days={days} headColWidth={HEAD_COL_WIDTH}>
       <Calendar startedAt={startedAt} lessons={lessons} teachers={teachers} />
     </CalendarProvider>
   )

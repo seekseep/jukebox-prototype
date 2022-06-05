@@ -1,7 +1,5 @@
 import { useRouter } from 'next/router'
 
-import { WithDocRefs } from '@/components/utilities/withDocRefs'
-
 import Card from '@/components/parts/Card'
 import Suspension from '@/components/parts/Suspension'
 import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'

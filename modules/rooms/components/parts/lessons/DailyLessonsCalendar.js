@@ -82,9 +82,9 @@ export function Calendar ({ lessons, teachers, startedAt }) {
   )
 }
 
-export default function DailyLessonsCalendar({ startedAt, lessons, teachers, startHour, endHour, days }) {
+export default function DailyLessonsCalendar({ roomId, startedAt, lessons, teachers, startHour, endHour, days }) {
   return (
-    <CalendarProvider startHour={startHour} endHour={endHour} days={days} headColWidth={HEAD_COL_WIDTH}>
+    <CalendarProvider roomId={roomId} startHour={startHour} endHour={endHour} days={days} headColWidth={HEAD_COL_WIDTH}>
       <Calendar startedAt={startedAt} lessons={lessons} teachers={teachers} />
     </CalendarProvider>
   )
