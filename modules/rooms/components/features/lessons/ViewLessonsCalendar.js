@@ -31,7 +31,7 @@ export default function ViewLessonsCalendar () {
     getPreviousQuery,
     getChangedQuery
   } = useCalendar(query)
-  const { term, format, startHour, endHour } = parsedQuery
+  const { roomId, term, format, startHour, endHour } = parsedQuery
 
   const refresh = useCallback(query => push({ pathname, query }), [pathname, push])
   const handleGoToday = useCallback(() => refresh(getTodayQuery()), [getTodayQuery, refresh])
@@ -107,13 +107,13 @@ export default function ViewLessonsCalendar () {
         {({ data: [lessons, subjects, teachers, students, sheets] }) => (
           <>
             {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.TEACHER && (
-              <WeeklyLessonsCalendarByTeacher {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
+              <WeeklyLessonsCalendarByTeacher {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
             )}
             {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.DAY && (
-              <WeeklyLessonsCalendarByDay {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
+              <WeeklyLessonsCalendarByDay {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
             )}
             {term === CALENDAR_TERM.DAILY && (
-              <DailyLessonsCalendar {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
+              <DailyLessonsCalendar {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
             )}
           </>
         )}

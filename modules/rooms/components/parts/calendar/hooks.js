@@ -17,6 +17,7 @@ export const Z_INDEX = Object.freeze({
 const Context = createContext({})
 
 export function CalendarProvider ({
+  roomId,
   startHour = 0, endHour = 23, days = DEFAULT_DAYS,
   startedAt = null,
   hourColWidth = HOUR_COL_WIDTH,
@@ -28,6 +29,7 @@ export function CalendarProvider ({
   return (
     <Context.Provider
       value={{
+        roomId,
         startedAt,
         startHour,
         endHour,

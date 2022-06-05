@@ -20,7 +20,7 @@ export default function PrintLessons () {
   const { query } = useRouter()
 
   const { parsedQuery,  } = useCalendar(query)
-  const { term, format, startHour, endHour } = parsedQuery
+  const { roomId, term, format, startHour, endHour } = parsedQuery
   const lessonsQueryResult = useSearchLessonsQuery(query.roomId, parsedQuery)
   const subjectsQueryResult = useSubjectsQuery(query.roomId)
   const teachersQueryResult = useTeachersQuery(query.roomId)
@@ -38,13 +38,13 @@ export default function PrintLessons () {
       {({ data: [lessons, subjects, teachers, students, sheets] }) => (
         <>
           {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.TEACHER && (
-            <WeeklyLessonsCalendarByTeacherForPrint {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
+            <WeeklyLessonsCalendarByTeacherForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
           )}
           {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.DAY && (
-            <WeeklyLessonsCalendarByDayForPrint {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
+            <WeeklyLessonsCalendarByDayForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
           )}
           {term === CALENDAR_TERM.DAILY && (
-            <DailyLessonsCalendarForPrint {...{ startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets,  startHour, endHour }} />
+            <DailyLessonsCalendarForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets,  startHour, endHour }} />
           )}
         </>
       )}
