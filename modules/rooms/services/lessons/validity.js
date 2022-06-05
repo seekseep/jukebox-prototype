@@ -9,7 +9,7 @@ export const SHEET_MAX_PARALLEL_LESSONS = 1
 
 class LessonValidity {
   constructor () {
-    this.validity = LESSON_VALIDITY.UNCERTAIN
+    this.validity = VALID
     this.messages = []
   }
 
@@ -26,11 +26,11 @@ class LessonValidity {
   }
 
   uncertain (message) {
-    this.append(message, LESSON_VALIDITY.UNCERTAIN)
+    this.append(message, UNCERTAIN)
   }
 
   invalid (message) {
-    this.append(message, LESSON_VALIDITY.INVALID)
+    this.append(message, INVALID)
   }
 }
 
@@ -60,8 +60,6 @@ function getHourValue(string) {
 }
 
 function isAffectiveRepeatSchedule (lesson, schedule) {
-
-  console.log('isAffectiveRepeatSchedule')
   const lessonStartTime = getHourValue(format(lesson.startedAt, 'HH:mm'))
   const lessonFinishTime = getHourValue(format(lesson.finishedAt, 'HH:mm'))
   const scheduleStartTime = getHourValue(schedule.repeatStartTime)
@@ -158,8 +156,57 @@ function getAccountAvailability (lesson, accountSchedules) {
   })
 
   if (blackSchedules.length > 0) return false
-  if (whiteSchedules.length < 1) return null
   return true
+}
+
+function getAccountsMap (accounts) {
+  const accountsMap = {}
+  accounts.forEach(account => {
+    accountsMap[account.id] = account
+  })
+  return accountsMap
+}
+
+function getAccountRelationsMap (relations) {
+  const accountRelationsMap = {}
+  relations.forEach((relation) => {
+    accountRelationsMap[relation.departure.id] = accountRelationsMap[relation.departure.id] || {}
+    accountRelationsMap[relation.departure.id][relation.destination.id] = relation
+  })
+  return accountRelationsMap
+}
+
+function getResourceSchedulesMap (schedules) {
+  const resourceSchedulesMap = {}
+  schedules.forEach((schedule) => {
+    resourceSchedulesMap[schedule.resource.id] = resourceSchedulesMap[schedule.resource.id] || []
+    resourceSchedulesMap[schedule.resource.id].push(schedule)
+  })
+  return resourceSchedulesMap
+}
+
+function getParallelLessons (lesson, lessons) {
+  const parallelLessons = lessons.filter((l) => {
+    return (
+      (lesson.startedAt <= l.startedAt && l.startedAt <= lesson.finishedAt)
+      || (lesson.startedAt <= l.finished && l.finished <= lesson.finishedAt)
+    )
+  })
+  return parallelLessons
+}
+
+function getAccountsFromLessons (lessons, accountsMap) {
+  return Object.values(
+    lessons.reduce((coexisttingAccounts, lesson) => {
+      lesson.teachers.forEach((teacherRef) => {
+        coexisttingAccounts[teacherRef.id] = accountsMap[teacherRef.id]
+      })
+      lesson.students.forEach((studentRef) => {
+        coexisttingAccounts[studentRef.id] = accountsMap[studentRef.id]
+      })
+      return coexisttingAccounts
+    }, {})
+  )
 }
 
 export function getLessonValidity (lesson, { lessons, accounts, sheets, relations, schedules }) {
@@ -179,38 +226,13 @@ export function getLessonValidity (lesson, { lessons, accounts, sheets, relation
   }
   console.group('授業の妥当性確認')
 
-  const accountsMap = {}
-  accounts.forEach(account => {
-    accountsMap[account.id] = account
-  })
-
-  // NOTE: 関係性のインデックス
-  const accountRelationsMap = {}
-  relations.forEach((relation) => {
-    accountRelationsMap[relation.departure.id] = accountRelationsMap[relation.departure.id] || {}
-    accountRelationsMap[relation.departure.id][relation.destination.id] = relation
-  })
-  console.log('関係性のインデックス')
-  console.log(accountRelationsMap)
-
-  // NOTE: 予定のインデックス
-  const resourceScheduleMap = {}
-  schedules.forEach((schedule) => {
-    resourceScheduleMap[schedule.resource.id] = resourceScheduleMap[schedule.resource.id] || []
-    resourceScheduleMap[schedule.resource.id].push(schedule)
-  })
-  console.log('予定のインデックス')
-  console.log(resourceScheduleMap)
+  // NOTE: 各リソースのインデックス
+  const accountsMap = getAccountsMap(accounts)
+  const accountRelationsMap = getAccountRelationsMap(relations)
+  const resourceSchedulesMap = getResourceSchedulesMap(schedules)
 
   // NOTE: 並列する授業
-  const parallelLessons = lessons.filter((l) => {
-    return (
-      (lesson.startedAt <= l.startedAt && l.startedAt <= lesson.finishedAt)
-      || (lesson.startedAt <= l.finished && l.finished <= lesson.finishedAt)
-    )
-  })
-  console.log('並列した授業')
-  console.log(parallelLessons)
+  const parallelLessons = getParallelLessons(lesson, lessons)
 
   // NOTE: 講師の妥当性
   console.group('講師の妥当性')
@@ -218,50 +240,31 @@ export function getLessonValidity (lesson, { lessons, accounts, sheets, relation
     const teacherId = teacherRef.id
     const teacher = accountsMap[teacherId]
 
-    const teacherSchedules = resourceScheduleMap[teacher.id]
+    // NOTE: 出勤予定の確認
+    const teacherSchedules = resourceSchedulesMap[teacher.id]
     const availabilty = getAccountAvailability(lesson, teacherSchedules)
     if (availabilty === false) {
       lessonValidity.invalid('講師が時間出勤していません')
-    } else if (availabilty === null) {
-      lessonValidity.uncertain('出勤しているか不明です')
     }
 
-    // TODO: 授業の種別によって妥当性の確認の方法を調整する。個別授業・一斉授業
+    // NOTE: 同時指導可能授業数の確認
     const teacherParallelLessons = parallelLessons.filter(lesson => {
+      // TODO: 授業の種別によって妥当性の確認の方法を調整する。個別授業・一斉授業
       return lesson.teachers.some(teacherRef => teacherRef.id === teacherId)
     })
-    console.log(`同時に講師(${teacher.name})が担当してる授業`)
-    console.log(teacherParallelLessons)
-
     if (teacherParallelLessons.length > TEACHER_MAX_PARALLEL_LESSONS) {
       lessonValidity.invalid('講師の最大並列授業数を上回っています')
     }
 
-    // NOTE: 同時に授業を行っている人
-    const coexisttingAccounts = Object.values(
-      teacherParallelLessons.reduce((coexisttingAccounts, lesson) => {
-        lesson.teachers.forEach((teacherRef) => {
-          coexisttingAccounts[teacherRef.id] = accountsMap[teacherRef.id]
-        })
-        lesson.students.forEach((studentRef) => {
-          coexisttingAccounts[studentRef.id] = accountsMap[studentRef.id]
-        })
-        return coexisttingAccounts
-      }, {})
-    )
-    console.log('同時に授業を行っている人')
-    console.log(coexisttingAccounts)
+    // NOTE: 授業参加者の確認
+    const coexisttingAccounts = getAccountsFromLessons(teacherParallelLessons, accountsMap)
     coexisttingAccounts.forEach(account => {
       const relation = accountRelationsMap[teacher.id][account.id]
-      if (!relation) return
-
-      if (relation.score < 0) {
-        lessonValidity.invalid(`${account.name}との関係が悪いです${relation.comment ? `(${relation.comment})` : ''}`)
-      }
+      if (!(relation?.score < 0)) return
+      lessonValidity.invalid(`${account.name}との関係が悪いです${relation.comment ? `(${relation.comment})` : ''}`)
     })
   })
   console.groupEnd('講師の妥当性')
-
 
   // NOTE: 生徒の妥当性
 
