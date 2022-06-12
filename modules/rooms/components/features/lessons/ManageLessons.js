@@ -13,7 +13,7 @@ import { Button, LinkButton } from '@/components/parts/buttons'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 import Suspension, { MultiSuspension } from '@/components/parts/Suspension'
 
-import { getLessonDateLabel, getLessonDateTimeLabel } from '@rooms/services/lessons'
+import { getLessonDateLabel, getLessonDateTimeLabel } from '@rooms/services/lessons/labels'
 import { useGetRoomPath } from '@rooms/hooks/router'
 import { useSubjectsQuery } from '@rooms/hooks/subjects'
 import { useTeachersQuery } from '@rooms/hooks/teachers'

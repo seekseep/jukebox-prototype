@@ -1,19 +1,17 @@
 import classNames from 'classnames'
 import Link from 'next/link'
-import { WithDocRef, WithDocRefs } from '@/components/utilities/withDocRefs'
 
-import {
-  useCalendarContext,
-  useGridStyle,
-  useHours,
-  useLessonStyle,
+import { LESSON_VALIDITY } from '@rooms/constants'
+import { useGetRoomPath } from '@rooms/hooks/router'
+import { useLessonValidity } from '@rooms/hooks/lessons/validity'
+
+import { useCalendarContext, useHours } from '@rooms/components/parts/calendar/hooks'
+import { useGridStyle } from '@rooms/components/parts/calendar/hooks/layout'
+import { useLessonStyle,
   useBodyColStyle,
   useHeadColStyle,
   useLessonContainerStyle
-} from './hooks'
-import { useGetRoomPath } from '@rooms/hooks/router'
-import { useLessonValidity } from '@rooms/hooks/lessons/validity'
-import { LESSON_VALIDITY } from '@rooms/constants'
+} from '@rooms/components/parts/calendar/hooks/layout/vertical'
 
 export function Row ({ className, ...props }) {
   return <div className={classNames(className, 'flex relative')} {...props} />
@@ -31,53 +29,6 @@ export function HeadCol ({ style, className, ...props }) {
 export function BodyCol ({ className, ...props }) {
   const style = useBodyColStyle()
   return <Col style={style} className={classNames(className)} {...props} />
-}
-
-export function LessonsContainer ({ style, children }) {
-  const lessonContainerStyle = useLessonContainerStyle(style)
-  return (
-    <div className="w-full h-full absolute" style={lessonContainerStyle}>
-      {children}
-    </div>
-  )
-}
-
-export function Lesson ({ lesson, placement }) {
-  const style = useLessonStyle(placement)
-  const { isOverflowToBefore, isOverflowToAfter } = placement
-  const { roomId } = useCalendarContext()
-
-  const getRoomPath = useGetRoomPath(roomId)
-  const { validity } = useLessonValidity(roomId, lesson.id)
-
-
-  return (
-    <Link href={getRoomPath(`/lessons/${lesson.id}`)}>
-      <a className={classNames('block absolute left-0 top-0 pr-1 pb-1 mt-[-1px] ml-[-1px]')} style={style}>
-        <div className={classNames('w-full h-full border shadow-sm', {
-        'rounded-l'               : !isOverflowToBefore,
-        'rounded-r'               : !isOverflowToAfter,
-        'bg-white border-gray-300': validity !== LESSON_VALIDITY.INVALID,
-        'bg-red-50 border-red-500': validity === LESSON_VALIDITY.INVALID
-        })}>
-          <div className="flex flex-wrap gap-2 text-xs p-1">
-            <WithDocRef docRef={lesson.subject}>
-              {({ data: subject }) => (
-                <div>{subject.name}</div>
-              )}
-            </WithDocRef>
-            <div className="flex gap-1">
-              <WithDocRefs docRefs={lesson.students}>
-                {({ data: student }) => (
-                  <div>{student.name}</div>
-                )}
-              </WithDocRefs>
-            </div>
-          </div>
-        </div>
-      </a>
-    </Link>
-  )
 }
 
 export function HoursHeadRow () {
@@ -113,6 +64,39 @@ export function HoursBodyRow () {
         </BodyCol>
       ))}
     </Row>
+  )
+}
+
+export function LessonsContainer ({ style, children }) {
+  const lessonContainerStyle = useLessonContainerStyle(style)
+  return (
+    <div className="w-full h-full absolute" style={lessonContainerStyle}>
+      {children}
+    </div>
+  )
+}
+
+export function Lesson ({ lesson, placement, children }) {
+  const style = useLessonStyle(placement)
+  const { isOverflowToBefore, isOverflowToAfter } = placement
+  const { roomId } = useCalendarContext()
+
+  const getRoomPath = useGetRoomPath(roomId)
+  const { validity } = useLessonValidity(roomId, lesson.id)
+
+  return (
+    <Link href={getRoomPath(`/lessons/${lesson.id}`)}>
+      <a className={classNames('block absolute left-0 top-0 pr-1 pb-1 mt-[-1px] ml-[-1px]')} style={style}>
+        <div className={classNames('w-full h-full border shadow-sm', {
+        'rounded-l'               : !isOverflowToBefore,
+        'rounded-r'               : !isOverflowToAfter,
+        'bg-white border-gray-300': validity !== LESSON_VALIDITY.INVALID,
+        'bg-red-50 border-red-500': validity === LESSON_VALIDITY.INVALID
+        })}>
+          {children}
+        </div>
+      </a>
+    </Link>
   )
 }
 

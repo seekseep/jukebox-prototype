@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useCalendarContext, useGridStyle, useHours, Z_INDEX } from '../hooks'
+import { useCalendarContext, useGridStyle, useHours, Z_INDEX } from '../../hooks'
 
 
 export function useHourColStyle () {

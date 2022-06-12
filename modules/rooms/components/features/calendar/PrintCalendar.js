@@ -1,7 +1,5 @@
 import { useRouter } from 'next/router'
 
-import { CALENDAR_FORMAT, CALENDAR_TERM } from '@rooms/constants'
-
 import { MultiSuspension } from '@/components/parts/Suspension'
 
 import { useCalendar } from '@rooms/hooks/lessons/calendar'
@@ -11,14 +9,12 @@ import { useTeachersQuery } from '@rooms/hooks/teachers'
 import { useStudentsQuery } from '@rooms/hooks/students'
 import { useSheetsQuery } from '@rooms/hooks/sheets'
 
-import WeeklyTeacherCalendarForPrint from '@rooms/components/parts/calendar/print/WeeklyTeacherCalendarForPrint'
-import WeeklyDayCalendarForPrint from '@rooms/components/parts/calendar/print/WeeklyDayCalendarForPrint'
-import DailyCalendarForPrint from '@rooms/components/parts/calendar/print/DailyCalendarForPrint'
+import CalendarForPrint from '@rooms/components/parts/calendar/print/CalendarForPrint'
 
-export default function PrintLessons () {
+export default function PrintCalendar () {
   const { query } = useRouter()
 
-  const { parsedQuery,  } = useCalendar(query)
+  const { parsedQuery, startedAt } = useCalendar(query)
   const { roomId, term, format, startHour, endHour } = parsedQuery
   const lessonsQueryResult = useSearchLessonsQuery(query.roomId, parsedQuery)
   const subjectsQueryResult = useSubjectsQuery(query.roomId)
@@ -35,17 +31,20 @@ export default function PrintLessons () {
       sheetsQueryResult
     ]}>
       {({ data: [lessons, subjects, teachers, students, sheets] }) => (
-        <>
-          {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.TEACHER && (
-            <WeeklyTeacherCalendarForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
-          )}
-          {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.DAY && (
-            <WeeklyDayCalendarForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
-          )}
-          {term === CALENDAR_TERM.DAILY && (
-            <DailyCalendarForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets,  startHour, endHour }} />
-          )}
-        </>
+        <CalendarForPrint
+          {...{
+            startedAt,
+            roomId,
+            lessons,
+            subjects,
+            teachers,
+            students,
+            sheets,
+            format,
+            term,
+            startHour,
+            endHour
+          }} />
       )}
     </MultiSuspension>
   )

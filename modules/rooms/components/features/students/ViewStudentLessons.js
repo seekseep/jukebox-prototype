@@ -7,7 +7,7 @@ import { Feature, FeatureHead, FeatureTitle } from '@/components/parts/feature'
 import Collection, { CollectionLinkItem } from '@/components/parts/Collection'
 import Suspension from '@/components/parts/Suspension'
 
-import { getLessonDateTimeLabel } from '@rooms/services/lessons'
+import { getLessonDateTimeLabel } from '@rooms/services/lessons/labels'
 import { useGetRoomPath } from '@rooms/hooks/router'
 import { useStudentLessonsQuery } from '@rooms/hooks/lessons'
 
