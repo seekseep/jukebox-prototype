@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import PrintLessons from '@rooms/components/features/calendar/PrintLessons'
+import PrintCalendar from '@rooms/components/features/calendar/PrintCalendar'
 
 export default function LessonsPrint () {
   return (
@@ -7,7 +7,7 @@ export default function LessonsPrint () {
       <Head>
         <title>授業の印刷</title>
       </Head>
-      <PrintLessons />
+      <PrintCalendar />
     </>
   )
 }

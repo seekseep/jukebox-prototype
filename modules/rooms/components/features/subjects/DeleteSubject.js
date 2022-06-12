@@ -48,7 +48,7 @@ export default function DeleteSubject () {
             <CardBody>
               <ErrorAlert error={deletingError} />
               <FormActions>
-                <Button danger type="button" onClick={handleSubmit}>科目を削除する</Button>
+                <Button color="danger" type="button" onClick={handleSubmit}>科目を削除する</Button>
               </FormActions>
             </CardBody>
           </Card>

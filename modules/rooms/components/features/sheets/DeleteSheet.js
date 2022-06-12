@@ -48,7 +48,7 @@ export default function DeleteSheet () {
             <CardBody>
               <ErrorAlert error={deletingError} />
               <FormActions>
-                <Button danger type="button" onClick={handleSubmit}>席を削除する</Button>
+                <Button color="danger" type="button" onClick={handleSubmit}>席を削除する</Button>
               </FormActions>
             </CardBody>
           </Card>

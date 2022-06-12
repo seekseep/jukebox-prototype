@@ -6,8 +6,11 @@ import CreatableReactSelect from 'react-select/creatable'
 
 import { getDatetimeLocalValue, getTimeValue, getDateValue } from '@/services/input'
 
-export function Select ({ className, ...props }) {
-  return <select className={classNames(className, 'bg-white rounded border p-2')} {...props} />
+export function Select ({ className, size = 'md', ...props }) {
+  return <select className={classNames(className, 'bg-white rounded border p-2', {
+    'p-2'        : size === 'md',
+    'p-2 text-sm': size === 'sm'
+  })} {...props} />
 }
 
 export function FieldGroup ({ children })  {

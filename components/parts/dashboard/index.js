@@ -120,3 +120,7 @@ export function DashboardNavigationLink ({ href, exact = false, children }) {
     </Link>
   )
 }
+
+export function DashboardFullScreenSection (props) {
+  return <div className="relative w-full h-[calc(100vh-3rem)]" {...props} />
+}

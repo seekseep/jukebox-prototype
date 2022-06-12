@@ -11,9 +11,9 @@ import { useTeachersQuery } from '@rooms/hooks/teachers'
 import { useStudentsQuery } from '@rooms/hooks/students'
 import { useSheetsQuery } from '@rooms/hooks/sheets'
 
-import WeeklyLessonsCalendarByTeacherForPrint from '@rooms/components/parts/calendar/WeeklyLessonsCalendarByTeacherForPrint'
-import WeeklyLessonsCalendarByDayForPrint from '@rooms/components/parts/calendar/WeeklyLessonsCalendarByDayForPrint'
-import DailyLessonsCalendarForPrint from '@rooms/components/parts/calendar/DailyLessonsCalendarForPrint'
+import WeeklyTeacherCalendarForPrint from '@rooms/components/parts/calendar/print/WeeklyTeacherCalendarForPrint'
+import WeeklyDayCalendarForPrint from '@rooms/components/parts/calendar/print/WeeklyDayCalendarForPrint'
+import DailyCalendarForPrint from '@rooms/components/parts/calendar/print/DailyCalendarForPrint'
 
 export default function PrintLessons () {
   const { query } = useRouter()
@@ -37,13 +37,13 @@ export default function PrintLessons () {
       {({ data: [lessons, subjects, teachers, students, sheets] }) => (
         <>
           {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.TEACHER && (
-            <WeeklyLessonsCalendarByTeacherForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
+            <WeeklyTeacherCalendarForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
           )}
           {term === CALENDAR_TERM.WEEKLY && format === CALENDAR_FORMAT.DAY && (
-            <WeeklyLessonsCalendarByDayForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
+            <WeeklyDayCalendarForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets, startHour, endHour }} />
           )}
           {term === CALENDAR_TERM.DAILY && (
-            <DailyLessonsCalendarForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets,  startHour, endHour }} />
+            <DailyCalendarForPrint {...{ roomId, startedAt: new Date(parsedQuery.startedAt), lessons, subjects, teachers, students, sheets,  startHour, endHour }} />
           )}
         </>
       )}

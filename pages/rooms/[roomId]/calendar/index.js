@@ -1,10 +1,13 @@
+import  { DashboardFullScreenSection } from '@/components/parts/dashboard'
 import RoomDashboard from '@rooms/components/features/rooms/RoomDashboard'
-import ViewLessonsCalendar from '@rooms/components/features/calendar/ViewLessonsCalendar'
+import ViewCalendar from '@rooms/components/features/calendar/ViewCalendar'
 
 export default function Calendar () {
   return (
     <RoomDashboard title="カレンダー" noPadding>
-      <ViewLessonsCalendar />
+      <DashboardFullScreenSection>
+        <ViewCalendar />
+      </DashboardFullScreenSection>
     </RoomDashboard>
   )
 }

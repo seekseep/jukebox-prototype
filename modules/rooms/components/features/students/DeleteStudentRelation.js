@@ -49,7 +49,7 @@ export default function DeleteStudentRelation () {
             <ErrorAlert error={deletingError} />
             <CardBody>
               <FormActions>
-                <Button disabled={isDeleting} danger type="button" onClick={handleSubmit}>生徒の関係性を削除する</Button>
+                <Button disabled={isDeleting} color="danger" type="button" onClick={handleSubmit}>生徒の関係性を削除する</Button>
               </FormActions>
             </CardBody>
           </Card>

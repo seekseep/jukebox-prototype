@@ -46,7 +46,7 @@ export default function DeleteUser () {
           <CardBody>
           {deletingError && <ErrorAlert error={deletingError} />}
             <div className="flex flex-row-reverse">
-              <Button danger type="button" disabled={isDeleting} onClick={handleSubmit}>ユーザを削除する</Button>
+              <Button color="danger" type="button" disabled={isDeleting} onClick={handleSubmit}>ユーザを削除する</Button>
             </div>
           </CardBody>
         </Card>

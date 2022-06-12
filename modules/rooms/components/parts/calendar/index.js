@@ -30,7 +30,7 @@ export function HeadCol ({ style, className, ...props }) {
 
 export function BodyCol ({ className, ...props }) {
   const style = useBodyColStyle()
-  return <Col style={style} className={classNames(className, 'bg-gray-50')} {...props} />
+  return <Col style={style} className={classNames(className)} {...props} />
 }
 
 export function LessonsContainer ({ style, children }) {
@@ -53,17 +53,14 @@ export function Lesson ({ lesson, placement }) {
 
   return (
     <Link href={getRoomPath(`/lessons/${lesson.id}`)}>
-      <a className={classNames('block absolute left-0 top-0 py-1', {
-        'pl-1': !isOverflowToBefore,
-        'pr-1': !isOverflowToAfter,
-      })} style={style}>
+      <a className={classNames('block absolute left-0 top-0 pr-1 pb-1 mt-[-1px] ml-[-1px]')} style={style}>
         <div className={classNames('w-full h-full border shadow-sm', {
         'rounded-l'               : !isOverflowToBefore,
         'rounded-r'               : !isOverflowToAfter,
         'bg-white border-gray-300': validity !== LESSON_VALIDITY.INVALID,
         'bg-red-50 border-red-500': validity === LESSON_VALIDITY.INVALID
         })}>
-          <div className="flex flex-wrap gap-2 text-sm p-1">
+          <div className="flex flex-wrap gap-2 text-xs p-1">
             <WithDocRef docRef={lesson.subject}>
               {({ data: subject }) => (
                 <div>{subject.name}</div>
@@ -90,8 +87,8 @@ export function HoursHeadRow () {
   const hourColStyle = useGridStyle({ width: hourColWidth })
 
   return (
-    <Row>
-      <HeadCol style={headColStyle} />
+    <Row className="sticky top-0 z-[2000]">
+      <HeadCol className="sticky left-0 bg-white" style={headColStyle} />
       {hours.map(hour => (
         <HeadCol key={hour} style={hourColStyle}>
           <div className="text-xs text-gray-500 p-1">{hour}:00</div>
@@ -106,8 +103,15 @@ export function HoursBodyRow () {
   const style = useGridStyle({ width: hourColWidth  })
   const horus = useHours()
   return (
-    <Row>
-      {horus.map(hour => <BodyCol key={hour} style={style} />)}
+    <Row className="sticky top-0">
+      {horus.map(hour => (
+        <BodyCol className="flex" key={hour} style={style}>
+          <div className="w-1/4 border-r border-gray-100" />
+          <div className="w-1/4 border-r border-gray-100" />
+          <div className="w-1/4 border-r border-gray-100" />
+          <div className="w-1/4" />
+        </BodyCol>
+      ))}
     </Row>
   )
 }
@@ -120,10 +124,8 @@ export function CalendarContainer ({ children }) {
   })
 
   return (
-    <div className="overflow-auto w-full pb-4">
-      <div style={innerStyle}>
-        {children}
-      </div>
+    <div style={innerStyle}>
+      {children}
     </div>
   )
 }

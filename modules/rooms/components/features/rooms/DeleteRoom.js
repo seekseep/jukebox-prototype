@@ -48,7 +48,7 @@ export default function DeleteRoom () {
             <CardBody>
               <ErrorAlert error={deletingError} />
               <FormActions>
-                <Button danger type="button" onClick={handleSubmit}>教室を削除する</Button>
+                <Button color="danger" type="button" onClick={handleSubmit}>教室を削除する</Button>
               </FormActions>
             </CardBody>
           </Card>

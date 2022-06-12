@@ -65,7 +65,7 @@ export default function ManageSheetSchedule () {
                       <ErrorAlert error={updatingError} />
                       <FormActions>
                         <Button primary type="submit" disabled={!isValid || isUpdating}>保存する</Button>
-                        <Button secondary type="button" onClick={toggleEditing}>変更を破棄する</Button>
+                        <Button color="secondary" type="button" onClick={toggleEditing}>変更を破棄する</Button>
                       </FormActions>
                     </Form>
                   )}
@@ -74,7 +74,7 @@ export default function ManageSheetSchedule () {
             ) : (
               <>
                 <CardActions>
-                  <Button secondary sm onClick={toggleEditing}>編集する</Button>
+                  <Button color="secondary" size="sm" onClick={toggleEditing}>編集する</Button>
                 </CardActions>
                 <SchedulePropertySet
                   schedule={schedule}

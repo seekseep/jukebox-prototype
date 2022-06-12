@@ -56,8 +56,8 @@ function TeacherDayLessons ({ teacherDayLessonsSet: { teacher, days: dayLessonsS
   })
   return (
     <Row>
-      <HeadCol style={headColStyle} className="sticky top-0 left-0 flex items-center justify-center">
-        <div className="p-2 sticky top-0">{teacher.name}</div>
+      <HeadCol style={headColStyle} className="sticky top-0 left-0 flex items-center justify-center text-sm">
+        <div className="p-2 sticky top-4">{teacher.name}</div>
       </HeadCol>
       <div>
         {dayLessonsSets.map((dayLessonsSet) => (
