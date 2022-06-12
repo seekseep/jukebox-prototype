@@ -69,7 +69,9 @@ export default function ManageSubjectLessons () {
                     <input type="checkbox" onChange={({ target: { checked } }) => setAll(checked)} checked={isAllSelected} />
                   </label>
                   <div className="p-1">
-                    {isSomeSelected && <Button type="button" onClick={handleDelete} sm danger>削除</Button>}
+                    {isSomeSelected && (
+                      <Button type="button" onClick={handleDelete} size="sm" color="danger">削除</Button>
+                    )}
                   </div>
                 </div>
               }>

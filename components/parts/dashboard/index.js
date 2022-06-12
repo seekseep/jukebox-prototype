@@ -50,12 +50,20 @@ export function DashboardMain ({ children }) {
   return <main className="bg-gray-50 w-[calc(100%-12rem)]">{children}</main>
 }
 
-export function DashboardContents ({ children }) {
-  return <div className="py-2 pb-96">{children}</div>
+export function DashboardContents ({ children, noPadding = false }) {
+  return (
+    <div className={
+      classNames({
+        'py-2 pb-96': !noPadding
+      })
+    }>
+        {children}
+    </div>
+  )
 }
 
 export function DashboardHeader ({ children }) {
-  return <header className="sticky top-0 bg-white border-b h-16 flex items-center px-4 z-[2000]">{children}</header>
+  return <header className="sticky top-0 bg-white border-b h-12 flex items-center px-4 z-[2000]">{children}</header>
 }
 
 export function DashboardPageTitle ({ children }) {
@@ -111,4 +119,8 @@ export function DashboardNavigationLink ({ href, exact = false, children }) {
       </a>
     </Link>
   )
+}
+
+export function DashboardFullScreenSection (props) {
+  return <div className="relative w-full h-[calc(100vh-3rem)]" {...props} />
 }

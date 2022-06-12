@@ -4,7 +4,7 @@ import PropertySet, {
   PropertyContents
 } from '@/components/parts/PropertySet'
 import RepeatTypeLabel from '../RepeatTypeLabel'
-import { getDayLabel } from '@rooms/services/lessons'
+import { getDayLabel } from '@rooms/services/lessons/labels'
 import { REPEAT_TYPE } from '@rooms/constants'
 
 export default function RelationPropertySet ({ lessonFrame }) {

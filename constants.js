@@ -42,17 +42,18 @@ export const WEEK_DAY = Object.freeze({
 export const WEEK_DAY_ALL = -1
 
 export const ICON = Object.freeze({
-  USER   : '👤',
-  TEACHER: '👨‍🏫',
-  STUDENT: '👩‍🎓',
-  PARENT : '👪',
-  SCHOOL : '🏫',
-  ROOM   : '🚪',
-  SUBJECT: '📕',
-  LESSON : '📖',
-  SHEET  : '🪑',
-  ADMIN  : '🚧',
-  FAMILY : '🏠'
+  USER    : '👤',
+  TEACHER : '👨‍🏫',
+  STUDENT : '👩‍🎓',
+  PARENT  : '👪',
+  SCHOOL  : '🏫',
+  ROOM    : '🚪',
+  SUBJECT : '📕',
+  LESSON  : '📖',
+  SHEET   : '🪑',
+  ADMIN   : '🚧',
+  FAMILY  : '🏠',
+  CALEDNAR: '📅'
 })
 
 export const RESOURCE_TYPE = Object.freeze({

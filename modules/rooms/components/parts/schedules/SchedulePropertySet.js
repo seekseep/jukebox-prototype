@@ -7,7 +7,7 @@ import PropertySet, {
 import { REPEAT_TYPE, SCHEDULE_TYPE_LABEL } from '@rooms/constants'
 import ScheduleTypeBadge from '@rooms/components/parts/schedules/ScheduleTypeBadge'
 import RepeatTypeLabel from '../RepeatTypeLabel'
-import { getDayLabel, getEventDateDurationLabel, getEventDurationLabel } from '@rooms/services/lessons'
+import { getDayLabel, getEventDateDurationLabel, getEventDurationLabel } from '@rooms/services/lessons/labels'
 
 export default function SchedulePropertySet ({
   schedule,

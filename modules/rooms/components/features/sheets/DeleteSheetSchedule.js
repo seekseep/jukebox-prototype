@@ -48,7 +48,7 @@ export default function DeleteSheetSchedule () {
             <CardBody>
             {deletingError && <ErrorAlert error={deletingError} />}
               <div className="flex flex-row-reverse">
-                <Button danger type="button" onClick={handleSubmit}>予定を削除する</Button>
+                <Button color="danger" type="button" onClick={handleSubmit}>予定を削除する</Button>
               </div>
             </CardBody>
           </Card>

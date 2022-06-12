@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { format, getMonth, isValid, startOfWeek,endOfWeek, add, sub, endOfDay, startOfDay } from 'date-fns'
+import { format, getMonth, isValid, startOfWeek,endOfWeek, add, sub, endOfDay, startOfDay, startOfMonth, endOfMonth } from 'date-fns'
 import locale from 'date-fns/locale/ja'
 
 import { CALENDAR_FORMAT, CALENDAR_TERM } from '@rooms/constants'
@@ -20,6 +20,8 @@ function dateToDateString (date) {
 function parseStartedAt(startedAtString, term) {
   const date = isValid(new Date(startedAtString)) ? new Date(startedAtString) : new Date()
   switch(term) {
+    case CALENDAR_TERM.MONTHLY:
+      return dateToDateString(startOfMonth(date))
     case CALENDAR_TERM.WEEKLY:
       return dateToDateString(startOfWeek(date))
     case CALENDAR_TERM.DAILY:
@@ -31,6 +33,8 @@ function parseStartedAt(startedAtString, term) {
 function getFinishedAtString(startedAtString, term) {
   const startedAt = new Date(startedAtString)
   switch(term) {
+    case CALENDAR_TERM.MONTHLY:
+      return dateToDateString(endOfMonth(startedAt))
     case CALENDAR_TERM.WEEKLY:
       return dateToDateString(endOfWeek(startedAt))
     case CALENDAR_TERM.DAILY:
@@ -41,7 +45,7 @@ function getFinishedAtString(startedAtString, term) {
 
 function parseFormat(format) {
   if (CALENDAR_FORMATS.includes(format)) return format
-  return CALENDAR_FORMAT.TEACHER
+  return CALENDAR_FORMAT.TEACHER_DATE
 }
 
 function parseIdArrayString (idArrayString) {
@@ -82,6 +86,8 @@ export function useParsedQuery(query) {
 
 function getNextStartedAt (date, term) {
   switch(term) {
+    case CALENDAR_TERM.MONTHLY:
+      return add(startOfMonth(date), { months: 1 })
     case CALENDAR_TERM.WEEKLY:
       return add(startOfWeek(date), { weeks: 1 })
     case CALENDAR_TERM.DAILY:
@@ -92,6 +98,8 @@ function getNextStartedAt (date, term) {
 
 function getNextFinishedAt (date, term) {
   switch(term) {
+    case CALENDAR_TERM.MONTHLY:
+      return endOfMonth(getNextStartedAt(date, term))
     case CALENDAR_TERM.WEEKLY:
       return endOfWeek(getNextStartedAt(date, term))
     case CALENDAR_TERM.DAILY:
@@ -102,6 +110,8 @@ function getNextFinishedAt (date, term) {
 
 function getPreviousStartedAt (date, term) {
   switch(term) {
+    case CALENDAR_TERM.MONTHLY:
+      return sub(startOfMonth(date), { months: 1 })
     case CALENDAR_TERM.WEEKLY:
       return sub(startOfWeek(date), { weeks: 1 })
     case CALENDAR_TERM.DAILY:
@@ -112,6 +122,8 @@ function getPreviousStartedAt (date, term) {
 
 function getPreviousFinishedAt (date, term) {
   switch(term) {
+    case CALENDAR_TERM.MONTHLY:
+      return endOfMonth(getPreviousStartedAt(date, term))
     case CALENDAR_TERM.WEEKLY:
       return endOfWeek(getPreviousStartedAt(date, term))
     case CALENDAR_TERM.DAILY:
@@ -138,6 +150,8 @@ export function useCalendar (query) {
 
         return `${monthLabel} ${startDateLabel} ~ ${endDateLabel}`
       }
+      case CALENDAR_TERM.MONTHLY:
+        return format(startedAt, 'yyyy年 MM月', { locale })
       default:
         return format(startedAt, 'yyyy年MM月dd日')
     }
@@ -145,11 +159,6 @@ export function useCalendar (query) {
 
   const getChangedQuery = useCallback((queryDiff = {}) => {
     const query = { ...parsedQuery, ...queryDiff }
-
-    if (query.term === CALENDAR_TERM.DAILY) {
-      query.format = CALENDAR_FORMAT.DAY
-    }
-
     return query
   }, [parsedQuery])
 
@@ -170,6 +179,7 @@ export function useCalendar (query) {
   return {
     parsedQuery,
     currentLabel,
+    startedAt,
     getChangedQuery,
     getNextQuery,
     getPreviousQuery,

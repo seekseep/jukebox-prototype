@@ -1,6 +1,6 @@
 import { REPEAT_TYPE } from '@rooms/constants'
 
-import { getDayLabel } from './lessons'
+import { getDayLabel } from './lessons/labels'
 
 export function getLessonFrameDateLabel (lessonframe) {
   const { repeat, repeatIndexes } = lessonframe

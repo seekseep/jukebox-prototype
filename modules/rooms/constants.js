@@ -15,13 +15,16 @@ export const LESSON_FIELD_NAME = Object.freeze({
 })
 
 export const CALENDAR_TERM = Object.freeze({
-  DAILY : 'DAILY',
-  WEEKLY: 'WEEKLY',
+  DAILY  : 'DAILY',
+  WEEKLY : 'WEEKLY',
+  MONTHLY: 'MONTHLY'
 })
 
 export const CALENDAR_FORMAT = Object.freeze({
-  TEACHER: 'TEACHER',
-  DAY    : 'DAY',
+  STUDENT_DATE: 'STUDENT_DATE',
+  TEACHER_DATE: 'TEACHER_DATE',
+  DATE_TEACHER: 'DATE_TEACHER',
+  DATE_STUDENT: 'DATE_STUDENT',
 })
 
 export const REPEAT_TYPE = Object.freeze({

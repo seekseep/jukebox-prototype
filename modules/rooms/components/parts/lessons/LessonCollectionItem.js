@@ -3,8 +3,7 @@ import { useMemo } from 'react'
 import { WithDocRefs, WithDocRef  } from '@/components/utilities/withDocRefs'
 import { useLessonValidity } from '@rooms/hooks/lessons/validity'
 import LessonValidityBadge from './LessonValidityBadge'
-import { getEventDurationLabel } from '@rooms/services/lessons'
-
+import { getEventDurationLabel } from '@rooms/services/lessons/labels'
 
 export default function LessonCollectionItem ({
   lesson, roomId

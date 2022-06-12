@@ -1,6 +1,7 @@
-import { REPEAT_TYPE } from '@rooms/constants'
 import { format } from 'date-fns'
-import { getDayLabel, getEventDateDurationLabel } from './lessons'
+
+import { REPEAT_TYPE } from '@rooms/constants'
+import { getDayLabel, getEventDateDurationLabel } from './lessons/labels'
 
 export function getScheduleDateLabel (schedule) {
   const { repeat, startedAt, finishedAt, repeatIndexes } = schedule

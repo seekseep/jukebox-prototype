@@ -51,7 +51,7 @@ export default function DeleteLessonFrame () {
             <CardBody>
               <ErrorAlert error={deletingError} />
               <FormActions>
-                <Button disabled={isDeleting} danger type="button" onClick={handleSubmit}>授業枠を削除する</Button>
+                <Button color="danger" disabled={isDeleting} type="button" onClick={handleSubmit}>授業枠を削除する</Button>
               </FormActions>
             </CardBody>
           </Card>

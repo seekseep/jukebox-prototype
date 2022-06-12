@@ -74,7 +74,7 @@ export default function ManagedUserLinkedStudent () {
                 <CardBody>
                   <ErrorAlert error={deletingError} />
                   <FormActions>
-                    <Button disabled={isDeleting} danger type="button" onClick={handleDelete}>紐付けを解除する</Button>
+                    <Button disabled={isDeleting} color="danger" type="button" onClick={handleDelete}>紐付けを解除する</Button>
                   </FormActions>
                 </CardBody>
               </>

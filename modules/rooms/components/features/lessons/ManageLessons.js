@@ -13,7 +13,7 @@ import { Button, LinkButton } from '@/components/parts/buttons'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 import Suspension, { MultiSuspension } from '@/components/parts/Suspension'
 
-import { getLessonDateLabel, getLessonDateTimeLabel } from '@rooms/services/lessons'
+import { getLessonDateLabel, getLessonDateTimeLabel } from '@rooms/services/lessons/labels'
 import { useGetRoomPath } from '@rooms/hooks/router'
 import { useSubjectsQuery } from '@rooms/hooks/subjects'
 import { useTeachersQuery } from '@rooms/hooks/teachers'
@@ -139,7 +139,7 @@ export default function ManageLessons () {
   const searchValuesToResult = useSearchValuesToResult()
   const handleSearch = useCallback((values) => {
     const result = searchValuesToResult(values)
-    push(getRoomPath(`/lessons/list?${result}`))
+    push(getRoomPath(`/lessons?${result}`))
   }, [getRoomPath, push, searchValuesToResult])
 
   const updateValidationSchema = useUpdateValidationSchema()
@@ -272,7 +272,7 @@ export default function ManageLessons () {
                               <ErrorAlert error={updatingError} />
                               <FormActions>
                                 <Button primary type="submit" disabled={!isValid || isUpdating}>保存する</Button>
-                                <Button secondary type="button" onClick={toggleUpdate}>変更を破棄する</Button>
+                                <Button color="secondary" type="button" onClick={toggleUpdate}>変更を破棄する</Button>
                               </FormActions>
                             </Form>
                           )}
@@ -282,8 +282,8 @@ export default function ManageLessons () {
                   ) : (
                     <div className="p-2">
                       <FormActions>
-                        <Button secondary type="button" onClick={toggleUpdate}>編集する</Button>
-                        <Button disabled={isDeleting} type="button" danger onClick={handleDelete}>削除する</Button>
+                        <Button type="button" color="secondary" onClick={toggleUpdate}>編集する</Button>
+                        <Button type="button" color="danger" disabled={isDeleting} onClick={handleDelete}>削除する</Button>
                       </FormActions>
                     </div>
                   )}

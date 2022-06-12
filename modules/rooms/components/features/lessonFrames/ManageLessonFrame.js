@@ -77,8 +77,8 @@ export default function ManageLessonFrame () {
                     <LessonFrameFormFields tags={tags} />
                     {updatingError && <ErrorAlert error={updatingError} />}
                     <div className="flex flex-row-reverse justify-between">
-                      <Button primary type="submit" disabled={!isValid || isUpdating}>保存する</Button>
-                      <Button secondary type="button" onClick={toggleEditing}>変更を破棄する</Button>
+                      <Button color="primary" type="submit" disabled={!isValid || isUpdating}>保存する</Button>
+                      <Button color="secondary" type="button" onClick={toggleEditing}>変更を破棄する</Button>
                     </div>
                   </Form>
                 )}
@@ -87,7 +87,7 @@ export default function ManageLessonFrame () {
           ) : (
             <>
               <CardActions>
-                <Button secondary sm onClick={toggleEditing}>編集する</Button>
+                <Button color="secondary" size="sm" onClick={toggleEditing}>編集する</Button>
               </CardActions>
               <LessonFramePropertySet lessonFrame={lessonFrame} />
             </>

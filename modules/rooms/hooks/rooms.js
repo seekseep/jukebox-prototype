@@ -46,6 +46,7 @@ export function useActiveFeatures(roomId) {
       sheets  : isStaff,
       subjects: isAccount,
       lessons : isAccount,
+      calendar: isAccount,
       parents : isStaff,
       settings: isStaff,
     }
