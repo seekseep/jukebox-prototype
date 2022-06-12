@@ -35,11 +35,17 @@ export default function ViewFeatures () {
                 icon={ICON.TEACHER} label="講師"
                 description="講師の登録や予定を登録できます"  />
             )}
-            {features.sheets && (
+            {features.parents && (
               <FeatureCard
-                href={getRoomPath('/sheets')}
-                icon={ICON.SHEET} label="座席"
-                description="座席の登録や予定を登録できます"  />
+                href={getRoomPath('/parents')}
+                icon={ICON.PARENT} label="保護者"
+                description="保護者の登録や予定を登録できます"  />
+            )}
+            {features.calendar && (
+              <FeatureCard
+                href={getRoomPath('/calendar')}
+                icon={ICON.CALEDNAR} label="カレンダー"
+                description="カレンダーの閲覧と表示ができます"  />
             )}
             {features.subjects && (
               <FeatureCard
@@ -53,11 +59,11 @@ export default function ViewFeatures () {
                 icon={ICON.LESSON} label="授業"
                 description="授業の登録や編集ができます"  />
             )}
-            {features.parents && (
+            {features.sheets && (
               <FeatureCard
-                href={getRoomPath('/parents')}
-                icon={ICON.FAMILY} label="保護者"
-                description="保護者の登録や予定を登録できます"  />
+                href={getRoomPath('/sheets')}
+                icon={ICON.SHEET} label="座席"
+                description="座席の登録や予定を登録できます"  />
             )}
             {features.settings && (
               <FeatureCard

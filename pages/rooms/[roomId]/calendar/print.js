@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import PrintLessons from '@rooms/components/features/lessons/PrintLessons'
+import PrintLessons from '@rooms/components/features/calendar/PrintLessons'
 
 export default function LessonsPrint () {
   return (

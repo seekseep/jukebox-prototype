@@ -8,9 +8,9 @@ import { Button } from '@/components/parts/buttons'
 
 import { CALENDAR_FORMAT, CALENDAR_TERM } from '@rooms/constants'
 import { useCalendar } from '@rooms/hooks/lessons/calendar'
-import WeeklyLessonsCalendarByTeacher from '@rooms/components/parts/lessons/WeeklyLessonsCalendarByTeacher'
-import WeeklyLessonsCalendarByDay from '@rooms/components/parts/lessons/WeeklyLessonsCalendarByDay'
-import DailyLessonsCalendar from '@rooms/components/parts/lessons/DailyLessonsCalendar'
+import WeeklyLessonsCalendarByTeacher from '@rooms/components/parts/calendar/WeeklyLessonsCalendarByTeacher'
+import WeeklyLessonsCalendarByDay from '@rooms/components/parts/calendar/WeeklyLessonsCalendarByDay'
+import DailyLessonsCalendar from '@rooms/components/parts/calendar/DailyLessonsCalendar'
 import { useSearchLessonsQuery } from '@rooms/hooks/lessons'
 import { useSubjectsQuery } from '@rooms/hooks/subjects'
 import { useTeachersQuery } from '@rooms/hooks/teachers'
@@ -54,8 +54,7 @@ export default function ViewLessonsCalendar () {
   if (!query.roomId) return null
 
   return (
-    <Card>
-      <CardBody>
+    <div className="bg-white relative w-full h-[calc(100vh-4rem)] overflow-y-auto">
         <div className="flex gap-x-4 gap-y-2 items-start flex-wrap">
           <div className="flex gap-2 shrink-0">
             <button onClick={handleGoToday} className="bg-gray-50 border border-gray-100 text-center leading-10 h-10 rounded cursor-pointer hover:bg-gray-100 active:bg-gray-200 px-4">今日</button>
@@ -96,7 +95,6 @@ export default function ViewLessonsCalendar () {
             <Button onClick={handleGoPrintPage}>表示している内容を印刷する</Button>
           </div>
         </div>
-      </CardBody>
       <MultiSuspension results={[
         lessonsQueryResult,
         subjectsQueryResult,
@@ -118,6 +116,6 @@ export default function ViewLessonsCalendar () {
           </>
         )}
       </MultiSuspension>
-    </Card>
+    </div>
   )
 }

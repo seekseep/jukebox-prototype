@@ -17,5 +17,5 @@ export const auth = getAuth(app)
 
 if (process.env.NODE_ENV === 'development') {
   connectFirestoreEmulator(firestore, 'localhost', 8080)
-  connectAuthEmulator(auth, 'http://localhost:9099')
+  connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true })
 }

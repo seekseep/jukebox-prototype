@@ -11,10 +11,9 @@ import { useTeachersQuery } from '@rooms/hooks/teachers'
 import { useStudentsQuery } from '@rooms/hooks/students'
 import { useSheetsQuery } from '@rooms/hooks/sheets'
 
-import WeeklyLessonsCalendarByTeacherForPrint from '@rooms/components/parts/lessons/WeeklyLessonsCalendarByTeacherForPrint'
-import WeeklyLessonsCalendarByDayForPrint from '@rooms/components/parts/lessons/WeeklyLessonsCalendarByDayForPrint'
-import DailyLessonsCalendarForPrint from '@rooms/components/parts/lessons/DailyLessonsCalendarForPrint'
-
+import WeeklyLessonsCalendarByTeacherForPrint from '@rooms/components/parts/calendar/WeeklyLessonsCalendarByTeacherForPrint'
+import WeeklyLessonsCalendarByDayForPrint from '@rooms/components/parts/calendar/WeeklyLessonsCalendarByDayForPrint'
+import DailyLessonsCalendarForPrint from '@rooms/components/parts/calendar/DailyLessonsCalendarForPrint'
 
 export default function PrintLessons () {
   const { query } = useRouter()

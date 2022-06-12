@@ -24,7 +24,7 @@ function getFirstChar (string) {
   return Array.from(string)[0]
 }
 
-export default function RoomDashboard ({ title, children }) {
+export default function RoomDashboard ({ title, children, noPadding }) {
   const { query: { roomId } } = useRouter()
   const getRoomPath = useGetRoomPath(roomId)
 
@@ -52,6 +52,7 @@ export default function RoomDashboard ({ title, children }) {
           <DNavLink href={getRoomPath('/subjects')}>科目</DNavLink>
           <DNavLink href={getRoomPath('/lessons')}>授業</DNavLink>
           <DNavLink href={getRoomPath('/parents')}>保護者</DNavLink>
+          <DNavLink href={getRoomPath('/calendar')}>カレンダー</DNavLink>
           <DNavLink href={getRoomPath('/settings')}>教室</DNavLink>
         </DashboardNavigationBody>
       </DashboardNavigation>
@@ -59,18 +60,18 @@ export default function RoomDashboard ({ title, children }) {
         <DashboardHeader>
           <div className="flex flex-row justify-between w-full">
             <Link href={getRoomPath('/')}>
-              <a className="text-lg font-bold px-2 leading-10">
+              <a className="font-bold px-2 leading-10">
                 {room?.name}
               </a>
             </Link>
             <div className="flex gap-3 items-center px-2">
               {account && (
                 <>
-                  <div className="w-10 h-10 bg-gray-100 text-gray-800 rounded-full flex justify-center items-center">
-                    <div>{getFirstChar(account?.name)}</div>
+                  <div className="w-8 h-8 bg-gray-100 text-gray-800 rounded-full flex justify-center items-center">
+                    <div className="text-xs">{getFirstChar(account?.name)}</div>
                   </div>
-                  <div className="grow">{account?.name}</div>
-                  <div className="w-16 shrink-0 text-xs bg-gray-100 text-gray-900 px-2 text-center py-1 rounded">
+                  <div className="grow text-sm">{account?.name}</div>
+                  <div className="w-12 shrink-0 text-xs bg-gray-100 text-gray-900 px-2 text-center py-1 rounded">
                     <AccountTypeLabel type={account?.type} />
                   </div>
                 </>
@@ -78,7 +79,7 @@ export default function RoomDashboard ({ title, children }) {
             </div>
           </div>
         </DashboardHeader>
-        <DashboardContents>
+        <DashboardContents noPadding={noPadding}>
           {typeof children === 'function' ? children({ getRoomPath }) : children}
         </DashboardContents>
       </DashboardMain>
