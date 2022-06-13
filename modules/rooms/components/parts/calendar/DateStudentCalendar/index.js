@@ -12,6 +12,8 @@ function TermedCalendar (props)  {
       return <DateStudentDailyCalendar />
     case CALENDAR_TERM.WEEKLY:
       return <DateStudentWeeklyCalendar />
+    default:
+      return null
   }
 }
 

@@ -15,6 +15,8 @@ function TermedCalendar (props)  {
       return <TeacherDateWeeklyCalendar />
     case CALENDAR_TERM.MONTHLY:
       return <TeacherDateMonthlyCalendar />
+    default:
+      return null
   }
 }
 
