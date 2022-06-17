@@ -6,7 +6,7 @@ const Card = forwardRef(function Card ({ type = 'div', elevation = 1, ...props }
     type,
     {
       className: classNames(
-        'block bg-white rounded-lg border text-black w-full',
+        'block bg-white rounded-lg border text-black w-full overflow-auto',
         {
           'shadow-sm' : elevation === 1,
           'shadow'    : elevation === 2,

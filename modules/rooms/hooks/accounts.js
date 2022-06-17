@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import useSWR from 'swr'
 
-import { getAccountByUser } from '@/services/api/rooms/accounts'
+import { getAccountByUser, updateAccounts } from '@rooms/services/api/accounts'
 
 import {
   useDocAsObjectQuery,
@@ -9,7 +9,8 @@ import {
   useCreateDocMutation,
   useUpdateDocMutation,
   useDeleteDocMutation,
-  expandSWR
+  expandSWR,
+  useMutation
 } from '@/hooks/api'
 import { useCurrentUserId } from '@/hooks/auth'
 
@@ -38,6 +39,12 @@ export function useCreateAccountMutation (roomId) {
 
 export function useUpdateAccountMutation (roomId, accountId) {
   return useUpdateDocMutation(roomId && accountId && `/rooms/${roomId}/accounts/${accountId}`)
+}
+
+export function useUpdateAccountsMutation(roomId) {
+  return useMutation(
+    async (accounts) => await updateAccounts(roomId, accounts)
+  )
 }
 
 export function useDeleteAccountMutation (roomId, accountId) {

@@ -72,6 +72,9 @@ export function useMutation (execute) {
 
   const succeed = useCallback((data) => {
     setState({ isLoading: false, error: null, data, isSuccess: true, isError: false })
+    setTimeout(() => setState({
+      isLoading: false, error: null, data: null, isSuccess: false, isError: false
+    }), 1000)
   }, [])
 
   const fail = useCallback((error) => {

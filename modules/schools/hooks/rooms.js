@@ -1,9 +1,11 @@
 import useSWR from 'swr'
 import { expandSWR, useMutation } from '@/hooks/api'
 
-import { getSchoolRoomRefs, setUpRoom } from '@/services/api/rooms'
-import { getSchoolRef } from '@/services/api/schools'
+
 import { getUserRef } from '@/services/api/users'
+
+import { getSchoolRef } from '@schools/services/api/schools'
+import { getSchoolRoomRefs, setUpRoom } from '@schools/services/api/rooms'
 
 export function useSchoolRoomRefs (schoolId) {
   const swr = useSWR([schoolId, 'rooms'], getSchoolRoomRefs)

@@ -4,6 +4,13 @@ const nextConfig = {
   swcMinify      : false,
   async redirects() {
     return []
+  },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.csv$/,
+      use : 'raw-loader',
+    })
+    return config
   }
 }
 

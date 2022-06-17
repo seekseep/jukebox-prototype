@@ -12,6 +12,13 @@ export function getTimeValue(date = new Date()) {
   return format(date, 'HH:mm')
 }
 
+export function getWeekValue (date = new Date())  {
+  return format(date, 'yyyy-\'W\'w')
+}
+export function getMonthValue (date = new Date())  {
+  return format(date, 'yyyy-MM')
+}
+
 export function getOption(value, options, defaultValues) {
   const option = options.find(option => option.value === value)
 

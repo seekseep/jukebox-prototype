@@ -6,7 +6,7 @@ import {
   updateLesson,
   updateLessons,
   deleteLesson
-} from '@/services/api/rooms/lessons'
+} from '@rooms/services/api/lessons'
 
 import {
   useDeleteDocMutation,
@@ -15,11 +15,11 @@ import {
   expandSWR,
   useCollectionAsObjectArrayQuery
 } from '@/hooks/api'
-import { searchLessons } from '@/services/api/rooms/lessons'
-import { getSubjectRef } from '@/services/api/rooms/subjects'
-import { getStudentRef } from '@/services/api/rooms/students'
-import { getTeacherRef } from '@/services/api/rooms/teachers'
-import { getSheetRef } from '@/services/api/rooms/sheets'
+import { searchLessons } from '@rooms/services/api/lessons'
+import { getSubjectRef } from '@rooms/services/api/subjects'
+import { getStudentRef } from '@rooms/services/api/students'
+import { getTeacherRef } from '@rooms/services/api/teachers'
+import { getSheetRef } from '@rooms/services/api/sheets'
 import { refEqual } from 'firebase/firestore'
 
 function appendReferncesToLesson ({ subject, students, teachers, sheets, ...lesson }, roomId) {

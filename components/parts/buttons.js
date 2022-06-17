@@ -25,6 +25,13 @@ export function Button ({ size, color, disabled = false, ...props }) {
   )
 }
 
+export function DownloadButton ({ dataUrl, fileName, size, color, disabled = false, ...props }) {
+  const className = useClassName({ color, size, disabled, ...props })
+  return (
+    <a href={dataUrl} download={fileName} {...props} className={className} />
+  )
+}
+
 export function LinkButton ({ href, size, color, disabled = false, ...props }) {
   const className = useClassName({ size, color, disabled, ...props })
   return (

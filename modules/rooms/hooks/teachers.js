@@ -2,7 +2,7 @@ import useSWR from 'swr'
 import { useMemo } from 'react'
 
 import { ACCOUNT_TYPE } from '@rooms/constants'
-import { createAccount, getTeacherAccounts } from '@/services/api/rooms/accounts'
+import { createAccount, getTeacherAccounts } from '@rooms/services/api/accounts'
 import { useMutation, expandSWR } from '@/hooks/api'
 
 import { useAccountQuery, useDeleteAccountMutation, useUpdateAccountMutation } from '@rooms/hooks/accounts'

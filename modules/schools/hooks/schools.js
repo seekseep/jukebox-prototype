@@ -1,10 +1,10 @@
-import { createSchool, deleteSchool, setUpSchool, updateSchool } from '@/services/api/schools'
+import { createSchool, deleteSchool, setUpSchool, updateSchool } from '@schools/services/api/schools'
 import { getUserRef } from '@/services/api/users'
 import {
   useCollectionAsObjectArrayQuery,
   useDocAsObjectQuery,
   useMutation
-} from '../../../hooks/api'
+} from '@/hooks/api'
 
 export function useSchools() {
   return useCollectionAsObjectArrayQuery('/schools')

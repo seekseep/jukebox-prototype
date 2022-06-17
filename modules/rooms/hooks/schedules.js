@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { format } from 'date-fns'
 import { refEqual } from 'firebase/firestore'
 
-import { createSchedule } from '@/services/api/rooms/schedules'
+import { createSchedule } from '@rooms/services/api/schedules'
 import {
   useMutation,
   useDocAsObjectQuery,
@@ -11,10 +11,10 @@ import {
   useUpdateDocMutation,
   useCollectionAsObjectArrayQuery
 } from '@/hooks/api'
-import { getAccountRef } from '@/services/api/rooms/accounts'
-import { getSheetRef } from '@/services/api/rooms/sheets'
-import { getStudentRef } from '@/services/api/rooms/students'
-import { getTeacherRef } from '@/services/api/rooms/teachers'
+import { getAccountRef } from '@rooms/services/api/accounts'
+import { getSheetRef } from '@rooms/services/api//sheets'
+import { getStudentRef } from '@rooms/services/api/students'
+import { getTeacherRef } from '@rooms/services/api/teachers'
 
 export function useSchedulesQuery(roomId) {
   return useCollectionAsObjectArrayQuery(roomId && `/rooms/${roomId}/schedules`)
