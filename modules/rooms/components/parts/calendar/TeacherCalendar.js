@@ -17,29 +17,8 @@ export function FormattedCalendar (props) {
 }
 
 export default function TeacherCalendar (props) {
-  const {
-    roomId,
-    days,
-    startedAt,
-    startHour,
-    endHour,
-    teachers,
-    students,
-    lessons
-  } = props
-
   return (
-    <CalendarProvider
-      {...{
-        roomId,
-        lessons,
-        startedAt,
-        teachers,
-        students,
-        days,
-        startHour,
-        endHour
-      }} >
+    <CalendarProvider {...props} >
       <FormattedCalendar {...props} />
     </CalendarProvider>
   )

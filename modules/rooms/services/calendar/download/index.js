@@ -1,3 +1,13 @@
+import { jsPDF } from 'jspdf'
+
+export function getNewDoc () {
+  const doc = new jsPDF()
+  doc.addFont('/fonts/MPLUS1p-Regular.ttf', 'MPLUS1p', '')
+  doc.addFont('/fonts/MPLUS1p-Bold.ttf', 'MPLUS1p', 'bold')
+  doc.setFont('MPLUS1p', '')
+  return doc
+}
+
 export async function downloadTeacherCalendars(
   roomId,
   treacherIds,
