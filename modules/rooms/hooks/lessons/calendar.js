@@ -4,6 +4,10 @@ import locale from 'date-fns/locale/ja'
 
 import { CALENDAR_FORMAT, CALENDAR_TERM } from '@rooms/constants'
 import { DATE_FORMAT } from '@/constants'
+import {
+  downloadRoomCalendars
+} from '@rooms/services/calendar/download'
+import { useMutation } from '@/hooks/api'
 
 const CALENDAR_TERMS = Object.values(CALENDAR_TERM)
 const CALENDAR_FORMATS = Object.values(CALENDAR_FORMAT)
@@ -211,4 +215,12 @@ export function useCalendar (router, defaultQuery = {}) {
     handleGoPrevious,
     handleGoNext,
   }
+}
+
+export function useDownlaodCalendars (roomId, resources = {})  {
+  return useMutation(
+    async ({ options }) => {
+      await downloadRoomCalendars(roomId, options, resources)
+    }
+  )
 }

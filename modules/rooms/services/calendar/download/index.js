@@ -1,4 +1,7 @@
 import { jsPDF } from 'jspdf'
+import { format } from 'date-fns'
+import { createPdfFile } from '@rooms/services/pdf'
+import { zipFiles } from '@rooms/services/zip'
 
 export function getNewDoc () {
   const doc = new jsPDF()
@@ -8,32 +11,17 @@ export function getNewDoc () {
   return doc
 }
 
-export async function downloadTeacherCalendars(
-  roomId,
-  treacherIds,
-  {
-    term,
-    startedAt,
-    asOneFile
-  },
-  {
-    lessons, students, teachers, sheets, relations, schedules
-  }
-) {
-  const options = { term, startedAt, asOneFile }
-  const resources = { lessons, students, teachers, sheets, relations, schedules }
-  console.info('Download Teacher Calendars', {
-    roomId,
-    treacherIds,
-    options,
-    resources
-  })
-
+function setContentToDoc(doc, { format: _format, term, startedAt }) {
+  doc.text(`Format: ${_format}`, 10, 20, { maxWidth: 100 })
+  doc.text(`Term: ${term}`, 10, 30, { maxWidth: 100 })
+  doc.text(`Started At: ${format(startedAt, 'yyyy-MM-dd HH:ss')}`, 10, 40, { maxWidth: 100 })
 }
+
 
 export async function downloadRoomCalendars(
   roomId,
   {
+    format,
     term,
     startedAt,
     asOneFile
@@ -42,12 +30,29 @@ export async function downloadRoomCalendars(
     lessons, students, teachers, sheets, relations, schedules
   }
 ) {
-  const options = { term, startedAt, asOneFile }
-  const resources = { lessons, students, teachers, sheets, relations, schedules }
-  console.info('Download Room Calendars', {
-    roomId,
-    treacherIds,
-    options,
-    resources
-  })
+  const options = { format, term, startedAt, asOneFile }
+  const resources = { roomId, lessons, teachers, students, sheets, relations, schedules }
+
+  if (asOneFile) {
+    const doc = getNewDoc()
+    setContentToDoc(doc, options, resources)
+    const { data, name } = createPdfFile('教室のカレンダー.pdf', doc)
+    saveAs(data, name)
+    return
+  }
+
+  const pdfFiles = [
+
+  ]
+  const doc = getNewDoc()
+  setContentToDoc(doc, options, resources)
+  pdfFiles.push(
+    createPdfFile(
+      '教室のカレンダー.pdf',
+      doc
+    )
+  )
+
+  const data = await zipFiles(pdfFiles)
+  saveAs(data, '教室のカレンダー.zip')
 }

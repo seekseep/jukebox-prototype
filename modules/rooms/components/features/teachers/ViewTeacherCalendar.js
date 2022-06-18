@@ -10,6 +10,9 @@ import { useSubjectsQuery } from '@rooms/hooks/subjects'
 import { useTeachersQuery } from '@rooms/hooks/teachers'
 import { useStudentsQuery } from '@rooms/hooks/students'
 import { useSheetsQuery } from '@rooms/hooks/sheets'
+import { useRelationsQuery } from '@rooms/hooks/relations'
+import { useSchedulesQuery } from '@rooms/hooks/schedules'
+import { useDownlaodTeacherCalendar } from '@rooms/hooks/teachers'
 
 import TeacherCalendar from '@rooms/components/parts/calendar/TeacherCalendar'
 import TeacherCalendarNavigation from '@rooms/components/parts/calendar/TeacherCalendarNavigation'
@@ -17,12 +20,7 @@ import { CALENDAR_FORMAT } from '@rooms/constants'
 import { useToggleState } from '@/hooks/ui'
 import DownloadTeacherCalendarModal from '@rooms/components/parts/teachers/DownloadTeacherCalendarModal'
 
-import { useDownlaodTeacherCalendar } from '@rooms/hooks/teachers'
-import { useRelationsQuery } from '@rooms/hooks/relations'
-import { useSchedulesQuery } from '@rooms/hooks/schedules'
-
-
-export default function ViewStudeCalendar () {
+export default function ViewTeacherCalendar () {
   const router = useRouter()
   const [isDownloadModalOpened, toggleDownloadModal] = useToggleState(false)
 
