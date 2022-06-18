@@ -10,7 +10,10 @@ import {
   useDeleteAccountMutation,
   useAccountsQuery
 } from '@rooms/hooks/accounts'
-import { downloadStudentCalendars } from '@rooms/services/calendar/download/students'
+import {
+  downloadStudentCalendars,
+  downloadStudentCalendar
+} from '@rooms/services/calendar/download/students'
 
 export function useStudentsQuery(roomId) {
   const { data: accounts , ...result } = useAccountsQuery(roomId)
@@ -82,10 +85,18 @@ export function useStudentOptions (students) {
   }) || [], [students])
 }
 
-export function useDownlaodStudentsCalendars (roomId, resources = {})  {
+export function useDownlaodStudentCalendars (roomId, resources = {})  {
   return useMutation(
     async ({ studentIds, options }) => {
       await downloadStudentCalendars(roomId, studentIds, options, resources)
+    }
+  )
+}
+
+export function useDownlaodStudentCalendar (roomId, resources = {})  {
+  return useMutation(
+    async ({ studentId, options }) => {
+      await downloadStudentCalendar(roomId, studentId, options, resources)
     }
   )
 }

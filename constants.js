@@ -103,3 +103,8 @@ export const FIELD_OPERATOR = Object.freeze({
 export const DATE_FORMAT = Object.freeze({
   ISO_8601: 'yyyy-MM-dd\'T\'HH:mm',
 })
+
+export const Z_INDEX = Object.freeze({
+  MODAL: 5000,
+  INPUT: 6000,
+})

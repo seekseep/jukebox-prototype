@@ -3,11 +3,10 @@ import Link from 'next/link'
 
 import { LESSON_VALIDITY } from '@rooms/constants'
 
-import { WithDocRef, WithDocRefs } from '@/components/utilities/withDocRefs'
 import { useGetRoomPath } from '@rooms/hooks/router'
 import { useLessonValidity } from '@rooms/hooks/lessons/validity'
 
-import { useHours, useCalendarContext } from '@rooms/components/parts/calendar/hooks'
+import { useCalendarContext } from '@rooms/components/parts/calendar/hooks'
 import { useGridStyle } from '@rooms/components/parts/calendar/hooks/layout'
 import {
   useLayoutContext,
@@ -16,7 +15,6 @@ import {
   useHeadColStyle,
   useLessonContainerStyle
 } from '@rooms/components/parts/calendar/hooks/layout/horizontal'
-import { getMinutes } from 'date-fns'
 
 export function Row ({ className, ...props }) {
   return <div className={classNames(className, 'flex relative')} {...props} />
@@ -72,7 +70,7 @@ export function Lesson ({ lesson, placement, children }) {
 
 export function HoursHeadRow () {
   const { hourColWidth, headColWidth } = useLayoutContext()
-  const hours = useHours()
+  const { hours } = useCalendarContext()
 
   const headColStyle = useGridStyle({ width: headColWidth })
   const hourColStyle = useGridStyle({ width: hourColWidth })
@@ -90,12 +88,13 @@ export function HoursHeadRow () {
 }
 
 export function HoursBodyRow () {
+  const { hours } = useCalendarContext()
   const { hourColWidth } = useLayoutContext()
   const style = useGridStyle({ width: hourColWidth  })
-  const horus = useHours()
+
   return (
     <Row className="sticky top-0">
-      {horus.map(hour => (
+      {hours.map(hour => (
         <BodyCol className="flex" key={hour} style={style}>
           <div className="w-1/4 border-r border-gray-100" />
           <div className="w-1/4 border-r border-gray-100" />
@@ -109,14 +108,16 @@ export function HoursBodyRow () {
 
 export function CalendarContainer ({ children }) {
   const { hourColWidth, headColWidth } = useLayoutContext()
-  const hours = useHours()
+  const { hours } = useCalendarContext()
   const innerStyle = useGridStyle({
     width: hours.length * hourColWidth + headColWidth,
   })
 
   return (
-    <div style={innerStyle}>
-      {children}
+    <div className="overflow-auto">
+      <div style={innerStyle}>
+        {children}
+      </div>
     </div>
   )
 }
@@ -127,7 +128,7 @@ export function LessonsRow ({ children }) {
     lessonRowsCount,
     hourColWidth
   } =  useLayoutContext()
-  const hours = useHours()
+  const { hours } = useCalendarContext()
 
   const lessonsRowStyle = useGridStyle({
     height: lessonRowHeight * lessonRowsCount,

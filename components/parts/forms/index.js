@@ -132,7 +132,7 @@ export function DateField({ label, type, ...props }) {
 
   const handleChange = useCallback(({ target: { value } }) => {
     helpers.setValue(valueToDate(value, type))
-  }, [helpers])
+  }, [helpers, type])
   return (
     <FieldContainer>
       {label && <Label>{label}</Label>}

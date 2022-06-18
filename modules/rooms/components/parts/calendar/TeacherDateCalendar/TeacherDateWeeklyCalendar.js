@@ -7,21 +7,22 @@ import { CalendarContainer, HoursHeadRow } from '@rooms/components/parts/calenda
 
 import TeacherDateLessonsRow from '@rooms/components/parts/calendar/TeacherDateCalendar/TeacherDateLessonsRow'
 
-export default function TeacherDateWeeklyCalendar() {
+export default function TeacherDateWeeklyCalendar({}) {
   const {
     lessons,
     teachers,
     startedAt,
+    teacher,
     days
   } = useCalendarContext()
 
   const teacherDateLessonsSets = useMemo(() =>
     getTeacherWeekDayLessonsSets(lessons, {
-      teachers,
+      teachers: teacher ? [teachers.find(t => t.id === teacher)] : teachers,
       startedAt,
       days
     })
-  , [days, lessons, startedAt, teachers])
+  , [days, lessons, startedAt, teacher, teachers])
 
   return (
     <CalendarContainer>
@@ -31,7 +32,6 @@ export default function TeacherDateWeeklyCalendar() {
           key={teacherDateLessonsSet.teacher.id}
           teacherDateLessonsSet={teacherDateLessonsSet} />
       ))}
-
     </CalendarContainer>
   )
 }

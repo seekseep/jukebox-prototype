@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import StudentsTable  from '@rooms/components/parts/students/StudentsTable'
 import EditStudentsModal  from '@rooms/components/parts/students/EditStudentsModal'
-import DownloadStudentsCalendarsModal  from '@rooms/components/parts/students/DownloadStudentsCalendarsModal'
+import DownloadStudentCalendarsModal  from '@rooms/components/parts/students/DownloadStudentCalendarsModal'
 
 export default function StudentsManager({
   roomId, students,
@@ -27,7 +27,7 @@ export default function StudentsManager({
         students={toEditStudents} allStudents={students}
         onSubmit={({ students }) => onUpdateStudents({ students })}
         {...updateResult} />
-      <DownloadStudentsCalendarsModal
+      <DownloadStudentCalendarsModal
         isOpened={!!toDownloadCalendarsStudents} toggle={() => setToDownloadCalendarsStudents(null)}
         students={toDownloadCalendarsStudents}
         onSubmit={({ studentIds, options }) => onDownloadStudentsCalendars({ studentIds, options })}

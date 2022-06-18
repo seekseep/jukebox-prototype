@@ -12,7 +12,7 @@ export default function DateStudentWeeklyCalendar() {
     lessons,
     students,
     startedAt,
-    days
+    days,
   } = useCalendarContext()
 
   const dateStudentLessonsSets = useMemo(() => {

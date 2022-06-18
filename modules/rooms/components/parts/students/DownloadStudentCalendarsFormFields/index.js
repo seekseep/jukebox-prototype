@@ -2,7 +2,7 @@ import { CheckBoxField, DateField, Field } from '@/components/parts/forms'
 import { CALENDAR_TERM } from '@rooms/constants'
 import { useFormikContext } from 'formik'
 
-export default function DownloadStudentsCalendarFormFields () {
+export default function DownloadStudentCalendarsFormFields () {
   const { values: { term } } = useFormikContext()
 
   return (

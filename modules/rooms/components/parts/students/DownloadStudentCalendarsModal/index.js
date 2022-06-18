@@ -6,15 +6,15 @@ import Modal, { ModalDialog } from '@/components/parts/Modal'
 import { Form, FormActions } from '@/components/parts/forms'
 import ErrorAlert from '@/components/parts/ErrorAlert'
 
-import DownloadStudentsCalendarFormFields from '@rooms/components/parts/students/DownloadStudentsCalendarFormFields'
+import DownloadStudentCalendarsFormFields from '@rooms/components/parts/students/DownloadStudentCalendarsFormFields'
 import {
   useInitialValues,
   useValidationSchema,
   useValuesToResult
-} from '@rooms/components/parts/students/DownloadStudentsCalendarFormFields/hooks'
+} from '@rooms/components/parts/students/DownloadStudentCalendarsFormFields/hooks'
 import { toast } from 'react-toastify'
 
-export default function DownloadStudentsCalendarsModal ({
+export default function DownloadStudentCalendarsModal ({
   isOpened, toggle, onSubmit,
   students,
   isLoading, isSuccess, error,
@@ -42,7 +42,7 @@ export default function DownloadStudentsCalendarsModal ({
               <div className="text-xl p-4 border-b">生徒のカレンダーのダウンロード</div>
               <div className="p-4">
                 <Form>
-                  <DownloadStudentsCalendarFormFields />
+                  <DownloadStudentCalendarsFormFields />
                   <ErrorAlert error={error} />
                   <FormActions>
                     <Button disabled={!isValid || isLoading} type="submit" color="primary" onSubmit={handleSubmit}>ダウンロードする</Button>

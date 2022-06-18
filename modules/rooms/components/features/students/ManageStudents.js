@@ -12,7 +12,7 @@ import {
   useStudentsQuery,
   useUpdateStudentsMutation,
   useDeleteStudentsMutation,
-  useDownlaodStudentsCalendars
+  useDownlaodStudentCalendars
 } from '@rooms/hooks/students'
 import StudentsManager from '@rooms/components/parts/students/StudentsManager'
 import { useTeachersQuery } from '@rooms/hooks/teachers'
@@ -48,7 +48,7 @@ export default function ManageStudents () {
     mutate()
   }, [updateStudentResult.isSuccess, mutate])
 
-  const [downloadStudentsCalendars, downloadResult] = useDownlaodStudentsCalendars(roomId, {
+  const [downloadStudentsCalendars, downloadResult] = useDownlaodStudentCalendars(roomId, {
     teachers : teachersResult.data,
     students : studentsResult.data,
     relations: relationsResult.data,
