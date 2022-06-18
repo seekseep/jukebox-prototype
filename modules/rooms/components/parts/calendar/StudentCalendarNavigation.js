@@ -1,18 +1,15 @@
 import { useMemo } from 'react'
 
-import { CALENDAR_TERM, CALENDAR_FORMAT } from '@rooms/constants'
+import { CALENDAR_TERM } from '@rooms/constants'
 import { Button } from '@/components/parts/buttons'
 import {
   DateCalendarField,
   DaysCalendarFiled,
   FieldsRow,
-  FormatCalendarField,
   NavigationContainer,
-  StudentCalendarField,
-  TeacherCalendarFiled,
   TermCalendarField,
   TimesCalendarField
-} from './calendarNavigation'
+} from '@rooms/components/parts/calendar/calendarNavigation'
 
 export default function StudentCalendarNavigation ({
   current,

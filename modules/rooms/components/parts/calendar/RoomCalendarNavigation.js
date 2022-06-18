@@ -12,7 +12,7 @@ import {
   TeacherCalendarFiled,
   TermCalendarField,
   TimesCalendarField
-} from './calendarNavigation'
+} from '@rooms/components/parts/calendar/calendarNavigation'
 
 export default function RoomCalendarNavigation ({
   current,
