@@ -1,4 +1,4 @@
-import { add, getDay, getDaysInMonth, startOfMonth, getDate, getDaof } from 'date-fns'
+import { add, getDay, getDaysInMonth, startOfMonth, getDate } from 'date-fns'
 
 // NOTE: 任意の日の 日付 > 生徒 授業の一覧
 export function getDateStudentLessonsSet (lessons, { students, date }) {

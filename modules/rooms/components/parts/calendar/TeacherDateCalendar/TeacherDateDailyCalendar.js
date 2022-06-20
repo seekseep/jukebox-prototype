@@ -11,15 +11,16 @@ export default function TeacherDateDailyCalendar() {
   const {
     lessons,
     teachers,
-    startedAt
+    startedAt,
+    teacher
   } = useCalendarContext()
 
   const teacherDateLessonsSets = useMemo(() =>
     getTeacherDateLessonsSets(lessons, {
-      teachers,
-      date: startedAt
+      teachers: teacher ? [teachers.find(t => t.id === teacher)] : teachers,
+      date    : startedAt
     })
-  , [lessons, startedAt, teachers])
+  , [lessons, startedAt, teachers, teacher])
 
   return (
     <CalendarContainer>

@@ -27,6 +27,7 @@ export default function ViewTeacherNavigation () {
       </Breadcrumbs>
       <TabNavigation>
         <Tab href={getTeacherPath('/')} exact>基本情報</Tab>
+        <Tab href={getTeacherPath('/calendar')}>カレンダー</Tab>
         <Tab href={getTeacherPath('/lessons')}>授業</Tab>
         <Tab href={getTeacherPath('/subjects')}>科目</Tab>
         <Tab href={getTeacherPath('/schedules')}>予定</Tab>

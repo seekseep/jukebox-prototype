@@ -3,14 +3,33 @@ import classNames from 'classnames'
 import { useFormikContext, useField } from 'formik'
 import ReactSelect from 'react-select'
 import CreatableReactSelect from 'react-select/creatable'
+import { startOfWeek, add } from 'date-fns'
 
-import { getDatetimeLocalValue, getTimeValue, getDateValue } from '@/services/input'
+import {
+  getDatetimeLocalValue,
+  getTimeValue,
+  getDateValue,
+  getWeekValue,
+  getMonthValue
+} from '@/services/input'
 
-export function Select ({ className, size = 'md', ...props }) {
-  return <select className={classNames(className, 'bg-white rounded border p-2', {
-    'p-2'        : size === 'md',
-    'p-2 text-sm': size === 'sm'
-  })} {...props} />
+export function Select ({ className, size = 'md', disabled = false, ...props }) {
+  return (
+    <select
+      className={
+        classNames(
+          className,
+          'bg-white rounded border p-2',
+          {
+            'p-2'        : size === 'md',
+            'p-2 text-sm': size === 'sm',
+            'bg-gray-50' : disabled
+          }
+        )
+      }
+      disabled={disabled}
+      {...props} />
+  )
 }
 
 export function FieldGroup ({ children })  {
@@ -44,14 +63,30 @@ export function Label ({ ...props }) {
   return <label className="" {...props} />
 }
 
-const inputClassName = 'border rounded p-2 leading-none shadow-sm focus:shadow'
-
-export function Input ({ type = 'text', className = '', ...props }) {
-  return <input className={classNames(className, inputClassName)} type={type} {...props}/>
+function useInputClassName({ className, size = 'md', disabled = false }) {
+  return classNames(
+    className,
+    'border rounded leading-none shadow-sm focus:shadow',
+    {
+      'bg-gray-50' : disabled === true,
+      'shadow-sm'  : disabled === false,
+      'p-1 text-sm': size === 'sm',
+      'p-2'        : size === 'md',
+    }
+  )
 }
 
-export function Textarea ({ className, ...props }) {
-  return <textarea className={classNames(className, inputClassName)} {...props}/>
+export function Input ({ type = 'text', size = 'md', className = '', disabled = false, ...props }) {
+  const inputClassName = useInputClassName({ className, size, disabled })
+
+
+  return <input className={inputClassName} type={type} disabled={disabled} {...props}/>
+}
+
+export function Textarea ({ className = '', size = 'md', disabled = false, ...props }) {
+  const inputClassName = useInputClassName({ className, size, disabled })
+
+  return <textarea className={inputClassName} disabled={disabled} {...props}/>
 }
 
 function useDateFieldInputValue(value, type) {
@@ -63,6 +98,10 @@ function useDateFieldInputValue(value, type) {
           return getTimeValue(date)
         case 'date':
           return getDateValue(date)
+        case 'week':
+          return getWeekValue(date)
+        case 'month':
+          return getMonthValue(date)
         case 'datetime-local':
         default:
           return getDatetimeLocalValue(date)
@@ -70,10 +109,30 @@ function useDateFieldInputValue(value, type) {
     },[value, type])
 }
 
+function valueToDate (value, type) {
+  if (!value) return null
+
+  if (type === 'week') {
+    const [year, weeks ] = value.split('-W').map(Number)
+
+    return startOfWeek(
+      add(
+        new Date(year, 0, 1), { weeks: weeks - 1 }
+      )
+    )
+  }
+
+  return new Date(value)
+}
+
 export function DateField({ label, type, ...props }) {
   const [field, meta, helpers] = useField(props)
   const inputValue = useDateFieldInputValue(field.value, type)
-  const handleChange = useCallback(({ target: { value } }) => helpers.setValue(value ? new Date(value) : null), [helpers])
+
+
+  const handleChange = useCallback(({ target: { value } }) => {
+    helpers.setValue(valueToDate(value, type))
+  }, [helpers, type])
   return (
     <FieldContainer>
       {label && <Label>{label}</Label>}
@@ -145,14 +204,14 @@ export function SelectField ({ label, options, helper, isMulti = false, ...props
   )
 }
 
-export function CreatableSelectField ({ label, isMulti = false, ...props }) {
+export function CreatableSelectField ({ label, isMulti = false, options, ...props }) {
   const [field, meta, { setValue }] = useField(props)
 
   return (
     <FieldContainer>
       {label && <Label>{label}</Label>}
       <CreatableReactSelect
-        instanceId={props.name} isMulti={isMulti}
+        instanceId={props.name} isMulti={isMulti} options={options}
         {...field}  onChange={setValue} noOptionsMessage={() => '項目がありません'}
         {...props} />
       <FieldAlert meta={meta} />

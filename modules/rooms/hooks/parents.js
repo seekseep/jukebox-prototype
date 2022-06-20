@@ -1,10 +1,9 @@
-import { ACCOUNT_TYPE } from '@rooms/constants'
-
-import { createAccount, updateAccount } from '@/services/api/rooms/accounts'
-
 import { useMutation } from '@/hooks/api'
+
+import { ACCOUNT_TYPE } from '@rooms/constants'
+import { createAccount, updateAccount } from '@rooms/services/api/accounts'
+import { getStudentRef } from '@rooms/services/api/students'
 import { useAccountQuery, useDeleteAccountMutation, useAccountsByAccountTypeQuery } from '@rooms/hooks/accounts'
-import { getStudentRef } from '@/services/api/rooms/students'
 
 export function useParentsQuery(roomId) {
   return useAccountsByAccountTypeQuery(roomId, ACCOUNT_TYPE.PARENT)

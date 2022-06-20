@@ -12,16 +12,17 @@ export default function StudentDateWeeklyCalendar() {
     lessons,
     students,
     startedAt,
+    student,
     days
   } = useCalendarContext()
 
   const studentDateLessonsSets = useMemo(() =>
     getStudentWeekDayLessonsSets(lessons, {
-      students,
+      students: student ? [students.find(t => t.id === student)] : students,
       startedAt,
       days
     })
-  , [days, lessons, startedAt, students])
+  , [days, lessons, startedAt, student, students])
 
   return (
     <CalendarContainer>
@@ -31,7 +32,6 @@ export default function StudentDateWeeklyCalendar() {
           key={studentDateLessonsSet.student.id}
           studentDateLessonsSet={studentDateLessonsSet} />
       ))}
-
     </CalendarContainer>
   )
 }

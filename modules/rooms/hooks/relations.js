@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { refEqual } from 'firebase/firestore'
 
-import { getAccountRef } from '@/services/api/rooms/accounts'
-import { getStudentRef } from '@/services/api/rooms/students'
-import { getTeacherRef } from '@/services/api/rooms/teachers'
-import { createRelation } from '@/services/api/rooms/relations'
+import { getAccountRef } from '@rooms/services/api/accounts'
+import { getStudentRef } from '@rooms/services/api/students'
+import { getTeacherRef } from '@rooms/services/api/teachers'
+import { createRelation } from '@rooms/services/api/relations'
 
 import {
   useMutation,

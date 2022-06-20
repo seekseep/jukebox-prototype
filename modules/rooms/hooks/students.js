@@ -1,16 +1,19 @@
 import { useMemo } from 'react'
 
-import { ACCOUNT_TYPE } from '@rooms/constants'
-
 import { useMutation } from '@/hooks/api'
-import { createAccount } from '@/services/api/rooms/accounts'
 
+import { ACCOUNT_TYPE } from '@rooms/constants'
+import { createAccount, deleteAccount, updateAccounts } from '@rooms/services/api/accounts'
 import {
   useAccountQuery,
   useUpdateAccountMutation,
   useDeleteAccountMutation,
   useAccountsQuery
 } from '@rooms/hooks/accounts'
+import {
+  downloadStudentCalendars,
+  downloadStudentCalendar
+} from '@rooms/services/calendar/download/students'
 
 export function useStudentsQuery(roomId) {
   const { data: accounts , ...result } = useAccountsQuery(roomId)
@@ -35,8 +38,38 @@ export function useCreateStudentMutation (roomId) {
   )
 }
 
+export function useCreateStudentsMutation (roomId) {
+  return useMutation(
+    async (students) => {
+      const createdStudents = []
+      for (let student of students) {
+        const createdStudent = await createAccount(roomId, { type: ACCOUNT_TYPE.STUDENT, ...student })
+        createdStudents.push(createdStudent)
+      }
+      return createdStudents
+    }
+  )
+}
+
+export function useDeleteStudentsMutation (roomId) {
+  return useMutation(
+    async (studentIds) => {
+      for (let studentId of studentIds) {
+        await deleteAccount(roomId, studentId)
+      }
+      return null
+    }
+  )
+}
+
 export function useUpdateStudentMutation (roomId, studentId) {
   return useUpdateAccountMutation(roomId, studentId)
+}
+
+export function useUpdateStudentsMutation (roomId) {
+  return useMutation(
+    async ({ students: accounts }) => await updateAccounts(roomId, accounts)
+  )
 }
 
 export function useDeleteStudentMutation (roomId, studentId) {
@@ -50,4 +83,57 @@ export function useStudentOptions (students) {
 
     return ({ label, value })
   }) || [], [students])
+}
+
+export function useDownlaodStudentCalendars (roomId, resources = {})  {
+  return useMutation(
+    async ({ studentIds, options }) => {
+      await downloadStudentCalendars(roomId, studentIds, options, resources)
+    }
+  )
+}
+
+export function useDownlaodStudentCalendar (roomId, resources = {})  {
+  return useMutation(
+    async ({ studentId, options }) => {
+      await downloadStudentCalendar(roomId, studentId, options, resources)
+    }
+  )
+}
+
+export function useSchoolGradeOptions (students) {
+  return useMemo(() => {
+    if (!students) return []
+
+    const options = { }
+    students.forEach(student => {
+      const schoolGrade = student.schoolGrade
+      if (!schoolGrade) return
+      options[schoolGrade] = {
+        label: schoolGrade,
+        value: schoolGrade
+      }
+    })
+
+    return Object.values(options)
+  }, [students])
+}
+
+export function useSchoolNameOptions (students) {
+  return useMemo(() => {
+    if (!students) return []
+
+    const options = { }
+
+    students.forEach(student => {
+      const schoolName = student.schoolName
+      if (!schoolName) return
+      options[schoolName] = {
+        label: schoolName,
+        value: schoolName
+      }
+    })
+
+    return Object.values(options)
+  }, [students])
 }

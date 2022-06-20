@@ -12,16 +12,17 @@ export default function StudentDateMonthlyCalendar () {
     roomId,
     lessons,
     students,
-    startedAt
+    startedAt,
+    student
   } = useCalendarContext()
   const getRoomPath = useGetRoomPath(roomId)
 
   const studentDateLessonsSets = useMemo(() =>
     getStudentMonthDateLessonsSets(lessons, {
-      students,
+      students: student ? [students.find(t => t.id === student)] : students,
       startedAt
     })
-  , [lessons, startedAt, students])
+  , [lessons, startedAt, student, students])
 
   const weeks = useMemo(() => {
     if (!startedAt) return []

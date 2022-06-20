@@ -4,58 +4,56 @@ import locale from 'date-fns/locale/ja'
 
 import { CALENDAR_FORMAT, CALENDAR_TERM } from '@rooms/constants'
 import { DATE_FORMAT } from '@/constants'
+import {
+  downloadRoomCalendars
+} from '@rooms/services/calendar/download'
+import { useMutation } from '@/hooks/api'
 
 const CALENDAR_TERMS = Object.values(CALENDAR_TERM)
 const CALENDAR_FORMATS = Object.values(CALENDAR_FORMAT)
-
-function parseTerm (term) {
-  if (CALENDAR_TERMS.includes(term)) return term
-  return CALENDAR_TERM.WEEKLY
-}
 
 function dateToDateString (date) {
   return format(date, DATE_FORMAT.ISO_8601)
 }
 
-function parseStartedAt(startedAtString, term) {
-  const date = isValid(new Date(startedAtString)) ? new Date(startedAtString) : new Date()
+function parseTerm (term, defaultValue = CALENDAR_TERM.WEEKLY) {
+  if (CALENDAR_TERMS.includes(term)) return term
+  return defaultValue
+}
+
+function parseStartedAt(startedAtString, term, defaultValue = new Date()) {
+  const date = isValid(new Date(startedAtString)) ? new Date(startedAtString) : defaultValue
   switch(term) {
     case CALENDAR_TERM.MONTHLY:
-      return dateToDateString(startOfMonth(date))
+      return startOfMonth(date)
     case CALENDAR_TERM.WEEKLY:
-      return dateToDateString(startOfWeek(date))
+      return startOfWeek(date)
     case CALENDAR_TERM.DAILY:
     default:
-      return dateToDateString(startOfDay(date))
+      return startOfDay(date)
   }
 }
 
-function getFinishedAtString(startedAtString, term) {
-  const startedAt = new Date(startedAtString)
+function getFinishedAtString(startedAt, term, defaultValue) {
   switch(term) {
     case CALENDAR_TERM.MONTHLY:
-      return dateToDateString(endOfMonth(startedAt))
+      return endOfMonth(startedAt)
     case CALENDAR_TERM.WEEKLY:
-      return dateToDateString(endOfWeek(startedAt))
+      return endOfWeek(startedAt)
     case CALENDAR_TERM.DAILY:
     default:
-      return dateToDateString(endOfDay(startedAt))
+      return defaultValue ?? endOfDay(startedAt)
   }
 }
 
-function parseFormat(format) {
+function parseFormat(format, defaultValue = CALENDAR_FORMAT.TEACHER_DATE) {
   if (CALENDAR_FORMATS.includes(format)) return format
-  return CALENDAR_FORMAT.TEACHER_DATE
+  return defaultValue
 }
 
-function parseIdArrayString (idArrayString) {
-  if (typeof idArrayString !== 'string') return []
-  return idArrayString.split(',')
-}
-
-function parseStartHour (startHour) {
+function parseStartHour (startHour, defaultValue = 9) {
   if (0 <= startHour && startHour <= 22) return parseInt(startHour)
-  return 9
+  return defaultValue
 }
 
 function parseEndHour (endHour, startHour = 0) {
@@ -63,25 +61,47 @@ function parseEndHour (endHour, startHour = 0) {
   return 21
 }
 
-export function useParsedQuery(query) {
+function parseDays (daysValue, defaultValue = '')  {
+  if (!daysValue) return defaultValue
+
+  const days = []
+
+  if(typeof daysValue === 'string') {
+    days.push(daysValue)
+  } else if (daysValue?.length > 0) {
+    days.push(...daysValue)
+  }
+
+  return days.map(Number).filter(day => 0 <= day && day <= 7)
+}
+
+function parseTeacher (teacher, defaultValue = '') {
+  return teacher ?? defaultValue
+}
+function parseStudent (student, defaultValue = '') {
+  return student ?? defaultValue
+}
+
+export function useParsedQuery(query, defaultQuery = {}) {
   return useMemo(() => {
     const parsedQuery = {}
 
     parsedQuery.roomId = query.roomId
-    parsedQuery.term = parseTerm(query.term)
-    parsedQuery.format = parseFormat(query.format)
-    parsedQuery.startedAt = parseStartedAt(query.startedAt, parsedQuery.term)
-    parsedQuery.finishedAt = getFinishedAtString(parsedQuery.startedAt, parsedQuery.term)
-    parsedQuery.startHour = parseStartHour(query.startHour)
-    parsedQuery.endHour = parseEndHour(query.endHour, parsedQuery.startHour)
+    parsedQuery.term = parseTerm(query.term, defaultQuery.term)
+    parsedQuery.format = parseFormat(query.format, defaultQuery.format)
+    parsedQuery.startedAt = parseStartedAt(query.startedAt, parsedQuery.term, defaultQuery.startedAt)
+    parsedQuery.finishedAt = getFinishedAtString(parsedQuery.startedAt, parsedQuery.term, defaultQuery.finishedAt)
+    parsedQuery.startHour = parseStartHour(query.startHour, defaultQuery.startHour)
+    parsedQuery.endHour = parseEndHour(query.endHour, parsedQuery.startHour, defaultQuery.endHour)
+    parsedQuery.days = parseDays(query.days, defaultQuery.days)
+    parsedQuery.teacher = parseTeacher(query.teacher, defaultQuery.teacher)
+    parsedQuery.student = parseStudent(query.student, defaultQuery.student)
 
-    if (query.subjects) parsedQuery.subjects = parseIdArrayString(query.subjects)
-    if (query.teachers) parsedQuery.teachers = parseIdArrayString(query.teachers)
-    if (query.students) parsedQuery.students = parseIdArrayString(query.students)
-    if (query.sheets) parsedQuery.sheets = parseIdArrayString(query.sheets)
-
-    return parsedQuery
-  }, [query.endHour, query.format, query.roomId, query.sheets, query.startHour, query.startedAt, query.students, query.subjects, query.teachers, query.term])
+    return {
+      ...query,
+      ...parsedQuery
+    }
+  }, [defaultQuery.days, defaultQuery.endHour, defaultQuery.finishedAt, defaultQuery.format, defaultQuery.startHour, defaultQuery.startedAt, defaultQuery.student, defaultQuery.teacher, defaultQuery.term, query])
 }
 
 function getNextStartedAt (date, term) {
@@ -132,10 +152,10 @@ function getPreviousFinishedAt (date, term) {
   }
 }
 
-export function useCalendar (query) {
-  const parsedQuery = useParsedQuery(query)
-  const { term } = parsedQuery
-  const startedAt = useMemo(() => new Date(parsedQuery.startedAt), [parsedQuery.startedAt])
+export function useCalendar (router, defaultQuery = {}) {
+  const { query, pathname, push } = router
+  const parsedQuery = useParsedQuery(query, defaultQuery)
+  const { term, startedAt } = parsedQuery
 
   const currentLabel = useMemo(() => {
     switch (term) {
@@ -163,26 +183,44 @@ export function useCalendar (query) {
   }, [parsedQuery])
 
   const getNextQuery = useCallback(() => getChangedQuery({
-    startedAt : format(getNextStartedAt(startedAt, term), DATE_FORMAT.ISO_8601),
-    finishedAt: format(getNextFinishedAt(startedAt, term), DATE_FORMAT.ISO_8601),
+    startedAt : getNextStartedAt(startedAt, term),
+    finishedAt: getNextFinishedAt(startedAt, term),
   }), [getChangedQuery, startedAt, term])
 
   const getPreviousQuery = useCallback(() => getChangedQuery({
-    startedAt : format(getPreviousStartedAt(startedAt, term), DATE_FORMAT.ISO_8601),
-    finishedAt: format(getPreviousFinishedAt(startedAt, term), DATE_FORMAT.ISO_8601),
+    startedAt : getPreviousStartedAt(startedAt, term),
+    finishedAt: getPreviousFinishedAt(startedAt, term),
   }), [getChangedQuery, startedAt, term])
 
   const getTodayQuery = useCallback(() => getChangedQuery({
-    startedAt: format(new Date(), DATE_FORMAT.ISO_8601)
+    startedAt: new Date()
   }), [getChangedQuery])
+
+  const refresh = useCallback(query => {
+    if (query.startedAt) query.startedAt = dateToDateString(query.startedAt)
+    if (query.finishedAt) query.finishedAt = dateToDateString(query.finishedAt)
+    push({ pathname, query })
+  }, [pathname, push])
+  const handleGoToday = useCallback(() => refresh(getTodayQuery()), [getTodayQuery, refresh])
+  const handleGoPrevious = useCallback(() => refresh(getPreviousQuery()), [getPreviousQuery, refresh])
+  const handleGoNext = useCallback(() => refresh(getNextQuery()), [getNextQuery, refresh])
 
   return {
     parsedQuery,
     currentLabel,
     startedAt,
     getChangedQuery,
-    getNextQuery,
-    getPreviousQuery,
-    getTodayQuery
+    refresh,
+    handleGoToday,
+    handleGoPrevious,
+    handleGoNext,
   }
+}
+
+export function useDownlaodCalendars (roomId, resources = {})  {
+  return useMutation(
+    async ({ options }) => {
+      await downloadRoomCalendars(roomId, options, resources)
+    }
+  )
 }

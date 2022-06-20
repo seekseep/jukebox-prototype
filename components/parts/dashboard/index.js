@@ -71,19 +71,19 @@ export function DashboardPageTitle ({ children }) {
 }
 
 export const DASHBOARD_SECTION_SIZE = Object.freeze({
-  NONE: 'max-w-none',
-  XS  : 'max-w-xs',
-  SM  : 'max-w-sm',
-  MD  : 'max-w-md',
-  LG  : 'max-w-lg',
-  XL  : 'max-w-xl',
-  XL_2: 'max-w-2xl',
-  XL_3: 'max-w-3xl',
-  XL_4: 'max-w-4xl',
-  XL_5: 'max-w-5xl',
-  XL_6: 'max-w-6xl',
-  XL_7: 'max-w-7xl',
-  FULL: 'max-w-full',
+  NONE: 'none',
+  XS  : 'xs',
+  SM  : 'sm',
+  MD  : 'md',
+  LG  : 'lg',
+  XL  : 'xl',
+  XL_2: '2xl',
+  XL_3: '3xl',
+  XL_4: '4xl',
+  XL_5: '5xl',
+  XL_6: '6xl',
+  XL_7: '7xl',
+  FULL: 'full',
 })
 
 export function DashboardSection ({ children, size = DASHBOARD_SECTION_SIZE.XL_4 }) {

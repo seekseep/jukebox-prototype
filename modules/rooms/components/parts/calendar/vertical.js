@@ -5,12 +5,13 @@ import { LESSON_VALIDITY } from '@rooms/constants'
 import { useGetRoomPath } from '@rooms/hooks/router'
 import { useLessonValidity } from '@rooms/hooks/lessons/validity'
 
-import { useCalendarContext, useHours } from '@rooms/components/parts/calendar/hooks'
+import { useCalendarContext } from '@rooms/components/parts/calendar/hooks'
 import { useGridStyle } from '@rooms/components/parts/calendar/hooks/layout'
 import { useLessonStyle,
   useBodyColStyle,
   useHeadColStyle,
-  useLessonContainerStyle
+  useLessonContainerStyle,
+  useLayoutContext
 } from '@rooms/components/parts/calendar/hooks/layout/vertical'
 
 export function Row ({ className, ...props }) {
@@ -33,7 +34,7 @@ export function BodyCol ({ className, ...props }) {
 
 export function HoursHeadRow () {
   const { hourColWidth, headColWidth } = useCalendarContext()
-  const hours = useHours()
+  const { hours } = useCalendarContext()
   const headColStyle = useGridStyle({ width: headColWidth })
   const hourColStyle = useGridStyle({ width: hourColWidth })
 
@@ -50,12 +51,13 @@ export function HoursHeadRow () {
 }
 
 export function HoursBodyRow () {
-  const { hourColWidth } = useCalendarContext()
+  const { hours } = useCalendarContext()
+  const { hourColWidth } = useLayoutContext()
   const style = useGridStyle({ width: hourColWidth  })
-  const horus = useHours()
+
   return (
     <Row className="sticky top-0">
-      {horus.map(hour => (
+      {hours.map(hour => (
         <BodyCol className="flex" key={hour} style={style}>
           <div className="w-1/4 border-r border-gray-100" />
           <div className="w-1/4 border-r border-gray-100" />
@@ -102,7 +104,7 @@ export function Lesson ({ lesson, placement, children }) {
 
 export function CalendarContainer ({ children }) {
   const { hourColWidth, headColWidth } = useCalendarContext()
-  const hours = useHours()
+  const { hours } = useCalendarContext()
   const innerStyle = useGridStyle({
     width: hours.length * hourColWidth + headColWidth,
   })
